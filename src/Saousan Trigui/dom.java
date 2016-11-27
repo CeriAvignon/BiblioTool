@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
 	 * @version 1.0
 	 */
 
-public class Test_dom {
+public class DomParseur {
 
 		public static void main(String[] args) {
 
