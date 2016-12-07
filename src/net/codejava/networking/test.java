@@ -6,11 +6,56 @@ package net.codejava.networking;
 	import java.io.InputStream;
 	import java.net.HttpURLConnection;
 	import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
+import java.util.List;
 	 
-		public class test {
+public class test extends Recherche  {
+	
+	private static final int BUFFER_SIZE = 4096;
+
 			
-	    private static final int BUFFER_SIZE = 4096;
-	 
+     public test(int id, String type, String nom, String url) {
+		super(id, type, nom, url);
+	
+     }
+     
+  public String lecture () {
+	 try{
+		 
+	      String[] tab=null;
+	      
+		// on charge le pilote JDBC 
+         Class.forName("com.mysql.jdbc.Driver");
+         // on crée une connection du package java.sql
+         Connection conn=DriverManager.getConnection
+  ("jdbc:mysql://localhost:3306/projetjava",	"root" ,"");
+         
+       //création d'un objet preparedstatement pour une requette qui récupére les url 
+         PreparedStatement ps=conn.prepareStatement("select url from Recherche");
+         // execution de la requette 
+      		   ResultSet rs=ps.executeQuery();
+      		   ResultSetMetaData rsmd=rs.getMetaData();
+      		   
+      		int i=0;
+      		tab= new String[rsmd.getColumnCount()];
+      		
+      		       for(int i=1;i<rsmd.getColumnCount();i++){
+      			   
+      		   }
+          		   while(rs.next())
+          				   {
+          			   String fileURL=rs.getString("url");
+	                     }
+	  
+	   
+      return tab ;       
+      }
+   
 	    /**
 	     * @param URL du fichier a télécharger 
 	     * @param chemin du répértoire pour enregistre les fichier 
