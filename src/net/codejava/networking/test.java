@@ -6,56 +6,41 @@ package net.codejava.networking;
 	import java.io.InputStream;
 	import java.net.HttpURLConnection;
 	import java.net.URL;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.util.ArrayList;
-import java.util.List;
-	 
-public class test extends Recherche  {
+	import java.sql.Connection;
+    import java.sql.DriverManager;
+    import java.sql.PreparedStatement;
+    import java.sql.ResultSet;
+    import java.sql.ResultSetMetaData;
+    import java.util.ArrayList;
+    import java.util.List;
+
+import javax.management.Query;
+
+import javafx.scene.control.Tab;
+    import java.sql.*;
+    import java.util.ArrayList;
+
+    public class test extends Recherche  {
 	
 	private static final int BUFFER_SIZE = 4096;
 
 			
-     public test(int id, String type, String nom, String url) {
-		super(id, type, nom, url);
-	
-     }
-     
-  public String lecture () {
-	 try{
-		 
-	      String[] tab=null;
-	      
-		// on charge le pilote JDBC 
-         Class.forName("com.mysql.jdbc.Driver");
-         // on crée une connection du package java.sql
-         Connection conn=DriverManager.getConnection
-  ("jdbc:mysql://localhost:3306/projetjava",	"root" ,"");
-         
-       //création d'un objet preparedstatement pour une requette qui récupére les url 
-         PreparedStatement ps=conn.prepareStatement("select url from Recherche");
-         // execution de la requette 
-      		   ResultSet rs=ps.executeQuery();
-      		   ResultSetMetaData rsmd=rs.getMetaData();
-      		   
-      		int i=0;
-      		tab= new String[rsmd.getColumnCount()];
-      		
-      		       for(int i=1;i<rsmd.getColumnCount();i++){
-      			   
-      		   }
-          		   while(rs.next())
-          				   {
-          			   String fileURL=rs.getString("url");
-	                     }
-	  
-	   
-      return tab ;       
-      }
-   
+           public test(int id, String type, String nom, String url) {
+		           super(id, type, nom, url);
+                        }
+        //execution de la requette 
+      		    //ResultSet rs = statement.executeQuery();
+              /**
+               while(rs.next()){ 
+      		    	for(int i = 0 ; i < maListe.size(); i++){
+      		    		maListe.add(rs.getString("i"));
+      		          }}}                
+	                      catch (Exception e)
+          	                 {
+          	        throw new Exception("Exception Lecture : " + e);
+          	                  }
+	   return Tab;     **/  
+                 
 	    /**
 	     * @param URL du fichier a télécharger 
 	     * @param chemin du répértoire pour enregistre les fichier 
@@ -65,10 +50,10 @@ public class test extends Recherche  {
 	            throws IOException {
 	    	
 	    	/** cree une instance de URL qui pointe vers le lien * */
-	        URL url = new URL(fileURL);
+	        URL url = new URL([][]fileURL);
 	        
 	        /** ouvrir une connection http */
-	        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+	        HttpURLConnection httpConn = (HttpURLConnection)url.openConnection();
 	        
 	        int responseCode = httpConn.getResponseCode();
 	         /** verification du code de réponse http */ 
