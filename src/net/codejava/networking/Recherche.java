@@ -2,13 +2,13 @@ package net.codejava.networking;
  
 public class Recherche {
 	private int id;
-	private String type;
+	private String chemin;
 	private String nom;
 	private String url ;
-	public Recherche(int id, String type, String nom, String url) {
+	public Recherche(int id, String chemin, String nom, String url) {
 		super();
 		this.id = id;
-		this.type = type;
+		this.chemin = chemin;
 		this.nom = nom;
 		this.url = url;
 	}
@@ -18,16 +18,10 @@ public class Recherche {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
-	public String getNom() {
+	public String getnom() {
 		return nom;
 	}
-	public void setNom(String nom) {
+	public void setnom(String nom) {
 		this.nom = nom;
 	}
 	public String getUrl() {
@@ -36,6 +30,11 @@ public class Recherche {
 	public void setUrl(String url) {
 		this.url = url;
 	} 
-	
+	public String getchemin() {
+		return chemin;
+	}
+	public void setchemin(String chemin) {
+		this.chemin = chemin;
+	}
 	
 }
