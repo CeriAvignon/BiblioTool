@@ -17,7 +17,7 @@ import java.util.List;
 public class Article extends Recherche {
 	
 	
-    public static  ArrayList<String> Resultat = new ArrayList<String>();
+    public static  ArrayList<URL> Resultat = new ArrayList<>();
 	
 	private static final int BUFFER_SIZE = 4096;
 	
@@ -26,7 +26,7 @@ public class Article extends Recherche {
              }
    
    
-            public static List<String> recupurl(){
+            public static List<URL> recupurl(){
                try {
    
   Class.forName("com.mysql.jdbc.Driver");
@@ -61,14 +61,14 @@ public class Article extends Recherche {
 * @param chemin du répértoire pour enregistre les fichier 
 * @throws IOException
 */
-          public static void downloadFile(String fileURL, String saveDir)
+          public static void downloadFile(URL fileURL, String saveDir)
               throws IOException {
 	
 	/** cree une instance de URL qui pointe vers le lien * */
- URL url = new URL(fileURL) ;
+            // URL url = new URL(fileURL) ;
  
  /** ouvrir une connection http */
- HttpURLConnection httpConn = (HttpURLConnection)url.openConnection();
+ HttpURLConnection httpConn = (HttpURLConnection)fileURL.openConnection();
  
  int responseCode = httpConn.getResponseCode();
   /** verification du code de réponse http */ 
@@ -89,15 +89,15 @@ public class Article extends Recherche {
                      disposition.length() - 1);
          }
      } 
-     else {
+    /** else {
      	 /** extrait le nom de fichier de l'URL */
-         fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1,
+         /**fileName = fileURL.substring(//*fileURL.lastIndexOf("/") + 1,
                  fileURL.length());
      }
      System.out.println("Type du contenu = " + contentType);
      System.out.println("Contenu Disposition = " + disposition);
      System.out.println("Taille = " + contentLength);
-     System.out.println("Nom-fichier = " + fileName);
+     System.out.println("Nom-fichier = " + fileName);*/
          /**
       Ouvrir le chemin d'entrée à partir de la connexion HTTP*/	            
      InputStream inputStream = httpConn.getInputStream();
@@ -126,14 +126,5 @@ public class Article extends Recherche {
  
  httpConn.disconnect();
 }
-
-	  public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		  
-		 
-		   
-		   
-
-	}
 
 }
