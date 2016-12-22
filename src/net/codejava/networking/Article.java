@@ -12,12 +12,14 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Article extends Recherche {
 	
 	
-    public static  ArrayList<URL> Resultat = new ArrayList<>();
+    public static  ArrayList<String> Resultat = new ArrayList<>();
+    
 	
 	private static final int BUFFER_SIZE = 4096;
 	
@@ -26,26 +28,28 @@ public class Article extends Recherche {
              }
    
    
-            public static List<URL> recupurl(){
+         public static List<String> recupurl(){
                try {
    
-  Class.forName("com.mysql.jdbc.Driver");
-// on crée une connection du package java.sql		
- Connection conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/projetjava","root" ,"");
+       Class.forName("com.mysql.jdbc.Driver");
+     // on crée une connection du package java.sql		
+          Connection conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/projetjava","root" ,"");
  
-//création d'un objet preparedstatement pour une requette qui récupére les url 
-//PreparedStatement statement=conn.prepareStatement("select url from Recherche");
-                   
- String queryString = "select url from recherche";
- Statement stm = conn.createStatement();
- ResultSet rs = stm.executeQuery(queryString);
- ResultSetMetaData res = rs.getMetaData();
+      //création d'un objet preparedstatement pour une requette qui récupére les url 
+      //la requette sql 
+       String queryString = "select url from recherche";
+       
+       //création d'un objet preparedstatement pour une requette qui récupére les url 
+           Statement stm = conn.createStatement();
+           ResultSet rs = stm.executeQuery(queryString);
+           ResultSetMetaData res = rs.getMetaData();
  
-        while(rs.next()) {
+            while(rs.next()) {
  	         for(int i = 1; i <=  res.getColumnCount(); i++)
  	              {
+ 	        	 //ajouter tous les urls sur la liste 
  		Resultat.add("rs.getObject(i)");
- 		//System.out.println(rs.getObject(i).toString());
+ 		
                   }
                         }
          rs.close();
@@ -53,7 +57,8 @@ public class Article extends Recherche {
               } catch (Exception e){}
  	  
            return(Resultat);
-             }
+         }
+
    
    /**
 /**
@@ -61,50 +66,55 @@ public class Article extends Recherche {
 * @param chemin du répértoire pour enregistre les fichier 
 * @throws IOException
 */
-          public static void downloadFile(URL fileURL, String saveDir)
+         
+     public static void downloadFile( List<String> array, String saveDir)
               throws IOException {
-	
-	/** cree une instance de URL qui pointe vers le lien * */
-            // URL url = new URL(fileURL) ;
+    	 
+    	 Iterator<String> it = array.iterator();
+    	 
+    	 while (it.hasNext()) {
+    	       String s = it.next();
+    	   /** cree une instance de URL qui pointe vers le lien * */
+               URL url = new URL(s) ;
+             
+    	       /** ouvrir une connection http */
+             HttpURLConnection httpConn = (HttpURLConnection)url.openConnection();
  
- /** ouvrir une connection http */
- HttpURLConnection httpConn = (HttpURLConnection)fileURL.openConnection();
+             int responseCode = httpConn.getResponseCode();
+                /** verification du code de réponse http */ 
  
- int responseCode = httpConn.getResponseCode();
-  /** verification du code de réponse http */ 
- 
-      if (responseCode == HttpURLConnection.HTTP_OK) {
-     String fileName = "";
-     String disposition = httpConn.getHeaderField("Content-Disposition");
-     String contentType = httpConn.getContentType();
-     int contentLength = httpConn.getContentLength();
+             if (responseCode == HttpURLConnection.HTTP_OK) {
+              String fileName = "";
+              String disposition = httpConn.getHeaderField("Content-Disposition");
+              String contentType = httpConn.getContentType();
+            int contentLength = httpConn.getContentLength();
 
-        if (disposition != null) {
+               if (disposition != null) {
      	
-         /** Extraire le nom de fichier sur l'en-tête */
-     	
-         int index = disposition.indexOf("filename=");
-         if (index > 0) {
-             fileName = disposition.substring(index + 10,
+              /** Extraire le nom de fichier sur l'en-tête */
+     	 
+                int index = disposition.indexOf("filename=");
+                if (index > 0) {
+                fileName = disposition.substring(index + 10,
                      disposition.length() - 1);
-         }
-     } 
-    /** else {
+                       }
+                   } 
+     else {
      	 /** extrait le nom de fichier de l'URL */
-         /**fileName = fileURL.substring(//*fileURL.lastIndexOf("/") + 1,
-                 fileURL.length());
-     }
-     System.out.println("Type du contenu = " + contentType);
-     System.out.println("Contenu Disposition = " + disposition);
-     System.out.println("Taille = " + contentLength);
-     System.out.println("Nom-fichier = " + fileName);*/
+                 fileName = s.substring(//*s.lastIndexOf("/") + 1,
+                 s.length());
+              }
+              System.out.println("Type du contenu = " + contentType);
+              System.out.println("Contenu Disposition = " + disposition);
+              System.out.println("Taille = " + contentLength);
+              System.out.println("Nom-fichier = " + fileName);
          /**
-      Ouvrir le chemin d'entrée à partir de la connexion HTTP*/	            
-     InputStream inputStream = httpConn.getInputStream();
-     String saveFilePath = saveDir + File.separator + fileName;
+          Ouvrir le chemin d'entrée à partir de la connexion HTTP*/	            
+        InputStream inputStream = httpConn.getInputStream();
+        String saveFilePath = saveDir + File.separator + fileName;
+        
         /** Ouvre un flux de sortie pour enregistrer dans le fichier */
-     
-     FileOutputStream outputStream = new FileOutputStream(saveFilePath);
+         FileOutputStream outputStream = new FileOutputStream(saveFilePath);
 
      int bytesRead = -1;
      byte[] buffer = new byte[BUFFER_SIZE];
@@ -127,4 +137,5 @@ public class Article extends Recherche {
  httpConn.disconnect();
 }
 
+}
 }
