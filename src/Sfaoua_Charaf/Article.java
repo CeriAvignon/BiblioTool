@@ -1,4 +1,4 @@
-package net.codejava.networking;
+package Sfaoua_Charaf;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,70 +12,56 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public class Article extends Recherche {
+public class Article {
 	
-	
-    public static  ArrayList<String> Resultat = new ArrayList<>();
+       public static   ArrayList<String> Resultat = new ArrayList<>();
+       private static final int BUFFER_SIZE = 4096;
     
-	
-	private static final int BUFFER_SIZE = 4096;
-	
-	public Article(int id, String type, String nom, String url) {
-        super(id, type, nom, url);
-             }
-   
-   
-         public static List<String> recupurl(){
+    public Article() {
+           }
+    
+        public static List<String> recupurl(){
                try {
-   
-       Class.forName("com.mysql.jdbc.Driver");
+        Class.forName("com.mysql.jdbc.Driver");
      // on crée une connection du package java.sql		
           Connection conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/projetjava","root" ,"");
  
-      //création d'un objet preparedstatement pour une requette qui récupére les url 
-      //la requette sql 
-       String queryString = "select url from recherche";
+     //la requette sql 
+          String queryString = "select url from recherche";
        
        //création d'un objet preparedstatement pour une requette qui récupére les url 
+       
            Statement stm = conn.createStatement();
            ResultSet rs = stm.executeQuery(queryString);
            ResultSetMetaData res = rs.getMetaData();
- 
+  //Création d'une boucle pour parcourir la list 
             while(rs.next()) {
  	         for(int i = 1; i <=  res.getColumnCount(); i++)
  	              {
  	        	 //ajouter tous les urls sur la liste 
- 		Resultat.add("rs.getObject(i)");
- 		
-                  }
+ 		            Resultat.add(rs.getString(i));
+ 		            }
                         }
-         rs.close();
-         stm.close();
-              } catch (Exception e){}
- 	  
-           return(Resultat);
+            rs.close();
+            stm.close();
+             } catch (Exception e){}
+               
+ 	  return(Resultat);
          }
-
-   
-   /**
+    /**
 /**
 * @param URL du fichier a télécharger 
 * @param chemin du répértoire pour enregistre les fichier 
 * @throws IOException
 */
          
-     public static void downloadFile( List<String> array, String saveDir)
+     public static void downloadFile( String array, String saveDir)
               throws IOException {
     	 
-    	 Iterator<String> it = array.iterator();
-    	 
-    	 while (it.hasNext()) {
-    	       String s = it.next();
     	   /** cree une instance de URL qui pointe vers le lien * */
-               URL url = new URL(s) ;
+               URL url = new URL(array) ;
              
     	       /** ouvrir une connection http */
              HttpURLConnection httpConn = (HttpURLConnection)url.openConnection();
@@ -83,7 +69,7 @@ public class Article extends Recherche {
              int responseCode = httpConn.getResponseCode();
                 /** verification du code de réponse http */ 
  
-             if (responseCode == HttpURLConnection.HTTP_OK) {
+    if (responseCode == HttpURLConnection.HTTP_OK) {
               String fileName = "";
               String disposition = httpConn.getHeaderField("Content-Disposition");
               String contentType = httpConn.getContentType();
@@ -99,15 +85,15 @@ public class Article extends Recherche {
                      disposition.length() - 1);
                        }
                    } 
-     else {
+              else {
      	 /** extrait le nom de fichier de l'URL */
-                 fileName = s.substring(//*s.lastIndexOf("/") + 1,
-                 s.length());
-              }
-              System.out.println("Type du contenu = " + contentType);
-              System.out.println("Contenu Disposition = " + disposition);
-              System.out.println("Taille = " + contentLength);
-              System.out.println("Nom-fichier = " + fileName);
+                 fileName = array.substring(array.lastIndexOf("/") + 1,
+                 array.length());
+                   }
+         System.out.println("Type du contenu = " + contentType);
+         System.out.println("Contenu Disposition = " + disposition);
+         System.out.println("Taille = " + contentLength);
+         System.out.println("Nom-fichier = " + fileName);
          /**
           Ouvrir le chemin d'entrée à partir de la connexion HTTP*/	            
         InputStream inputStream = httpConn.getInputStream();
@@ -116,17 +102,18 @@ public class Article extends Recherche {
         /** Ouvre un flux de sortie pour enregistrer dans le fichier */
          FileOutputStream outputStream = new FileOutputStream(saveFilePath);
 
-     int bytesRead = -1;
-     byte[] buffer = new byte[BUFFER_SIZE];
+         int bytesRead = -1;
+          byte[] buffer = new byte[BUFFER_SIZE];
      
-     while ((bytesRead = inputStream.read(buffer)) != -1) {
-         outputStream.write(buffer, 0, bytesRead);
-     }
+          while ((bytesRead = inputStream.read(buffer)) != -1) 
+          {
+               outputStream.write(buffer, 0, bytesRead);
+          }
 
-     outputStream.close();
-     inputStream.close();
+            outputStream.close();
+            inputStream.close();
 
-     System.out.println("Fichier télécharger");
+           System.out.println("Fichier télécharger");
  } 
  else {
      System.out.println("Aucun fichier , Le serveur a répondu au code HTTP:  " + responseCode);
@@ -137,5 +124,5 @@ public class Article extends Recherche {
  httpConn.disconnect();
 }
 
-}
+    	 
 }
