@@ -19,7 +19,7 @@ import org.json.JSONObject;
 
 /**
  *
- * @author Mondher
+ * @author Sofien
  */
 public class SearchClass {
     String format;
