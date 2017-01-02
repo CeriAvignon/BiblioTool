@@ -3,21 +3,24 @@
 dblp.search.engine
 ************************
 
-Cette classe permet la recherche sur la base de donnée en ligne DBLP avec son propres API.
+Cette classe permet la recherche sur la base de donnÃ©e en ligne DBLP avec son propres API.
 
-*****Les entrées :
+*****Les entrÃ©es :
 
-     -Le nom d'auteur: La méthode public InputStream searchAuthor(String mot) permet
+     -Le nom d'auteur: La mÃ©thode public InputStream searchAuthor(String mot) permet
 de faire la recherche avec cette entrer.
 
-     -Un mot clé: La méthode public InputStream searchMotCle(String mot) permet
-de faire la recherche avec cette entrée
+     -Un mot clÃ©: La mÃ©thode public InputStream searchMotCle(String mot) permet
+de faire la recherche avec cette entrÃ©e
 
 *****Les sorties:
 
- Ce classe résulte 4 variables :
+ Ce classe rÃ©sulte 4 variables :
 
-  - Le nom d'auteur avec la méthode public String[] getAuthor(JSONObject obj)
-  - L'URL d'un article avec la Méthode public String getUrl(JSONObject obj)
-  - La date ou bien L'année du publication avec la méthode public String getYear(JSONObject obj)
-  - Le Titre de l'article avec la méthode public String getTitle(JSONObject obj)
+  - Le nom d'auteur avec la mÃ©thode public String[] getAuthor(JSONObject obj)
+  - L'URL d'un article avec la MÃ©thode public String getUrl(JSONObject obj)
+  - La date ou bien L'annÃ©e du publication avec la mÃ©thode public String getYear(JSONObject obj)
+  - Le Titre de l'article avec la mÃ©thode public String getTitle(JSONObject obj)
+
+Lybrery:
+org.json =====>  Lien pour le telechargement:http://www.java2s.com/Code/Jar/j/Downloadjsonsimple11jar.htm
