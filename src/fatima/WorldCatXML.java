@@ -1,4 +1,4 @@
-package searchingmodule.libraries.worldCat;
+package fatima;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,10 +12,7 @@ import javax.xml.parsers.DocumentBuilder;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-/**
- *
- * @author Cristi
- */
+
 public class WorldCatXML {
 
     public WorldCatXML(String xmlFile) {
@@ -29,12 +26,12 @@ public class WorldCatXML {
             BufferedWriter out = new BufferedWriter(fstream);
             // normalize text representation
             doc.getDocumentElement().normalize();
-            System.out.println("Root element of the doc is "
+            System.out.println("L'élément racine du document est "
                     + doc.getDocumentElement().getNodeName());
 
-            NodeList listOfBooks = doc.getElementsByTagName("entry");
+            NodeList listOfBooks = doc.getElementsByTagName("entre");
             int totalPersons = listOfBooks.getLength();
-            System.out.println("Total no of pubications/articles : " + totalPersons);
+            System.out.println("Nombre total de publications / articles : " + totalPersons);
             out.write("<site name=\"WorldCat\">\n");
             for (int s = 0; s < listOfBooks.getLength(); s++) {
 
@@ -87,15 +84,15 @@ public class WorldCatXML {
 
 
                     out.write("</book>\n");
-                }//end of if clause
+                }
 
 
-            }//end of for loop with s var
+            }
             out.write("</site>\n");
             out.close();
 
         } catch (SAXParseException err) {
-            System.out.println("** Parsing error" + ", line "
+            System.out.println("** Erreur d'analyse" + ", ligne "
                     + err.getLineNumber() + ", uri " + err.getSystemId());
             System.out.println(" " + err.getMessage());
 
@@ -107,5 +104,5 @@ public class WorldCatXML {
             t.printStackTrace();
         }
 
-    }//end of main
+    }
 }
