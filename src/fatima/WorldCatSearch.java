@@ -1,4 +1,4 @@
-package searchingmodule.libraries.worldCat;
+package fatima;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -6,23 +6,19 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- *
- * @author Cristian
- */
 public class WorldCatSearch {
 
     public WorldCatSearch(String author, String title, String output) {
          try {
             /*
-             * Get a connection to the URL and start up a buffered reader.
+             * Obtenir une connexion à l'URL et démarrer un lecteur tamponné.
              */
 
             /*
-             * The complete pattern for an OpenSearch request is:
-             * http://worldcat.org/webservices/catalog/search/opensearch?q=[query]&format=[atom|rss]&start=[start
-             * position]&count=[maximum number of records to
-             * return]&cformat=[citation format]&wskey=[your key]
+             * Le modèle complet d'une requête OpenSearch est:
+              * Http://worldcat.org/webservices/catalog/search/opensearch?q=[query]&format=[atom|rss]&start=[start
+              * Position] & count = [nombre maximum d'enregistrements à
+              * Return] & cformat = [format de citation] & wskey = [votre clé]
              */
             long startTime = System.currentTimeMillis();
 
@@ -39,8 +35,8 @@ public class WorldCatSearch {
             InputStream reader = url.openStream();
 
             /*
-             * Setup a buffered file writer to write out what we read from the
-             * website.
+            Configurer un graveur de fichier tampon pour écrire ce que nous lisons à partir du
+              * site Internet.
              */
             FileOutputStream writer = new FileOutputStream("WorldCatSearchOutput.xml");
             byte[] buffer = new byte[153600];
@@ -55,7 +51,7 @@ public class WorldCatSearch {
 
             long endTime = System.currentTimeMillis();
 
-            System.out.println("Done. " + (new Integer(totalBytesRead).toString()) + " bytes read (" + (new Long(endTime - startTime).toString()) + " millseconds).\n");
+            System.out.println("terminé. " + (new Integer(totalBytesRead).toString()) + "Octets lus(" + (new Long(endTime - startTime).toString()) + " millsecondes).\n");
             writer.close();
             reader.close();
 
