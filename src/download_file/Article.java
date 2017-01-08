@@ -1,4 +1,4 @@
-package Sfaoua_Charaf;
+package download_file;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,26 +21,25 @@ public class Article {
     
     public Article() {
            }
-    
         public static List<String> recupurl(){
                try {
         Class.forName("com.mysql.jdbc.Driver");
-     // on crée une connection du package java.sql		
+       /** on crée une connection du package java.sql	**/	
           Connection conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/projetjava","root" ,"");
  
-     //la requette sql 
+       /** la requette sql **/
           String queryString = "select url from recherche";
        
-       //création d'un objet preparedstatement pour une requette qui récupére les url 
+       /**création d'un objet preparedstatement pour une requette qui récupére les url **/
        
            Statement stm = conn.createStatement();
            ResultSet rs = stm.executeQuery(queryString);
            ResultSetMetaData res = rs.getMetaData();
-  //Création d'une boucle pour parcourir la list 
+       /**Création d'une boucle pour parcourir la list **/
             while(rs.next()) {
  	         for(int i = 1; i <=  res.getColumnCount(); i++)
  	              {
- 	        	 //ajouter tous les urls sur la liste 
+ 	        	 /**ajouter tous les urls sur la liste **/
  		            Resultat.add(rs.getString(i));
  		            }
                         }
@@ -57,9 +56,10 @@ public class Article {
 * @throws IOException
 */
          
-     public static void downloadFile( String array, String saveDir)
-              throws IOException {
+     public static void downloadFile( String array, String saveDir){
+             // throws IOException {
     	 
+    	    try {
     	   /** cree une instance de URL qui pointe vers le lien * */
                URL url = new URL(array) ;
              
@@ -70,11 +70,11 @@ public class Article {
                 /** verification du code de réponse http */ 
  
     if (responseCode == HttpURLConnection.HTTP_OK) {
-              String fileName = "";
-              String disposition = httpConn.getHeaderField("Content-Disposition");
-              String contentType = httpConn.getContentType();
+             String fileName = "";
+             String disposition = httpConn.getHeaderField("Content-Disposition");
+             String contentType = httpConn.getContentType();
             int contentLength = httpConn.getContentLength();
-
+            
                if (disposition != null) {
      	
               /** Extraire le nom de fichier sur l'en-tête */
@@ -122,7 +122,6 @@ public class Article {
   */
  
  httpConn.disconnect();
+   } catch (IOException e){}   	 
 }
-
-    	 
 }

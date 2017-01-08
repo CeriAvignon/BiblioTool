@@ -1,4 +1,4 @@
-package Sfaoua_Charaf;
+package download_file;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class Res {
 				 // System.out.println(f.get(i));
 			  Article.downloadFile(val,saveDir);
 			  
-			  }catch(IOException e){};
+			  }catch(Exception e){};
 			
 		}
 	}
