@@ -1,0 +1,119 @@
+package fr.bibliotool.modele;
+
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name="Article")
+
+public class Article {
+
+	private String titre;
+	private List<String> auteur; 
+	private int annee;
+	private String page;
+	private int volume;
+	private String journal;
+	private String url;
+	private List<String> references;
+	
+	public Article(){
+		
+	}
+	
+	public Article(String titre, List<String> auteur, int annee, String page, int volume, String journal, String url,
+			 List<String> references) {
+		this.titre = titre;
+		this.auteur = auteur;
+		this.annee = annee;
+		this.page = page;
+		this.volume = volume;
+		this.journal = journal;
+		this.url = url;
+		this.references = references;
+	}
+	public void AfficherArticle(){
+    	
+    	for(int i=0;i<this.getAuteur().size();i++){
+    		//System.out.println(getAuteur()[i]);
+    	}
+    
+    }
+    @XmlElement
+
+	public String getTitre() {
+		return titre;
+	}
+
+	public void setTitre(String titre) {
+		this.titre = titre;
+	}
+    @XmlElement
+
+	public List<String> getAuteur() {
+		return auteur;
+	}
+
+	public void setAuteur(List<String> auteur) {
+		this.auteur = auteur;
+	}
+    @XmlElement
+
+	public int getAnnee() {
+		return annee;
+	}
+
+	public void setAnnee(int annee) {
+		this.annee = annee;
+	}
+    @XmlElement
+
+	public String getPage() {
+		return page;
+	}
+
+	public void setPage(String page) {
+		this.page = page;
+	}
+    @XmlElement
+
+	public int getVolume() {
+		return volume;
+	}
+
+	public void setVolume(int volume) {
+		this.volume = volume;
+	}
+    @XmlElement
+
+	public String getJournal() {
+		return journal;
+	}
+
+	public void setJournal(String journal) {
+		this.journal = journal;
+	}
+    @XmlElement
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+    @XmlElement
+
+	public  List<String> getReferences() {
+		return references;
+	}
+
+	public void setReferences( List<String> references) {
+		this.references = references;
+	}
+
+	
+
+	
+}
