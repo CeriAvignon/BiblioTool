@@ -1,4 +1,4 @@
-package fr.bibliotool.modele;
+package test;
 
 import java.util.List;
 
@@ -8,6 +8,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name="Article")
 
 public class Article {
+
+	private int id;
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	private String titre;
 	private List<String> auteur; 
