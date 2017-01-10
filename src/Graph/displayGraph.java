@@ -67,7 +67,7 @@ public class displayGraph {
         ImportController importController = Lookup.getDefault().lookup(ImportController.class);
         Container container;
         try {
-            File file = new File(getClass().getResource("Java.gexf").toURI());
+            File file = new File(getClass().getResource("files_gexf/LesMiserables.gexf").toURI());
             container = importController.importFile(file);
         } catch (Exception ex) {
             ex.printStackTrace();
