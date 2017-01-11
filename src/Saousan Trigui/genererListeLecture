@@ -43,7 +43,7 @@ public class grapheBiblio extends DirectedGraph
 		}
 	
 	}
-	List genererListeLecture (){
+	List<Integer> genererListeLecture (){
 		initialiserScore();
 		attribuerScoreRacine();
 		attribuerScoreSelonNiveau(racine,0);
