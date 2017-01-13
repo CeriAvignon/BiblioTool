@@ -1,19 +1,25 @@
 package Gui_Nico;
 
-/**
- * 
- * @author Nicolas Duret
- * 
- * Class Window extended of JFrame
- * Allows to build instances of Window
- *
- */
-
 import javax.swing.JFrame;
 
+/**
+ * 
+ * Class Window extended of JFrame <br>
+ * Allows to build instances of Window
+ * 
+ * @author Nicolas Duret
+ *
+ */
 public class Window extends JFrame{
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Constructor of the class Window
+	 * <p>
+	 * This constructor will set the different options of the window and will build a Panel
+	 * </p>
+	 * 
+	 */
 	public Window(){
 		this.setTitle("GUI BiblioTool");
 		this.setSize(800,800);

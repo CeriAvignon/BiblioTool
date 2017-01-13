@@ -1,23 +1,29 @@
 package Gui_Nico;
 
-/**
- * 
- * @author Nicolas Duret
- * 
- * Class Panel extended of JPanel
- * Allows to build items in the contentPanel layer of the window
- *
- */
-
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.JPanel;
 
+/**
+ * 
+ * Class Panel extended of JPanel <br>
+ * Allows to build items in the contentPanel layer of the window
+ * 
+ * @author Nicolas Duret
+ *
+ */
 public class Panel extends JPanel{
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * This method will draw shapes and add listener to the mouse
+	 * 
+	 * @param graph
+	 * 				The object we'll use to draw
+	 * 
+	 */
 	public void paintComponent(Graphics graph){
 		int pos_x = this.getWidth()/4;
 		int pos_y = this.getHeight()/4;
