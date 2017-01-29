@@ -53,8 +53,8 @@ public class Window extends JFrame {
 	    this.setJMenuBar(new BibliotoolMenuBar(this));
 	    
 	    //add contain by default
-	    //this.setContentPane(MakeContaintDefault());
-	    this.setContentPane(onglets);
+	    this.MakeContaintDefault();
+	    //this.setContentPane(onglets);
 	    
 	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);            
 	    this.setVisible(true);
