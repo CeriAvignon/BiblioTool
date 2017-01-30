@@ -1,9 +1,9 @@
-package biblioTool;
+package changeStatusArticle;
 
 import java.awt.List;
 
-import biblioTool.Article;
-import biblioTool.ListArticles;
+import changeStatusArticle.Article;
+import changeStatusArticle.ListArticles;
 public class test {
 
 	public void changeStatusArticle(ListArticles a,int id_article){

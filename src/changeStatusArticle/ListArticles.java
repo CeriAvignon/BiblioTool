@@ -1,4 +1,4 @@
-package biblioTool;
+package changeStatusArticle;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;

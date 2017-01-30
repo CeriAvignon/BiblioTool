@@ -1,4 +1,3 @@
-package test;
 
 import java.util.List;
 
@@ -8,16 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name="Article")
 
 public class Article {
-
-	private int id;
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
+    private int id;
 	private String titre;
 	private List<String> auteur; 
 	private int annee;
@@ -26,13 +16,13 @@ public class Article {
 	private String journal;
 	private String url;
 	private List<String> references;
-	
+	private static int i=0;
 	public Article(){
-		
 	}
 	
-	public Article(String titre, List<String> auteur, int annee, String page, int volume, String journal, String url,
+	public Article(int id, String titre, List<String> auteur, int annee, String page, int volume, String journal, String url,
 			 List<String> references) {
+		this.id=id;
 		this.titre = titre;
 		this.auteur = auteur;
 		this.annee = annee;
@@ -42,6 +32,7 @@ public class Article {
 		this.url = url;
 		this.references = references;
 	}
+	
 	public void AfficherArticle(){
     	
     	for(int i=0;i<this.getAuteur().size();i++){
@@ -49,7 +40,16 @@ public class Article {
     	}
     
     }
-    @XmlElement
+	
+    public int getId() {
+		return this.id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	@XmlElement
 
 	public String getTitre() {
 		return titre;
@@ -121,7 +121,7 @@ public class Article {
 	public void setReferences( List<String> references) {
 		this.references = references;
 	}
-
+ 
 	
 
 	
