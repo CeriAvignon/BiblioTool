@@ -1,4 +1,4 @@
-package GUI;
+package graphical_interface;
 
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;

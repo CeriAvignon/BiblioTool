@@ -1,4 +1,4 @@
-package GUI;
+package graphical_interface;
 /*
 Copyright 2008-2010 Gephi
 Authors : Mathieu Bastian <mathieu.bastian@gephi.org>
@@ -37,7 +37,6 @@ import org.gephi.preview.types.DependantOriginalColor;
 import org.gephi.project.api.ProjectController;
 import org.gephi.project.api.Workspace;
 import org.openide.util.Lookup;
-
 import org.gephi.graph.api.*;
 import org.gephi.project.api.ProjectController;
 import org.gephi.project.api.Workspace;

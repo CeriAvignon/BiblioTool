@@ -1,4 +1,4 @@
-package GUI;
+package graphical_interface;
 
 import java.awt.Color;
 import java.awt.event.*;
