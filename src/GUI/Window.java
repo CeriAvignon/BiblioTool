@@ -35,12 +35,7 @@ public class Window extends JFrame {
 	boolean isLogIn = false;
 	
 	/**
-	 * The onglet 
-	 */
-	private JTabbedPane onglets = new JTabbedPane();
-	
-	/**
-	 * constructor to create window
+	 * constructor to create Window
 	 */
 	public Window(){
 	    this.setTitle("BiblioTool"); //title of apps
@@ -54,7 +49,6 @@ public class Window extends JFrame {
 	    
 	    //add contain by default
 	    this.MakeContaintDefault();
-	    //this.setContentPane(onglets);
 	    
 	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);            
 	    this.setVisible(true);
@@ -63,32 +57,30 @@ public class Window extends JFrame {
 	 
 
 	/**
+	 * To be change, update
 	 * @author audrey roumieux
-	 * @return pan
 	 * It call by MakeContaintLogIn() and change the user is logIn
 	 */
 	public void MakeContaintProfile(){
 		//check connection of profile 
-		
 		//If we are connect, we look this profile page
-		Window.this.isLogIn = true;
+		this.isLogIn = true;
  	   
  	   pan.removeAll();
+ 	   
  	   // to be change
- 	   Window.this.setLayout(new GridLayout(1,1)); 
- 	   Window.this.getContentPane().add(new JPanel().add(new JLabel("Page profil")));
+ 	   this.setLayout(new GridLayout(1,1)); 
+ 	   this.getContentPane().add(new JPanel().add(new JLabel("Page profil")));
  	   
 	}
 	
 	/**
 	 * @author audrey roumieux
 	 * @param menuBar
-	 * @return pan
-	 * It use by makeMenu() when we click on log in menu
+	 * It use to change the contain of the windows, when we click on "log in" menu
 	 */
 	public void MakeContaintLogIn(){
 	
-		System.out.println("value isLogIn in log-in "+this.isLogIn);
 		pan.removeAll();
 		
 		JButton LogInButton = new JButton("Log in");
@@ -113,8 +105,7 @@ public class Window extends JFrame {
 	/**
 	 * @author audrey roumieux
 	 * @param menuBar
-	 * @return pan
-	 * It use by makeMenu() when we click on sing up menu
+	 * It use to change the contain of the windows, when we click on "sing up" menu
 	 */
 	public void MakeContaintSign(){
 		
@@ -141,33 +132,32 @@ public class Window extends JFrame {
 	/**
 	 * @author audrey roumieux
 	 * @param menuBar
-	 * @return pan
-	 * It use by MakeContaintSearch() when we have the result of search
+	 * It use by MakeContaintSearch(), when we have the result of search
 	 */
 	public void MakeContaintResultSearch(){
 		pan.removeAll();
 		
- 	    /* to be change by graph result */
+ 	    /* to be change by graph result
 		this.setLayout(new GridLayout(2,3)); 
 		this.getContentPane().add(new JPanel().add(new JLabel("Graph result")));
-		/*
+		*/ 
 		displayGraph previewJFrame = new displayGraph();
 		previewJFrame.script("timeframe1.gexf");
 		this.getContentPane().add(previewJFrame);
-		*/
+		
 	}
 	
 	
 	/**
 	 * @author audrey roumieux
 	 * @param menuBar
-	 * @return pan
 	 * It use by makeMenu() when we click on search menu
 	 */
 	public void MakeContaintSearch(){
 		
 		pan.removeAll();
 		
+		/*
 		//to be change by the search form
 		JButton searchButton = new JButton("Search");
 		searchButton.setBounds(750, 250, 40, 10);
@@ -186,50 +176,17 @@ public class Window extends JFrame {
 		this.getContentPane().add(new JPanel().add(new JLabel("")));
 		this.getContentPane().add(new JPanel().add(searchButton));
 		
-		/*
-		this.setLayout(new GridLayout(1,1));
-		this.getContentPane().add(new Form());
 		*/
 		
+		this.setLayout(new GridLayout(1,1));
+		this.getContentPane().add(new Form());
+			
 	}
 	
 	/**
 	 * @author audrey roumieux
 	 * @param menuBar
-	 * @return pan
-	 * It use by makeMenu() when we click on search menu
-	 */
-	public void MakeContaintSearchPDF(){
-		
-		pan.removeAll();
-		//to be change by the search form
-		JButton searchButton = new JButton("Search");
-		searchButton.setBounds(750, 250, 40, 10);
-		searchButton.addActionListener(new ActionListener() {
-		       public void actionPerformed(ActionEvent ae){
-					Window.this.MakeContaintResultSearch();
-		       } 
-		    });
-		
-		//to be change by the search form
-		this.setLayout(new GridLayout(2,3)); 
-		this.getContentPane().add(new JPanel().add(new JLabel("Search Form with PDF")));
-		this.getContentPane().add(new JPanel().add(new JLabel("")));
-		this.getContentPane().add(new JPanel().add(new JLabel("")));
-		this.getContentPane().add(new JPanel().add(new JLabel("")));
-		this.getContentPane().add(new JPanel().add(new JLabel("")));
-		this.getContentPane().add(new JPanel().add(searchButton));
-		/*
-		this.setLayout(new GridLayout(1,1));
-		this.getContentPane().add(new Form());
-		*/
-	}
-	
-	/**
-	 * @author audrey roumieux
-	 * @param menuBar
-	 * @return pan
-	 * It use by makeMenu() when we click on help menu
+	 * It use to change the contain of the window when we click on help menu
 	 */
 	public void MakeContaintHelp(){
 		
@@ -244,8 +201,7 @@ public class Window extends JFrame {
 	
 	/**
 	 * @author audrey roumieux
-	 * @return Void
-	 * It use by the constructor or the log out menu for change contain by default
+	 * It use by the constructor or the "log out" menu for change the contain by default
 	 */
 	public void MakeContaintDefault(){
 		
@@ -255,8 +211,5 @@ public class Window extends JFrame {
 		label.setForeground(Color.blue); // change the color
 		pan.add(label);
 	} 
-	
-	
-	
 	
 }

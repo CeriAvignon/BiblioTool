@@ -13,8 +13,8 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
 /**
- * It use by the window for create the menu
- * @author Audrey Roumieux
+ * It use by the class Window for create the menu
+ * @author audrey roumieux
  *
  */
 public class BibliotoolMenuBar extends JMenuBar {
@@ -42,7 +42,7 @@ public class BibliotoolMenuBar extends JMenuBar {
 	 */
 	JMenu menuEdit = new JMenu("Edit");
 	JMenuItem menuSearch = new JMenuItem("Search");
-	JMenuItem menuSearchPDF = new JMenuItem("Search with PDF");
+	//JMenuItem menuSearchPDF = new JMenuItem("Search with PDF");
 	JMenuItem menuCopy = new JMenuItem("Copy");
 	JMenuItem menuPaste = new JMenuItem("Paste");
 	
@@ -54,6 +54,10 @@ public class BibliotoolMenuBar extends JMenuBar {
 	
 	Window window;
 	
+	/**
+	 * constructor to create the menu
+	 * @param window
+	 */
 	public BibliotoolMenuBar(Window window){
 		 this.window = window;
 		
@@ -87,12 +91,12 @@ public class BibliotoolMenuBar extends JMenuBar {
 			}
 		});
 		
+		/*
 		menuSearchPDF.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				window.MakeContaintSearchPDF();
 			}
-		});
-		
+		});*/
 		
 		menuAboutBibliotool.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -117,6 +121,10 @@ public class BibliotoolMenuBar extends JMenuBar {
 		  return false;
 		}
 	
+	/**
+	 * @author audrey roumieux
+	 *
+	 */
 	 class OpenD implements ActionListener {
 		    public void actionPerformed(ActionEvent e) {
 		      JFileChooser c = new JFileChooser();
@@ -124,6 +132,10 @@ public class BibliotoolMenuBar extends JMenuBar {
 		    }
 		  }
 	 
+	 /**
+	  * @author audrey roumieux
+	  *
+	  */
 	 class SaveD implements ActionListener {
 		    public void actionPerformed(ActionEvent e) {
 		      JFileChooser c = new JFileChooser();
@@ -134,13 +146,14 @@ public class BibliotoolMenuBar extends JMenuBar {
 	/**
 	 * @author audrey roumieux
 	 * @param menuBar
-	 * it use by makeMenu() for add all items in the menu
+	 * it use by the constructor for add all items in the menu
 	 */
 	private void addItemsToMenu(JMenuBar menuBar){
 
 		addIfNotPresent(menuBar, menuFile);
 		menuFileNewWindow.addActionListener(new ActionListener(){
 		      public void actionPerformed(ActionEvent arg0) {
+		    	  
 			  }        
 		});
 		menuFileNewWindow.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_MASK));
@@ -163,7 +176,7 @@ public class BibliotoolMenuBar extends JMenuBar {
 		
 		addIfNotPresent(menuBar, menuEdit);
 		menuEdit.add(menuSearch);
-		menuEdit.add(menuSearchPDF);
+		//menuEdit.add(menuSearchPDF);
 		menuEdit.addSeparator();
 		
 		menuEdit.add(menuCopy);
@@ -178,7 +191,7 @@ public class BibliotoolMenuBar extends JMenuBar {
 			 menuProfile.add(menuLogIn);
 		} 
 		else { 
-			menuProfile.removeAll(); /* menuProfile.remove(menuLogIn); */
+			menuProfile.removeAll();
 			menuProfile.add( menuLogOut);
 			
 		}
@@ -187,13 +200,9 @@ public class BibliotoolMenuBar extends JMenuBar {
 		addIfNotPresent(menuBar, menuHelp);
 		menuHelp.add(menuAboutBibliotool);
 		
-		//addIfNotPresent(menuBar, menuCERI);
-		
 		// For refresh the menu
 		validate();
 		repaint();
 	}
-	
-	
 	
 }
