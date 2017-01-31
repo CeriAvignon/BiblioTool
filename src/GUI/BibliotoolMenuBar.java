@@ -15,7 +15,6 @@ import javax.swing.KeyStroke;
 /**
  * It use by the class Window for create the menu
  * @author audrey roumieux
- *
  */
 public class BibliotoolMenuBar extends JMenuBar {
 
@@ -68,6 +67,7 @@ public class BibliotoolMenuBar extends JMenuBar {
  			  window.isLogIn = false;
  			  addItemsToMenu(BibliotoolMenuBar.this);
  			  window.MakeContaintDefault();
+ 			  
  		   }
  	   });
 		
@@ -75,6 +75,8 @@ public class BibliotoolMenuBar extends JMenuBar {
 			public void actionPerformed(ActionEvent e) {
 				addItemsToMenu(BibliotoolMenuBar.this);
 				window.MakeContaintLogIn();
+				validate();
+	 			repaint();
 			}
 		});
 		

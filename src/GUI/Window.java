@@ -48,6 +48,7 @@ public class Window extends JFrame {
 	    this.setJMenuBar(new BibliotoolMenuBar(this));
 	    
 	    //add contain by default
+	    this.setContentPane(pan);
 	    this.MakeContaintDefault();
 	    
 	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);            
@@ -57,7 +58,7 @@ public class Window extends JFrame {
 	 
 
 	/**
-	 * To be change, update
+	 * To be change, update if we create different profile
 	 * @author audrey roumieux
 	 * It call by MakeContaintLogIn() and change the user is logIn
 	 */
@@ -70,7 +71,7 @@ public class Window extends JFrame {
  	   
  	   // to be change
  	   this.setLayout(new GridLayout(1,1)); 
- 	   this.getContentPane().add(new JPanel().add(new JLabel("Page profil")));
+ 	   this.getContentPane().add(new JPanel().add(new JLabel("Page profile")));
  	   
 	}
 	
@@ -100,6 +101,8 @@ public class Window extends JFrame {
 		this.getContentPane().add(new JPanel().add(new JLabel("")));
 		this.getContentPane().add(new JPanel().add(LogInButton));
 		
+		this.getContentPane().revalidate();
+		
 	}
 	
 	/**
@@ -127,6 +130,7 @@ public class Window extends JFrame {
 		this.getContentPane().add(new JPanel().add(new JLabel("")));
 		this.getContentPane().add(new JPanel().add(SignButton));
 		
+		this.getContentPane().revalidate();
 	}
 	
 	/**
@@ -137,14 +141,18 @@ public class Window extends JFrame {
 	public void MakeContaintResultSearch(){
 		pan.removeAll();
 		
- 	    /* to be change by graph result
+		/* to be change by graph result
 		this.setLayout(new GridLayout(2,3)); 
 		this.getContentPane().add(new JPanel().add(new JLabel("Graph result")));
 		*/ 
+		
+		//to be change by the result of the graph  by text mining or web mining
+		String doc = "timeframe1.gexf";
 		displayGraph previewJFrame = new displayGraph();
-		previewJFrame.script("timeframe1.gexf");
+		previewJFrame.script(doc);
 		this.getContentPane().add(previewJFrame);
 		
+		this.getContentPane().revalidate();
 	}
 	
 	
@@ -172,15 +180,14 @@ public class Window extends JFrame {
 		this.getContentPane().add(new JPanel().add(new JLabel("Search Form")));
 		this.getContentPane().add(new JPanel().add(new JLabel("")));
 		this.getContentPane().add(new JPanel().add(new JLabel("")));
-		this.getContentPane().add(new JPanel().add(new JLabel("")));
-		this.getContentPane().add(new JPanel().add(new JLabel("")));
 		this.getContentPane().add(new JPanel().add(searchButton));
 		
 		*/
 		
 		this.setLayout(new GridLayout(1,1));
 		this.getContentPane().add(new Form());
-			
+		
+		this.getContentPane().revalidate();
 	}
 	
 	/**
@@ -195,7 +202,7 @@ public class Window extends JFrame {
 		// to be change by the explain Help
 		this.setLayout(new GridLayout(1,1)); 
 		this.getContentPane().add(new JPanel().add(new JLabel("Text of help")));
-		
+		this.getContentPane().revalidate();
 	}
 	
 	
@@ -210,6 +217,7 @@ public class Window extends JFrame {
 		label.setFont(police);
 		label.setForeground(Color.blue); // change the color
 		pan.add(label);
+		this.getContentPane().revalidate();
 	} 
 	
 }
