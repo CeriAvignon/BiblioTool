@@ -17,12 +17,13 @@ public class Article {
 	private String journal;
 	private String url;
 	private List<String> references;
+	private String statut;
 	private static int i=0;
 	public Article(){
 	}
 	
 	public Article(int id, String titre, List<String> auteur, int annee, String page, int volume, String journal, String url,
-			 List<String> references) {
+			 List<String> references, String statut) {
 		this.id=id;
 		this.titre = titre;
 		this.auteur = auteur;
@@ -32,6 +33,7 @@ public class Article {
 		this.journal = journal;
 		this.url = url;
 		this.references = references;
+		this.statut="false";
 	}
 	
 	public void AfficherArticle(){
@@ -50,6 +52,13 @@ public class Article {
 		this.id = id;
 	}
 
+	 public String getStatut() {
+		return this.statut;
+	}
+
+	public void setStatut(String statut) {
+		this.statut = statut;
+	}
 	@XmlElement
 
 	public String getTitre() {
