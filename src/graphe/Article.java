@@ -1,16 +1,16 @@
-package manipgraphe;
+package graphe;
 
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="Article")
+@XmlRootElement(name = "Article")
 
 public class Article {
-    private int id;
+	private int id;
 	private String titre;
-	private List<String> auteur; 
+	private List<String> auteur;
 	private int annee;
 	private String page;
 	private int volume;
@@ -18,13 +18,14 @@ public class Article {
 	private String url;
 	private List<String> references;
 	private String statut;
-	private static int i=0;
-	public Article(){
+	private static int i = 0;
+
+	public Article() {
 	}
-	
-	public Article(int id, String titre, List<String> auteur, int annee, String page, int volume, String journal, String url,
-			 List<String> references, String statut) {
-		this.id=id;
+
+	public Article(int id, String titre, List<String> auteur, int annee, String page, int volume, String journal,
+			String url, List<String> references, String statut) {
+		this.id = id;
 		this.titre = titre;
 		this.auteur = auteur;
 		this.annee = annee;
@@ -33,18 +34,18 @@ public class Article {
 		this.journal = journal;
 		this.url = url;
 		this.references = references;
-		this.statut="false";
+		this.statut = "false";
 	}
-	
-	public void AfficherArticle(){
-    	
-    	for(int i=0;i<this.getAuteur().size();i++){
-    		//System.out.println(getAuteur()[i]);
-    	}
-    
-    }
-	
-    public int getId() {
+
+	public void AfficherArticle() {
+
+		for (int i = 0; i < this.getAuteur().size(); i++) {
+			// System.out.println(getAuteur()[i]);
+		}
+
+	}
+
+	public int getId() {
 		return this.id;
 	}
 
@@ -52,13 +53,14 @@ public class Article {
 		this.id = id;
 	}
 
-	 public String getStatut() {
+	public String getStatut() {
 		return this.statut;
 	}
 
 	public void setStatut(String statut) {
 		this.statut = statut;
 	}
+
 	@XmlElement
 
 	public String getTitre() {
@@ -68,7 +70,8 @@ public class Article {
 	public void setTitre(String titre) {
 		this.titre = titre;
 	}
-    @XmlElement
+
+	@XmlElement
 
 	public List<String> getAuteur() {
 		return auteur;
@@ -77,7 +80,8 @@ public class Article {
 	public void setAuteur(List<String> auteur) {
 		this.auteur = auteur;
 	}
-    @XmlElement
+
+	@XmlElement
 
 	public int getAnnee() {
 		return annee;
@@ -86,7 +90,8 @@ public class Article {
 	public void setAnnee(int annee) {
 		this.annee = annee;
 	}
-    @XmlElement
+
+	@XmlElement
 
 	public String getPage() {
 		return page;
@@ -95,7 +100,8 @@ public class Article {
 	public void setPage(String page) {
 		this.page = page;
 	}
-    @XmlElement
+
+	@XmlElement
 
 	public int getVolume() {
 		return volume;
@@ -104,7 +110,8 @@ public class Article {
 	public void setVolume(int volume) {
 		this.volume = volume;
 	}
-    @XmlElement
+
+	@XmlElement
 
 	public String getJournal() {
 		return journal;
@@ -113,7 +120,8 @@ public class Article {
 	public void setJournal(String journal) {
 		this.journal = journal;
 	}
-    @XmlElement
+
+	@XmlElement
 
 	public String getUrl() {
 		return url;
@@ -122,17 +130,15 @@ public class Article {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-    @XmlElement
 
-	public  List<String> getReferences() {
+	@XmlElement
+
+	public List<String> getReferences() {
 		return references;
 	}
 
-	public void setReferences( List<String> references) {
+	public void setReferences(List<String> references) {
 		this.references = references;
 	}
- 
-	
 
-	
 }
