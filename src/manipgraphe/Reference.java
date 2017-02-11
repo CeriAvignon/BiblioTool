@@ -1,3 +1,4 @@
+package manipgraphe;
 
 public class Reference {
 	private int id;
