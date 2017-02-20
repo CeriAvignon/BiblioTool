@@ -38,7 +38,7 @@ public final class MyGraph {
 		}
 		
 		for (Reference reference : references) {
-			System.out.println(reference.getTarget());
+			//System.out.println(reference.getTarget());
 			Edge e1 = graphModel.factory().newEdge(directedGraph.getNode(String.valueOf(reference.getSource())),
 					directedGraph.getNode(String.valueOf(reference.getTarget())), 0, 1.0, true);
 			directedGraph.addEdge(e1);
@@ -48,6 +48,23 @@ public final class MyGraph {
 	}
 	
 	
+	public static List<Article> getArticles() {
+		return articles;
+	}
+
+	public static void setArticles(List<Article> articles) {
+		MyGraph.articles = articles;
+	}
+
+	public static List<Reference> getReferences() {
+		return references;
+	}
+
+	public static void setReferences(List<Reference> references) {
+		MyGraph.references = references;
+	}
+
+	// methode implementee par le groupe web-mining
 	public static List<Article> retournerListeArticles() {
 		List<Article> articles = new ArrayList<Article>();
 		for (int i = 0; i < 6; i++) {
@@ -59,6 +76,7 @@ public final class MyGraph {
 		return articles;
 	}
 
+	// methode implementee par le groupe web-mining
 	public static List<Reference> ListeReference() {
 		List<Reference> references = new ArrayList<Reference>();
 		for (int i = 1; i <= 5; i++) {
