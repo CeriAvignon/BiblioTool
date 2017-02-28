@@ -22,5 +22,6 @@ public class Window extends JFrame{
 		this.setVisible(true);
 
 		this.setContentPane(new Panel()); //build a Panel
+
 	}
 }
