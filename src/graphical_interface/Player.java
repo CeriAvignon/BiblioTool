@@ -42,6 +42,16 @@ public class Player implements MouseMotionListener
 			desktop.add(newwindow);
 			newwindow.moveToFront();*/
 			
+			final JDesktopPane desktop = new JDesktopPane();
+			
+			final JInternalFrame newwindow = new JInternalFrame("internal window", true, true, true, true);
+			newwindow.dispose();
+			newwindow.setVisible(true);
+			newwindow.setSize(300,240);
+			newwindow.setMinimumSize(new Dimension(300,240));
+			desktop.add(newwindow);
+			newwindow.moveToFront();
+			
 			System.out.println("oui");
 		}
 	}
