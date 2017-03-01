@@ -1,6 +1,7 @@
 package graphical_interface;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,9 +23,9 @@ import javax.swing.JPanel;
 
 public class Main {
 	public static void main(String[] args) {
-		//Window window = new Window();
-		//window.getClass();
-		JFrame window = new JFrame("Internal Frames"); 
+		Window window = new Window();
+		window.getClass();
+		/*JFrame window = new JFrame("Internal Frames"); 
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 		final JDesktopPane desktop = new JDesktopPane(); 
 		JPanel top = new JPanel(); 
@@ -55,5 +56,7 @@ public class Main {
 		window.setSize(500, 500); 
 		window.setVisible(true); 
 		window.setLocationRelativeTo(null);
+		*/
+		window.setBackground(Color.GRAY);
 	}
 }
