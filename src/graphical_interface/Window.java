@@ -146,10 +146,7 @@ public class Window extends JFrame {
 		*/ 
 		
 		//to be change by the result of the graph  by text mining or web mining
-		String doc = "timeframe1.gexf";
-		displayGraph previewJFrame = new displayGraph();
-		previewJFrame.script(doc);
-		this.getContentPane().add(previewJFrame);
+		
 		
 		this.getContentPane().revalidate();
 	}
