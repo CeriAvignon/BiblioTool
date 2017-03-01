@@ -2,6 +2,7 @@ package graphical_interface;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -138,21 +139,26 @@ public class Window extends JFrame {
 	 * It use by MakeContaintSearch(), when we have the result of search
 	 */
 	public void MakeContaintResultSearch(){
+		System.out.println("lololol");
 		pan.removeAll();
-		
+		Panel pane = new Panel();
 		/* to be change by graph result
 		this.setLayout(new GridLayout(2,3)); 
 		this.getContentPane().add(new JPanel().add(new JLabel("Graph result")));
 		*/ 
 		
 		//to be change by the result of the graph  by text mining or web mining
-		String doc = "timeframe1.gexf";
+		/*String doc = "LesMiserables.gexf";
 		displayGraph previewJFrame = new displayGraph();
 		previewJFrame.script(doc);
-		this.getContentPane().add(previewJFrame);
+		this.getContentPane().add(previewJFrame);*/
 		
-		this.getContentPane().revalidate();
+		this.setContentPane(pane);
+		this.setVisible(true);
+		
+		
 	}
+	
 	
 	
 	/**
@@ -164,7 +170,7 @@ public class Window extends JFrame {
 		
 		pan.removeAll();
 		
-		/*
+		
 		//to be change by the search form
 		JButton searchButton = new JButton("Search");
 		searchButton.setBounds(750, 250, 40, 10);
@@ -181,11 +187,11 @@ public class Window extends JFrame {
 		this.getContentPane().add(new JPanel().add(new JLabel("")));
 		this.getContentPane().add(new JPanel().add(searchButton));
 		
-		*/
 		
-		this.setLayout(new GridLayout(1,1));
+		
+		/*this.setLayout(new GridLayout(1,1));
 		this.getContentPane().add(new Form());
-		
+		*/
 		this.getContentPane().revalidate();
 	}
 	
