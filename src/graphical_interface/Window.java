@@ -21,7 +21,7 @@ public class Window extends JFrame{
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //enable the close button
 		this.setVisible(true);
 
-		this.setContentPane(new Panel()); //build a Panel
+		this.setContentPane(new Panel(this)); //build a Panel
 
 	}
 }

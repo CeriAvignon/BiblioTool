@@ -18,7 +18,12 @@ import javax.swing.JPanel;
 public class Panel extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private Ellipse2D.Float oval;
+	public Window window;
 
+	public Panel(Window window){
+		this.window = window;
+	}
+	
 	public void paintComponent(Graphics graph){
 		Graphics2D g2 = (Graphics2D) graph;
 		int pos_x = this.getWidth()/4;
@@ -32,6 +37,7 @@ public class Panel extends JPanel{
 		
 		Player player = new Player(this); 				//build instance of Player with the actual instance
 		this.addMouseMotionListener(player); 			//make a mouse motion listener which will catch the motion of the mouse
+		
 	}
 	
 	public Ellipse2D.Float getOval() {
