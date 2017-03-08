@@ -1,6 +1,7 @@
 package graphical_interface;
-
+import javax.swing.*;
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -9,18 +10,26 @@ import java.awt.event.MouseWheelListener;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import org.gephi.graph.api.GraphController;
+import org.gephi.graph.api.Node;
+import org.gephi.graph.api.Edge;
 import org.gephi.preview.api.G2DTarget;
 import org.gephi.preview.api.PreviewController;
 import org.gephi.preview.api.PreviewMouseEvent;
+import org.gephi.preview.api.PreviewProperties;
 import org.gephi.preview.api.Vector;
+import org.gephi.project.api.ProjectController;
+import org.gephi.project.api.Workspace;
 import org.openide.util.Lookup;
+import java.util.ArrayList;
 
 /**
  *
  * @author mbastian
  */
+
 public class PreviewSketch extends JPanel implements MouseListener, MouseWheelListener, MouseMotionListener {
 
     private static final int WHEEL_TIMER = 500;
@@ -35,7 +44,9 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
     private Timer wheelTimer;
     private boolean inited;
     private final boolean isRetina;
-
+    private ArrayList hideNode;
+    private ArrayList hideEdges;
+    
     public PreviewSketch(G2DTarget target) {
         this.target = target;
         previewController = Lookup.getDefault().lookup(PreviewController.class);
@@ -70,13 +81,41 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (previewController.sendMouseEvent(buildPreviewMouseEvent(e, PreviewMouseEvent.Type.CLICKED))) {
+        PreviewMouseEvent tmpPME=buildPreviewMouseEvent(e, PreviewMouseEvent.Type.CLICKED);
+        MouseListenerTemplate test=new MouseListenerTemplate();
+        ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+        Workspace workspace = pc.getCurrentWorkspace();
+
+        for (Node node : Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace).getGraph().getNodes()) {
+        	if(test.clickingInNode(node,tmpPME)){
+        		// si on click sur un noeud, il affiche le popup menu
+        		//RightClickMenu rcmenu=new RightClickMenu(this,node);
+	    		JPopupMenu popup = new JPopupMenu();
+	    		JMenuItem mntmHide = new JMenuItem("Masquer ce noeud");
+	    		popup.add(mntmHide);
+	            popup.show(e.getComponent(), e.getX(), e.getY());
+	    		mntmHide.addActionListener( new ActionListener()
+	    		{
+	    		    public void actionPerformed(ActionEvent e)
+	    		    {
+	    		    	hideNode(node);
+	    	        	tmpPME.setConsumed(true);
+	    	        	return;
+	    		    }
+	    		});
+	        	System.out.println("on the node " + node.getLabel());
+        	} 
+	
+        }
+
+        if (previewController.sendMouseEvent(tmpPME)) {
             refreshLoop.refreshSketch();
         }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
+    	
         previewController.sendMouseEvent(buildPreviewMouseEvent(e, PreviewMouseEvent.Type.PRESSED));
         ref.set(e.getX(), e.getY());
         lastMove.set(target.getTranslate());
@@ -86,12 +125,14 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (!previewController.sendMouseEvent(buildPreviewMouseEvent(e, PreviewMouseEvent.Type.RELEASED))) {
+        PreviewMouseEvent tmpPME=buildPreviewMouseEvent(e, PreviewMouseEvent.Type.RELEASED);
+        if (!previewController.sendMouseEvent(tmpPME)) {
             setMoving(false);
         }
 
         refreshLoop.refreshSketch();
     }
+
 
     @Override
     public void mouseEntered(MouseEvent e) {
@@ -188,6 +229,37 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
         return new PreviewMouseEvent((int) pos.x, (int) pos.y, type, button, null);
     }
 
+    /**
+     * @author Yang Shuai
+     * This function allow to hide a node and those edges.
+     * can be used for the function redisplayHideNode(Node node);
+     */
+    
+    public void hideNode(Node node)
+    {
+    	try
+    	{
+  	  	  ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+	      Workspace workspace = pc.getCurrentWorkspace();
+	      for (Node n : Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace).getGraph().getNodes()) {   
+	    	  if(n==node)
+	    	  {
+              	System.out.println(n.getLabel());
+	    	  }
+	      }
+	      for (Edge edge : Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace).getGraph().getEdges()) {   
+	    	  if(edge.getSource().getId() == node.getId() || edge.getTarget().getId() ==node.getId() )
+	    	  {
+              	System.out.println(edge.getSource().getLabel() + " " +edge.getTarget().getLabel());
+	    	  }
+	      }
+    		
+    	}catch(Exception ex){
+    		System.out.println("Cannot find this node.");
+    	}
+	
+    }
+    
     private class RefreshLoop {
 
         private final long DELAY = 100;
@@ -232,3 +304,5 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
         }
     }
 }
+
+
