@@ -145,7 +145,7 @@ public class displayGraph extends JFrame{
 
     public static void main(String[] args) {
     	displayGraph previewJFrame = new displayGraph();
-        previewJFrame.script("timeframe1.gexf");
+        previewJFrame.script("LesMiserables.gexf");
         
     }
     
