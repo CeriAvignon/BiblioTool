@@ -21,5 +21,10 @@ public class ManipulateGraph {
 		
 		System.out.println("Nodes: " + dg.getNodeCount() + " Edges: " + dg.getEdgeCount());
 		
+		
+		
+		
+		
+		
 	}
 }

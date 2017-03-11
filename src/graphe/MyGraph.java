@@ -3,6 +3,7 @@ package graphe;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.gephi.graph.api.Column;
 import org.gephi.graph.api.DirectedGraph;
 import org.gephi.graph.api.Edge;
 import org.gephi.graph.api.GraphController;
@@ -17,24 +18,49 @@ public final class MyGraph {
 	
 	public static List<Article> articles;
 	public static List<Reference> references;
-	
+	public static GraphModel graphModel;
 	private MyGraph() { }
+	
+	public static Column idArt, titleArt, author, doi, pubYear, numPage, nbPage, numVol, numIssue, journal, urlArt, ref, status;
 	
 	public static DirectedGraph createDirectedGraph(){
 		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
 		pc.newProject();
 		Workspace workspace = pc.getCurrentWorkspace();
 		
-		GraphModel graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
+		
+		
+		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
 		DirectedGraph directedGraph = graphModel.getDirectedGraph();
+		createColumns();
 		
 		articles = retournerListeArticles();
 		references = ListeReference();
 		
+		
 		for (Article article : articles) {
-			Node n0 = graphModel.factory().newNode(String.valueOf(article.getId()));
-			n0.setLabel(article.getTitre());
+			Node n0 = graphModel.factory().newNode(String.valueOf(article.getIdArt()));
+			n0.setLabel(article.getTitleArt());
+			n0.setAttribute(idArt, article.getIdArt());
+			n0.setAttribute(pubYear, article.getPubYear());
+			n0.setAttribute(author, article.getAuthor());
+			n0.setAttribute(titleArt, article.getTitleArt());
+			n0.setAttribute(doi, article.getDoi());
+			n0.setAttribute(numPage, article.getNumPage());
+			n0.setAttribute(nbPage, article.getNbPage());
+			n0.setAttribute(numVol, article.getNumVol());
+			n0.setAttribute(numIssue, article.getNumIssue());
+			n0.setAttribute(journal, article.getJournal());
+			n0.setAttribute(urlArt, article.getUrlArt());
+			n0.setAttribute(ref, article.getReferences());
+			n0.setAttribute(status, article.getStatus());
+			
 			directedGraph.addNode(n0);
+		}
+		
+		System.out.println("les attributs du node sont :");
+		for (Column col : graphModel.getNodeTable()) {
+            System.out.println(col);
 		}
 		
 		for (Reference reference : references) {
@@ -47,6 +73,22 @@ public final class MyGraph {
 		return directedGraph;
 	}
 	
+	public static void createColumns(){
+		
+		idArt = graphModel.getNodeTable().addColumn("id_Article", Integer.class);
+		titleArt = graphModel.getNodeTable().addColumn("title_Article", String.class);
+		author = graphModel.getNodeTable().addColumn("authors", String.class);
+		doi = graphModel.getNodeTable().addColumn("doi", String.class);
+		pubYear = graphModel.getNodeTable().addColumn("pub_Year", Integer.class);
+		numPage = graphModel.getNodeTable().addColumn("num_Page", Integer.class);
+		nbPage = graphModel.getNodeTable().addColumn("nb_Page", Integer.class);
+		numVol = graphModel.getNodeTable().addColumn("num_Volume", Integer.class);
+		numIssue = graphModel.getNodeTable().addColumn("num_Issue", Integer.class);
+		journal = graphModel.getNodeTable().addColumn("journal", String.class);
+		urlArt = graphModel.getNodeTable().addColumn("url_Article", String.class);
+		ref = graphModel.getNodeTable().addColumn("reference", Integer.class);
+		status = graphModel.getNodeTable().addColumn("status", Boolean.class);
+	}
 	
 	public static List<Article> getArticles() {
 		return articles;
@@ -69,8 +111,8 @@ public final class MyGraph {
 		List<Article> articles = new ArrayList<Article>();
 		for (int i = 0; i < 6; i++) {
 			Article art = new Article();
-			art.setId(i + 1);
-			art.setTitre("article" + (i + 1));
+			art.setIdArt(i + 1);
+			art.setTitleArt("article" + (i + 1));
 			articles.add(art);
 		}
 		return articles;
