@@ -129,4 +129,9 @@ public final class MyGraph {
 		}
 		return references;
 	}
+	public static void createGrapheNode(){
+		// liste d noeuds et liste des references
+		
+		
+	} 
 }
