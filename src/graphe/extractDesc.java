@@ -30,7 +30,6 @@ public class extractDesc {
 		DirectedGraph directedGraph = graph.createDirectedGraph();		
 		System.out.println("la densité est de "+ calculateDensity(directedGraph));	
 		calculateDiameter(directedGraph);
-		exportGraph();
 	}
 	public static double calculateDensity(Graph graph){
         GraphDensity d = new GraphDensity();
@@ -64,35 +63,7 @@ public class extractDesc {
 		}
     	System.out.println(d.getReport());
 	}	
-	   public static void exportGraph(){
-			 //Export full graph gexf
-			   ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
-			   Workspace workspace = pc.getCurrentWorkspace();
-			   ExportController ec = Lookup.getDefault().lookup(ExportController.class);
-			   try {
-			       ec.exportFile(new File("graphe.gexf"));
-			   } catch (IOException ex) {
-			       ex.printStackTrace();
-			       return;
-			   }
-			  
-			   //Export GML
-		        Exporter exporterGraphML = ec.getExporter("graphml");     //Get GraphML exporter
-		        exporterGraphML.setWorkspace(workspace);
-		        StringWriter stringWriter = new StringWriter();
-		        ec.exportWriter(stringWriter, (CharacterExporter) exporterGraphML);
-
-		        FileWriter fw = null;
-		        try {
-		            fw = new FileWriter("graphe.graphml");
-		            fw.write(stringWriter.toString());
-		            fw.close();
-		            System.out.println("done");
-		        } catch (IOException e) {
-		            e.printStackTrace();
-		        }
-		   }
-
+	 
 	
 
 
