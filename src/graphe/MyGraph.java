@@ -9,7 +9,6 @@ import org.gephi.graph.api.Edge;
 import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphModel;
 import org.gephi.graph.api.Node;
-import org.gephi.graph.impl.GraphModelImpl;
 import org.gephi.project.api.ProjectController;
 import org.gephi.project.api.Workspace;
 import org.openide.util.Lookup;
@@ -28,15 +27,12 @@ public final class MyGraph {
 		pc.newProject();
 		Workspace workspace = pc.getCurrentWorkspace();
 		
-		
-		
 		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
 		DirectedGraph directedGraph = graphModel.getDirectedGraph();
 		createColumns();
 		
 		articles = retournerListeArticles();
 		references = ListeReference();
-		
 		
 		for (Article article : articles) {
 			Node n0 = graphModel.factory().newNode(String.valueOf(article.getIdArt()));
@@ -52,19 +48,18 @@ public final class MyGraph {
 			n0.setAttribute(numIssue, article.getNumIssue());
 			n0.setAttribute(journal, article.getJournal());
 			n0.setAttribute(urlArt, article.getUrlArt());
-			n0.setAttribute(ref, article.getReferences());
+			//n0.setAttribute(ref, article.getReferences());
 			n0.setAttribute(status, article.getStatus());
 			
 			directedGraph.addNode(n0);
 		}
 		
 		System.out.println("les attributs du node sont :");
-		for (Column col : graphModel.getNodeTable()) {
-            System.out.println(col);
+			for (Column col : graphModel.getNodeTable()) {
+			System.out.println(col);
 		}
-		
+			
 		for (Reference reference : references) {
-			//System.out.println(reference.getTarget());
 			Edge e1 = graphModel.factory().newEdge(directedGraph.getNode(String.valueOf(reference.getSource())),
 					directedGraph.getNode(String.valueOf(reference.getTarget())), 0, 1.0, true);
 			directedGraph.addEdge(e1);
