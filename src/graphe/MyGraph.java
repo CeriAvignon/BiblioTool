@@ -129,4 +129,11 @@ public final class MyGraph {
 		}
 		return references;
 	}
+	public void changeStatusArticl(Node a) {
+		
+		a.setAttribute(status,true);
+		int id= Integer.parseInt((String) a.getId());
+	  // setStatus(id); methode de web mining 
+	}
+	
 }
