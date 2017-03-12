@@ -1,5 +1,9 @@
 package graphe;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,21 +15,22 @@ import org.gephi.graph.api.Graph;
 import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphModel;
 import org.gephi.graph.api.Node;
+import org.gephi.io.exporter.api.ExportController;
+import org.gephi.io.exporter.spi.CharacterExporter;
+import org.gephi.io.exporter.spi.Exporter;
 import org.gephi.project.api.ProjectController;
 import org.gephi.project.api.Workspace;
 import org.gephi.statistics.plugin.GraphDensity;
 import org.gephi.statistics.plugin.GraphDistance;
 import org.openide.util.Lookup;
-
-
 public class extractDesc {
     private static MyGraph graph;
-
 	public static void main(String[] args) {
 		double density;
 		DirectedGraph directedGraph = graph.createDirectedGraph();		
 		System.out.println("la densité est de "+ calculateDensity(directedGraph));	
 		calculateDiameter(directedGraph);
+		exportGraph();
 	}
 	public static double calculateDensity(Graph graph){
         GraphDensity d = new GraphDensity();
@@ -59,6 +64,34 @@ public class extractDesc {
 		}
     	System.out.println(d.getReport());
 	}	
+	   public static void exportGraph(){
+			 //Export full graph gexf
+			   ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+			   Workspace workspace = pc.getCurrentWorkspace();
+			   ExportController ec = Lookup.getDefault().lookup(ExportController.class);
+			   try {
+			       ec.exportFile(new File("graphe.gexf"));
+			   } catch (IOException ex) {
+			       ex.printStackTrace();
+			       return;
+			   }
+			  
+			   //Export GML
+		        Exporter exporterGraphML = ec.getExporter("graphml");     //Get GraphML exporter
+		        exporterGraphML.setWorkspace(workspace);
+		        StringWriter stringWriter = new StringWriter();
+		        ec.exportWriter(stringWriter, (CharacterExporter) exporterGraphML);
+
+		        FileWriter fw = null;
+		        try {
+		            fw = new FileWriter("graphe.graphml");
+		            fw.write(stringWriter.toString());
+		            fw.close();
+		            System.out.println("done");
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }
+		   }
 
 	
 
