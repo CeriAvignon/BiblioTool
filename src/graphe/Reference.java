@@ -40,5 +40,7 @@ public class Reference {
 	public Reference() {
 		super();
 	}
-
+	public void afficher() {
+	    System.out.println("source : " +source+ ", target : " +target);
+	}
 }

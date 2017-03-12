@@ -52,16 +52,11 @@ public final class MyGraph {
 			n0.setAttribute(numIssue, article.getNumIssue());
 			n0.setAttribute(journal, article.getJournal());
 			n0.setAttribute(urlArt, article.getUrlArt());
-			n0.setAttribute(ref, article.getReferences());
 			n0.setAttribute(status, article.getStatus());
 			
 			directedGraph.addNode(n0);
 		}
-		
-		System.out.println("les attributs du node sont :");
-		for (Column col : graphModel.getNodeTable()) {
-            System.out.println(col);
-		}
+	
 		
 		for (Reference reference : references) {
 			//System.out.println(reference.getTarget());
@@ -71,6 +66,13 @@ public final class MyGraph {
 		}
 		
 		return directedGraph;
+	}
+	
+	public void changeStatusArticle(Node a) {
+		
+		a.setAttribute(status,true);
+		int id= Integer.parseInt((String) a.getId());
+	  // setStatus(id); methode de web mining 
 	}
 	
 	public static void createColumns(){
@@ -108,11 +110,18 @@ public final class MyGraph {
 
 	// methode implementee par le groupe web-mining
 	public static List<Article> retournerListeArticles() {
+		
 		List<Article> articles = new ArrayList<Article>();
 		for (int i = 0; i < 6; i++) {
+			Reference a=new Reference();
+			List<Reference> references = new ArrayList<Reference>();
 			Article art = new Article();
+			a.setId(i+1);
+			a.setSource(i+1);
+			references.add(a);
 			art.setIdArt(i + 1);
 			art.setTitleArt("article" + (i + 1));
+			art.setReferences(references);
 			articles.add(art);
 		}
 		return articles;
@@ -128,5 +137,42 @@ public final class MyGraph {
 			references.add(ref);
 		}
 		return references;
+	}
+	
+	public static List<Node> returnlistenode(){
+		DirectedGraph dg = createDirectedGraph();
+		List<Node> ln = new ArrayList<>();
+		int j = 1;
+		for (Node node : dg.getNodes()) {
+			if (j<4) {
+				ln.add(node);
+				j++;
+			}
+			
+		}
+		return ln ;
+	}
+	//test (cette fonction pour recuperer les données de la base de données)
+	static List<Reference> refList(int id_article){
+		List<Reference> listRef=new ArrayList<Reference>();
+		List<Article> listArticl =retournerListeArticles();
+		for(Article a:listArticl){
+			if(a.getIdArt()==id_article){
+				listRef=a.getReferences();	}
+		}
+	return listRef;
+	}
+
+	// methode pour determiner les réferences des noeuds selectionneé
+	static List<Reference> exportRef(List<Node> ListOfNode){
+	 List<Reference> listRef=new ArrayList<Reference>();
+	 for (Node node:ListOfNode){
+		 int id= Integer.parseInt((String) node.getId());
+		  List<Reference> ListBD=refList(id); 
+		for (Reference ref:ListBD){
+			listRef.add(ref);
+		}
+	 }
+	return listRef;
 	}
 }
