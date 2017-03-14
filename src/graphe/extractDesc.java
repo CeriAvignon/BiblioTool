@@ -28,9 +28,11 @@ public class extractDesc {
 	public static void main(String[] args) {
 		double density;
 		DirectedGraph directedGraph = graph.createDirectedGraph();		
-		System.out.println("la densité est de "+ calculateDensity(directedGraph));	
-		calculateDiameter(directedGraph);
+		//System.out.println("la densité est de "+ calculateDensity(directedGraph));	
+		//calculateDiameter(directedGraph);
+		extractDesc(directedGraph);
 	}
+	
 	public static double calculateDensity(Graph graph){
         GraphDensity d = new GraphDensity();
         double density = d.calculateDensity(graph, false);
@@ -46,11 +48,8 @@ public class extractDesc {
 		//la distance depuis un noeud de départ vers le noeud le plus loin dans le réseau
 	    double[] eccentricity;
         GraphDistance d = new GraphDistance();
-        // créer un map d'indicies
+        // créer un map d'indicies pour chaque node on associe une valeur
         HashMap<Node, Integer> indicies = d.createIndiciesMap(graph);   
-        for (Integer val : indicies.values()) {
-          System.out.println(val);
-        }
         Map<String, double[]> metrics1 = d.calculateDistanceMetrics(graph, indicies, true, false);
         eccentricity = metrics1.get(d.ECCENTRICITY);
         closeness = metrics1.get(d.CLOSENESS);
@@ -63,6 +62,36 @@ public class extractDesc {
 		}
     	System.out.println(d.getReport());
 	}	
+	
+	public static double[] extractDesc(Graph graph){
+		 double[] descriptor = new double[4];
+		 GraphDensity gd = new GraphDensity();
+	     double density = gd.calculateDensity(graph, false);
+		 descriptor[0]= density;
+		//MESURE LA fréquence d'apparition d'un noeud sur les plus courts chemins entre les noeuds du réseau
+		 double[] betweenness;
+		 //la distance moyenne depuis un noeud de départ vers tous les noeuds du réseau
+		 double[] closeness;
+		 double[] harmonicCloseness;
+		 //la distance depuis un noeud de départ vers le noeud le plus loin dans le réseau
+		 double[] eccentricity;
+	     GraphDistance d = new GraphDistance();
+	     // créer un map d'indicies
+	     HashMap<Node, Integer> indicies = d.createIndiciesMap(graph);   
+	     for (Integer val : indicies.values()) {
+	          System.out.println(val);
+	     }
+	     Map<String, double[]> metrics1 = d.calculateDistanceMetrics(graph, indicies, true, false);
+	     eccentricity = metrics1.get(d.ECCENTRICITY);
+	     closeness = metrics1.get(d.CLOSENESS);
+	     harmonicCloseness = metrics1.get(d.HARMONIC_CLOSENESS);
+	     betweenness = metrics1.get(d.BETWEENNESS);
+	     System.out.println("le rayon est de "+ d.getRadius());
+	     System.out.println("le diamètre est de "+ d.getDiameter());
+	     descriptor[1]=d.getDiameter();
+	     descriptor[2]=d.getRadius();
+	     return descriptor;
+	}
 	
 	
 
