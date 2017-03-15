@@ -26,7 +26,7 @@ public class TextMining {
 	public static Article processPdf(String pdf)
 	{
 		Article a = new Article();
-		Meta_Donnes meta=new Meta_Donnes(pdf);
+		MetaDonnees meta=new MetaDonnees(pdf);
 		
 		//Récupérer les meta d'une classe à part (Décider de l'API (itextpdf,clownPDF ou ..?))
 		

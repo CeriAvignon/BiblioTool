@@ -11,7 +11,7 @@ import com.itextpdf.text.pdf.PdfReader;
 
 // Pourquoi pas utiliser la classe TextMining et Article directement ?
 
-public class Meta_Donnes {
+public class MetaDonnees {
 	public String titre = null;
 	public  String auteur = null;
 	public  String date = null;
@@ -19,7 +19,7 @@ public class Meta_Donnes {
 	public  String sujet = null;
 	public  int nbrpage , nbrdonnees;
 
-	public Meta_Donnes(String f){
+	public MetaDonnees(String f){
 		
 		Fichier(f);
 		
