@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.gephi.graph.api.*;
-import org.gephi.graph.api.Edge;
 import org.gephi.project.api.ProjectController;
 import org.gephi.project.api.Workspace;
 import org.openide.util.Lookup;
@@ -18,10 +17,34 @@ public class ManipulateGraph {
 		MyGraph.setReferences(MyGraph.ListeReference());
 		
 		DirectedGraph dg = MyGraph.createDirectedGraph();
-		
+		List<Node> selectedNodes=new ArrayList<Node>();
+	
 		System.out.println("Nodes: " + dg.getNodeCount() + " Edges: " + dg.getEdgeCount());
 		
-		
+		/*******/
+
+		Node node1 = dg.getNode("1");
+		Node node2 = dg.getNode("2");
+		Node node3 = dg.getNode("3");
+
+		selectedNodes.add(node1);
+		selectedNodes.add(node2);
+		selectedNodes.add(node3);
+
+
+		List<String> listInfoSelectedNodes1=new ArrayList<String>();
+		listInfoSelectedNodes1=MyGraph.nodeInfo(selectedNodes);
+		System.out.println("");
+
+		int i=0;
+		for (String s : listInfoSelectedNodes1) {
+			System.out.println("Les information du noeud "+i+" sont :");
+			i++;
+			System.out.println("***"+s+"***");
+		}
+		System.out.println("");
+
+		/**********/		
 		
 		
 		

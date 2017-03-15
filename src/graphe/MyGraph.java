@@ -6,15 +6,18 @@ import java.util.List;
 import org.gephi.graph.api.Column;
 import org.gephi.graph.api.DirectedGraph;
 import org.gephi.graph.api.Edge;
+import org.gephi.graph.api.Graph;
 import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphModel;
 import org.gephi.graph.api.Node;
+
 import org.gephi.project.api.ProjectController;
 import org.gephi.project.api.Workspace;
 import org.openide.util.Lookup;
-
+import org.gephi.graph.*;
 public final class MyGraph {
 	
+	private static final String NULL = null;
 	public static List<Article> articles;
 	public static List<Reference> references;
 	public static GraphModel graphModel;
@@ -50,12 +53,13 @@ public final class MyGraph {
 			n0.setAttribute(urlArt, article.getUrlArt());
 			//n0.setAttribute(ref, article.getReferences());
 			n0.setAttribute(status, article.getStatus());
-			
 			directedGraph.addNode(n0);
 		}
 		
 		System.out.println("les attributs du node sont :");
 			for (Column col : graphModel.getNodeTable()) {
+				
+
 			System.out.println(col);
 		}
 			
@@ -108,6 +112,10 @@ public final class MyGraph {
 			Article art = new Article();
 			art.setIdArt(i + 1);
 			art.setTitleArt("article" + (i + 1));
+			art.setNbPage(50+i);
+			art.setNumVol(700);
+			art.setDoi("AIIII001");
+			art.setStatus(true);
 			articles.add(art);
 		}
 		return articles;
@@ -124,4 +132,43 @@ public final class MyGraph {
 		}
 		return references;
 	}
+
+	
+	
+	public static List<String> nodeInfo(List<Node> selectedNodes)
+	{
+		int nbColumn=0;
+		List<String> ListInfoSelectedNodes=new ArrayList<String>();
+		
+		for (Column col : graphModel.getNodeTable())
+		{
+			nbColumn++;
+		}
+
+		
+		for (int i=0; i <selectedNodes.size(); i++) //parcourir la liste selectedNodes envoyée par le groupe IG
+		{	
+			String stringInfoNode="";
+			for (int j=0;j<nbColumn;j++) 
+			{
+				Column col=graphModel.getNodeTable().getColumn(j);
+				
+				if(((selectedNodes.get(i)).getAttribute(col)!=NULL)&&(col.isIndexed()==true))
+				{
+					String NodeAttribute=(selectedNodes.get(i)).getAttribute(col).toString();
+					stringInfoNode=""+stringInfoNode+" "+col.getTitle()+": "+NodeAttribute+", ";
+				}
+			}
+			ListInfoSelectedNodes.add(i,stringInfoNode);
+		}
+		return (ListInfoSelectedNodes);
+	}
+	
+	
+	
+	
+	
+	
+	
 }
+
