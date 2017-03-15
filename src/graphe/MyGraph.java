@@ -153,23 +153,23 @@ public final class MyGraph {
 		return ln ;
 	}
 	//test (cette fonction pour recuperer les données de la base de données)
-	static List<Reference> refList(int id_article){
+	static List<Reference> refList(int idAarticl){
 		List<Reference> listRef=new ArrayList<Reference>();
 		List<Article> listArticl =retournerListeArticles();
 		for(Article a:listArticl){
-			if(a.getIdArt()==id_article){
+			if(a.getIdArt()==idAarticl){
 				listRef=a.getReferences();	}
 		}
 	return listRef;
 	}
 
 	// methode pour determiner les réferences des noeuds selectionneé
-	static List<Reference> exportRef(List<Node> ListOfNode){
+	static List<Reference> exportRef(List<Node> listOfNode){
 	 List<Reference> listRef=new ArrayList<Reference>();
-	 for (Node node:ListOfNode){
+	 for (Node node:listOfNode){
 		 int id= Integer.parseInt((String) node.getId());
-		  List<Reference> ListBD=refList(id); 
-		for (Reference ref:ListBD){
+		  List<Reference> listBD=refList(id); 
+		for (Reference ref:listBD){
 			listRef.add(ref);
 		}
 	 }
