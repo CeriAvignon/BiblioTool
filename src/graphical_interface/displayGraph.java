@@ -55,8 +55,7 @@ public class displayGraph {
 
 	public DirectedGraph directedGraph;
 	
-	// Display à partir du DirectedGraph envoyé par la recherche
-	
+
 	public void displayGexf() {
     	
     	///////////////////////////////////////////////////////////////
@@ -96,6 +95,7 @@ public class displayGraph {
         previewModel.getProperties().putValue(PreviewProperty.NODE_BORDER_WIDTH, 2);
         previewModel.getProperties().putValue(PreviewProperty.NODE_BORDER_COLOR, new DependantColor(Color.GREEN));
         previewModel.getProperties().putValue(NodeLabelItem.VISIBLE, Boolean.FALSE);
+        previewModel.getProperties().putValue(PreviewProperty.NODE_BORDER_COLOR, new DependantColor(Color.WHITE));
         
         //New Processing target, get the PApplet
         G2DTarget target = (G2DTarget) previewController.getRenderTarget(RenderTarget.G2D_TARGET);
@@ -104,6 +104,9 @@ public class displayGraph {
 
         //Add the applet to a JFrame and display
         /*JFrame frame = new JFrame("Preview");
+=======
+        JFrame frame = new JFrame("Preview");
+>>>>>>> refs/remotes/origin/IG-24
         frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(previewSketch, BorderLayout.CENTER);
@@ -118,6 +121,7 @@ public class displayGraph {
         
         frame.setSize(1024, 768);
         frame.setVisible(true);
+<<<<<<< HEAD
         */
         
         JPanel panel = new JPanel();
@@ -232,21 +236,9 @@ public class displayGraph {
 	    		n.setColor(Color.RED);
 	    		//n.setSize();
 	    	}
-
 	    }	  
 	}
 
-	public void saveGexf() {
-		//sauvegarde le graphe dans un fichier gexf
-		ExportController ec = Lookup.getDefault().lookup(ExportController.class);
-	    try {
-	        ec.exportFile(new File("bin/graphGephi/graph.gexf"));
-	    } catch (IOException ex) {
-	        ex.printStackTrace();
-	        return;
-	    }
-	}
-	
 	/*public static void filtre() {
 		 GraphModel graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
 	        AppearanceModel appearanceModel = Lookup.getDefault().lookup(AppearanceController.class).getModel();
@@ -262,6 +254,18 @@ public class displayGraph {
 	        PreviewController previewController = Lookup.getDefault().lookup(PreviewController.class);
 	        previewController.refreshPreview();
 	}*/
+	public void saveGexf() {
+		//sauvegarde le graphe dans un fichier gexf
+		ExportController ec = Lookup.getDefault().lookup(ExportController.class);
+	    try {
+	        ec.exportFile(new File("bin/graphGephi/graph.gexf"));
+	    } catch (IOException ex) {
+	        ex.printStackTrace();
+	        return;
+	    }
+	}
+	
+
 	
 	public static void main(String[] args) {
 		displayGraph d = new displayGraph();
