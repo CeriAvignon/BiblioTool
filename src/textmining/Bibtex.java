@@ -17,7 +17,7 @@ public class Bibtex {
 	private String type_de_doc;
 	private String ref;
 	private Map<String, String> donne;
-
+	private int i;
 	public  Bibtex() { 
 
 
@@ -26,6 +26,7 @@ public class Bibtex {
 		donne = new HashMap<>();
 
 	}
+ 	
  	public void affiche(){
  		Set<Entry<String, String>> setHm = donne.entrySet();
 
@@ -63,7 +64,7 @@ public class Bibtex {
 		
   	//	System.out.println(str);
   		
-  		
+  		 Map<String, String> String_var= new HashMap<>();;
   		String tampon="";
   		int mode=-1;
   		
@@ -71,88 +72,188 @@ public class Bibtex {
   		   
   		int compteur_acolade=0;  
 
-		 for(int i=0;i<str.length();i++){
+		 for(i=0;i<str.length();i++){
 		 
 		 	if(str.charAt(i) == '@'){
 
-		 		while(str.charAt(++i)!= '{' && i<str.length())
-		 			type_de_doc+=str.charAt(i);	
+		 		while(++i<str.length() && str.charAt(i)!= '{' && str.charAt(i)!= '(')
+		 			tampon+=str.charAt(i);	
 		 			
 		 			
-		 		if(str.charAt(i)== '{'){
-			 		i++;
-			 		compteur_acolade=1;
-			 		mode=0;	
-			 		
+		 		if(i < str.length()){
+		 		
+		 			if(tampon.equalsIgnoreCase("Preamble") || tampon.equalsIgnoreCase("Comment") ){//commentaire ou preambule #onsenfou
+		 				OnSenFou(str,str.charAt(i));
+		 				
+		 			}
+		 			else{
+		 				if(tampon.equalsIgnoreCase("String")){//C'est une varaible de type string
+		 					 Extraire(str,str.charAt(i),String_var);
+		 					
+		 				}
+		 				else{
+		 					type_de_doc=tampon;
+		 					
+					 		//System.out.println(str.charAt(i));
+					 		
+					 		char init =str.charAt(i);
+					 		
+					 		while(++i<str.length() && str.charAt(i)!= ',' && str.charAt(i)!= '=')
+					 			ref+=str.charAt(i);
+					 		
+					 		if(str.charAt(i) != ',')
+					 			ref="";
+		 					 Extraire(str,init,String_var);
+					 	}
+			 		}
 			 	}
 		 	}
 		 	
-		 	if(compteur_acolade > 0){
-		 	
-		 		
-		 		if(mode >=0){
 		 		
 		 			
-		 			if(str.charAt(i) == ',' && mode == 0){ // arret du mode 0
-
-		 				 //System.out.println("référence dans la source : " + tampon);
-		 				 
-		 				 ref=tampon;
-		 				tampon="";	 
-			 			
-			 			i++;
-			 			
-			 		}
-			 		if(str.charAt(i) == '=' && mode == 0 ){	// debut mode 2 fin pour mode 1
-			 		
-		 				// System.out.println("colonne1 : " + tampon);
-		 				
-		 				cle = tampon;
-		 				tampon="";
-		 				mode=2;
-						while(str.charAt(++i)!= '"' && str.charAt(i)!= '{' && i<str.length()) ; // debut de la chaine pour le mode 3
-						
-						if(str.charAt(i)== '{')
-							compteur_acolade++;
-						i++;
-
-			 		}
-			 		if((compteur_acolade == 2 && str.charAt(i)== '}') || (compteur_acolade == 1 && str.charAt(i) == '"') && str.charAt(i-1) != '\\' && mode==2){//fin pour mode 2
-						
-						
-			 			// System.out.println("colonne2 : " + tampon);
-			 			
-			 			if(str.charAt(i)== '}')
-			 				compteur_acolade--;
-			 				
-						donne.put(cle,tampon);			 			
-			 			
-			 			tampon="";	
-			 			
-						while(str.charAt(++i)!= ',' && str.charAt(i) != '}'  && i<str.length());
-						
-						if(str.charAt(i) == ',')
-			 				i++;
-			 				
-			 			mode = 0;
-			 		}
-			 		
-			 		if(str.charAt(i)== '{' && str.charAt(i-1) != '\\')
-							compteur_acolade++;
-			 		if(str.charAt(i)== '}' && str.charAt(i-1) != '\\')
-		 				compteur_acolade--;
-		 				
-		 				
-		 			tampon+=str.charAt(i);
-		 			//System.out.println(tampon);
-		 		}
-		 			
 		 	
-		 	}
 		 	
 		 	
 		 }
 	
+ 	
+ 	}
+ 	public void OnSenFou(String str,char init){
+ 	
+ 			
+ 		int nb_init=1;
+ 		char fin;
+ 		
+ 		if(init == '(')
+ 			fin=')';
+ 		else{
+	 		
+	 		if(init == '{')
+	 			fin='}';
+	 		else 
+	 			return;
+ 		
+ 		}
+ 		while(++i<str.length()){
+ 		
+ 			if(str.charAt(i) == fin && str.charAt(i-1) != '\\'){ //nombre paire de \ pour anuler
+ 				nb_init--;		
+ 				
+ 				if(nb_init == 0){
+ 					i++;
+ 					return;
+ 					
+ 				}
+ 			}
+ 			if(str.charAt(i) == init && str.charAt(i-1) != '\\')//pour l'instant sa suffit
+ 				nb_init++;
+ 			
+ 		
+ 			
+ 		}
+ 	
+ 	
+ 	
+ 	}
+ 	
+ 	
+ 	//------------>
+ 	public boolean Extraire(String str,char init,Map<String, String> objet){
+ 	
+ 		String cle="";	
+ 		int nb_init=1;
+ 		char fin;
+ 		
+ 		if(init == '(')
+ 			fin=')';
+ 		else{
+	 		
+	 		if(init == '{')
+	 			fin='}';
+	 		else 
+	 			return false;
+ 		
+ 		}
+ 		
+		while(++i<str.length()){
+			//System.out.println(str.charAt(i));
+			if(str.charAt(i) == '='){
+			
+				while(++i<str.length() && str.charAt(i)!= '{' && str.charAt(i)!= '"');	//int sans rien "" ou {}
+
+				if(i < str.length())
+					Valeur( str,str.charAt(i),objet,cle);
+				//else false
+				
+				System.out.println(cle);
+				cle="";
+			}
+			else
+				cle+=str.charAt(i);
+			
+			if(str.charAt(i) == ',')
+				cle="";
+
+
+			if(str.charAt(i) == fin && str.charAt(i-1) != '\\'){ //nombre paire de \ pour anuler
+ 				nb_init--;
+ 				
+ 				if(nb_init == 0){
+ 					i++;
+ 					return true;
+ 					
+ 				}
+
+ 			}
+ 			if(str.charAt(i) == init && str.charAt(i-1) != '\\')//pour l'instant sa suffit
+ 				nb_init++;
+ 			
+
+		}
+ 		return false;//terminer sans fin
+ 	
+ 	
+ 	}
+ 	public boolean Valeur(String str,char init,Map<String, String> objet,String cle){
+ 	
+ 		//System.out.println("ok "+init);
+ 	
+ 		int nb_init=1;
+ 		char fin;
+ 		
+ 		if(init == '"')
+ 			fin='"';
+ 		else{
+	 		
+	 		if(init == '{')
+	 			fin='}';
+	 		else 
+	 			return false;
+ 		
+ 		}
+ 		
+		while(++i<str.length()){
+
+
+			if(str.charAt(i) == fin && str.charAt(i-1) != '\\'){ //nombre paire de \ pour anuler
+			
+ 				nb_init--;
+ 							
+ 				if(nb_init == 0){
+ 					i++;
+ 					return true;
+ 					
+ 				}
+ 				
+ 			}
+ 			if(str.charAt(i) == init && str.charAt(i-1) != '\\')//pour l'instant sa suffit
+ 				nb_init++;
+ 			
+ 			System.out.print(str.charAt(i));
+
+		}
+ 	 	
+ 		return false;//terminer sans fin
  	
  	}
 }
