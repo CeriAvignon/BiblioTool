@@ -30,19 +30,19 @@ public class Bibtex {
 		i=0;
 
 	}
-
+	
  	 public void affiche(){
  	 System.out.println(type_de_doc+"  \n\nDONNE : ");
  	 affiche_objet(donne);
  	  System.out.println("  \n\nVARIABLE : ");
  	 affiche_objet(String_var);
- 	 
+ 	 /*
  	  	  System.out.println("  \n\nTEST : ");
  	 
  	 if(String_var.get("foo") == null )
 		 	System.out.println("VARIABLE NULL'foo'");
 		 else 
-		 	System.out.println(String_var.get("foo"));//geter si NULL // int
+		 	System.out.println(String_var.get("foo"));//geter si NULL // int*/
  	 }
  	private void affiche_objet(Map<String, String> objet){
  		Set<Entry<String, String>> setHm = objet.entrySet();
@@ -96,7 +96,7 @@ public class Bibtex {
 		 			if(str.charAt(i)!= ' ')
 		 				tampon+=str.charAt(i);	
 		 			
-		 		System.out.println("1T !: "+tampon);
+		 		//System.out.println("1T !: "+tampon);
 		 		if(i < str.length()){
 		 		
 		 			if(tampon.equalsIgnoreCase("Preamble") || tampon.equalsIgnoreCase("Comment") ){//commentaire ou preambule #onsenfou
@@ -106,10 +106,10 @@ public class Bibtex {
 		 			else{
 		 				if(tampon.equalsIgnoreCase("String")){//C'est une varaible de type string
 		 					 Extraire(str,str.charAt(i),String_var);
-		 					System.out.println("2T !: "+tampon);
+		 				//	System.out.println("2T !: "+tampon);
 		 				}
 		 				else{
-		 					System.out.println("3T !: "+tampon);
+		 					//System.out.println("3T !: "+tampon);
 		 					type_de_doc=tampon;
 		 					
 					 		//System.out.println(str.charAt(i));
@@ -242,7 +242,7 @@ public class Bibtex {
  	
  		for(;i<str.length() && str.charAt(i) ==' ';i++);
 
-		System.out.println(str.charAt(i) +"<--");
+		//System.out.println(str.charAt(i) +"<--      -->"+FIN_final);
 		
 		int nb_init=1;
  		char fin;
@@ -267,7 +267,7 @@ public class Bibtex {
 		while(++i<str.length()){
 
 
-			if(fin != 'V' && str.charAt(i) == fin && str.charAt(i-1) != '\\'){ //nombre paire de \ pour anuler
+			if(nb_init>0 && fin != 'V' && str.charAt(i) == fin && str.charAt(i-1) != '\\'){ //nombre paire de \ pour anuler
 			
  				nb_init--;
  							
@@ -275,7 +275,7 @@ public class Bibtex {
  				
  					Tampon += tmp;
  					//System.out.println(cle +","+Tampon);
- 					System.out.println("!! "+nb_init+" :: "+FIN_final);
+ 					//System.out.println("!! "+nb_init+" :: "+FIN_final);
  					
  					i++;
 
@@ -285,11 +285,11 @@ public class Bibtex {
  			}
  			if(fin == 'V'){
  			
- 				if((str.charAt(i) == ' ' || str.charAt(i) == '"' || str.charAt(i) == '{' ) && str.charAt(i-1) != '\\'){//beh NON fin # , FIN_final
+ 				if((str.charAt(i) == ' ' || str.charAt(i) == '#') && str.charAt(i-1) != '\\'){//beh NON fin # , FIN_final
  					
  					if(String_var.get(tmp) == null ){
  					
-					 	System.out.println("VARIABLE NULL'"+tmp+"'");
+					 	//System.out.println("VARIABLE NULL'"+tmp+"'");
 					 	Tampon +=Integer.parseInt(tmp);
 					 }
 					 else 
@@ -297,9 +297,10 @@ public class Bibtex {
 					 	
  					
  					
- 					//System.out.println(cle,Tampon);
+ 					//System.out.println(cle+','+Tampon);
 					 nb_init=0;
- 					 i++;
+					 if(str.charAt(i) != '#')
+ 					 	i++;
  				
  				}
  				
@@ -307,30 +308,32 @@ public class Bibtex {
  			if(nb_init !=0 && init == '{' && str.charAt(i) == init && str.charAt(i-1) != '\\')//pour l'instant sa suffit
  				nb_init++;
  				
- 			if((str.charAt(i) == ',' || str.charAt(i) == FIN_final) && (fin =='V' || nb_init==0)){
+ 			if((str.charAt(i) == ',' || str.charAt(i) == FIN_final) && (fin =='V' || nb_init==0)){	//si un signe de fin 
  			
  				if(str.charAt(i) == FIN_final && nb_init==0)
 					i--;
 				
-				 System.out.println(cle+" : "+tmp+":" +str.charAt(i)+" : "+nb_init);
+				// System.out.println(cle+" : "+tmp+":" +str.charAt(i)+" : "+nb_init);
 				 
 				if(nb_init > 0){
+					System.out.println("FIN_BRUTAL");	 
 					if(fin == 'V'){
 						 if(String_var.get(tmp) == null ){
-						 	System.out.println("VARIABLE NULL'"+tmp+"'");
+						 	//System.out.println("VARIABLE NULL'"+tmp+"'");
+						 	
 						 	Tampon +=Integer.parseInt(tmp);
 						 }
 						 else 
 						 	 Tampon +=String_var.get(tmp);//geter si NULL // int
 						 	
-						 System.out.println("VARIABLE");
+						// System.out.println("VARIABLE");
 						 
 					}
 					else
 						 Tampon += tmp; 
 						 
 				}	 
-					 
+				System.out.println(cle+','+Tampon);	 
 				objet.put(cle,Tampon);
 
 				return true;
@@ -339,10 +342,34 @@ public class Bibtex {
  			if(nb_init == 0 && str.charAt(i) == '#' ){
  			
  				System.out.println("IL Faut concatener");
- 			
+ 				for(;++i<str.length() && (str.charAt(i) ==' ' || str.charAt(i) =='#'););
+		
+				nb_init=1;
+		 		init=str.charAt(i);
+		 		
+		 		tmp="";
+		 		
+		 		if( init == '"'){
+		 			fin='"';
+		 			i++;
+		 		}
+		 		else{
+			 		
+			 		if(init == '{'){
+			 			fin='}';
+			 			i++;
+			 		}
+			 		else {
+						fin='V';
+						
+					}
+		 		
+		 		}
+		 		
+ 		 		System.out.println("IL Faut concatener"+fin);
  			}	
  			tmp += str.charAt(i);
- 			//System.out.println(tmp);
+ 			System.out.println(str.charAt(i) + "  " +nb_init);
 
 		}
  		return false;//terminer sans fin
