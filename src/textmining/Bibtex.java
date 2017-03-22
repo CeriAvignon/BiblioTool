@@ -58,12 +58,9 @@ public class Bibtex {
 	      }
  	
  	}
- 	public void lire(String Fichier){
- 	
+ 	public String FromFilePathToString(String Fichier){
  		String str="";
-	
-	
-		try{	
+ 		try{	
 			BufferedReader buff = new BufferedReader(new FileReader(Fichier));
 		
 			String tmp = null;
@@ -78,8 +75,17 @@ public class Bibtex {
 		
 		}
 		
+ 	
+ 		return str;
+ 	
+ 	}
+ 	public void lire(String Fichier){
+ 	
+ 		String str=FromFilePathToString(Fichier);
+	
+	
 		
-  	//	System.out.println(str);
+		
   		
   		String tampon="";
   		int mode=-1;
@@ -96,7 +102,6 @@ public class Bibtex {
 		 			if(str.charAt(i)!= ' ')
 		 				tampon+=str.charAt(i);	
 		 			
-		 		//System.out.println("1T !: "+tampon);
 		 		if(i < str.length()){
 		 		
 		 			if(tampon.equalsIgnoreCase("Preamble") || tampon.equalsIgnoreCase("Comment") ){//commentaire ou preambule #onsenfou
@@ -106,13 +111,9 @@ public class Bibtex {
 		 			else{
 		 				if(tampon.equalsIgnoreCase("String")){//C'est une varaible de type string
 		 					 Extraire(str,str.charAt(i),String_var);
-		 				//	System.out.println("2T !: "+tampon);
 		 				}
 		 				else{
-		 					//System.out.println("3T !: "+tampon);
 		 					type_de_doc=tampon;
-		 					
-					 		//System.out.println(str.charAt(i));
 					 		
 					 		char init =str.charAt(i);
 					 		int in = i+1;
@@ -138,11 +139,14 @@ public class Bibtex {
 	
  	
  	}
- 	public void OnSenFou(String str,char init){
+ 	public String OnSenFou(String str,char init){
  	
- 			
+ 		for(;i<str.length() && str.charAt(i) ==' ';i++);	//j'avance tant qu'il ya un espace
+ 		
  		int nb_init=1;
  		char fin;
+ 		
+ 		String Tampon="";
  		
  		if(init == '(')
  			fin=')';
@@ -151,7 +155,7 @@ public class Bibtex {
 	 		if(init == '{')
 	 			fin='}';
 	 		else 
-	 			return;
+	 			return Tampon;
  		
  		}
  		while(++i<str.length()){
@@ -161,19 +165,18 @@ public class Bibtex {
  				
  				if(nb_init == 0){
  					i++;
- 					return;
+ 					return Tampon;
  					
  				}
  			}
  			if(str.charAt(i) == init && str.charAt(i-1) != '\\')//pour l'instant sa suffit
  				nb_init++;
- 			
- 		
- 			
+	
+			Tampon +=str.charAt(i);
  		}
- 	
- 	
- 	
+ 		
+ 		 return Tampon;
+	
  	}
  	
  	
@@ -197,17 +200,15 @@ public class Bibtex {
  		
 		while(++i<str.length()){
 		
-			//System.out.println(str.charAt(i));
 			if(str.charAt(i) == '='){
-			
-				//while(++i<str.length() && str.charAt(i)== ' ' && str.charAt(i)!= '"');	//int sans rien "" ou {}				
+					
 				i++;
 
 				if(i < str.length())		//Si c'est le fichier est pas finie
 					Valeur( str,fin,objet,cle);
-				//else false
-				
-				//System.out.println(cle);
+				else 
+					return false;
+
 				cle="";
 			}
 			else
@@ -217,15 +218,12 @@ public class Bibtex {
 			if(str.charAt(i) == ',')
 				cle="";
 
-
 			if(str.charAt(i) == fin && str.charAt(i-1) != '\\'){ //nombre paire de \ pour anuler
  				nb_init--;
 
  				if(nb_init == 0){
  					i++;
- 					
- 					return true;
- 					
+ 					return true;	
  				}
 
  			}
@@ -240,11 +238,9 @@ public class Bibtex {
  	}
  	public boolean Valeur(String str,char FIN_final,Map<String, String> objet,String cle){
  	
- 		for(;i<str.length() && str.charAt(i) ==' ';i++);
-
-		//System.out.println(str.charAt(i) +"<--      -->"+FIN_final);
+ 		for(;i<str.length() && str.charAt(i) ==' ';i++);	//j'avance tant qu'il ya un espace
 		
-		int nb_init=1;
+		int nb_init=1;					
  		char fin;
  		char init=str.charAt(i);
  		
@@ -266,7 +262,6 @@ public class Bibtex {
  		
 		while(++i<str.length()){
 
-
 			if(nb_init>0 && fin != 'V' && str.charAt(i) == fin && str.charAt(i-1) != '\\'){ //nombre paire de \ pour anuler
 			
  				nb_init--;
@@ -274,30 +269,20 @@ public class Bibtex {
  				if(nb_init == 0){
  				
  					Tampon += tmp;
- 					//System.out.println(cle +","+Tampon);
- 					//System.out.println("!! "+nb_init+" :: "+FIN_final);
- 					
- 					i++;
-
- 					
+ 					i++;		
  				}
  				
  			}
  			if(fin == 'V'){
  			
- 				if((str.charAt(i) == ' ' || str.charAt(i) == '#') && str.charAt(i-1) != '\\'){//beh NON fin # , FIN_final
+ 				if((str.charAt(i) == ' ' || str.charAt(i) == '#') && str.charAt(i-1) != '\\'){//je guette si c'est la fin d'une variable
  					
- 					if(String_var.get(tmp) == null ){
- 					
-					 	//System.out.println("VARIABLE NULL'"+tmp+"'");
+ 					if(String_var.get(tmp) == null )
 					 	Tampon +=Integer.parseInt(tmp);
-					 }
+
 					 else 
-					 	 Tampon +=String_var.get(tmp);//geter si NULL // int
+					 	 Tampon +=String_var.get(tmp);
 					 	
- 					
- 					
- 					//System.out.println(cle+','+Tampon);
 					 nb_init=0;
 					 if(str.charAt(i) != '#')
  					 	i++;
@@ -312,28 +297,19 @@ public class Bibtex {
  			
  				if(str.charAt(i) == FIN_final && nb_init==0)
 					i--;
-				
-				// System.out.println(cle+" : "+tmp+":" +str.charAt(i)+" : "+nb_init);
 				 
 				if(nb_init > 0){
-					System.out.println("FIN_BRUTAL");	 
 					if(fin == 'V'){
-						 if(String_var.get(tmp) == null ){
-						 	//System.out.println("VARIABLE NULL'"+tmp+"'");
-						 	
+						 if(String_var.get(tmp) == null )
 						 	Tampon +=Integer.parseInt(tmp);
-						 }
 						 else 
-						 	 Tampon +=String_var.get(tmp);//geter si NULL // int
-						 	
-						// System.out.println("VARIABLE");
-						 
+						 	 Tampon +=String_var.get(tmp);
 					}
 					else
 						 Tampon += tmp; 
 						 
 				}	 
-				System.out.println(cle+','+Tampon);	 
+
 				objet.put(cle,Tampon);
 
 				return true;
@@ -341,8 +317,7 @@ public class Bibtex {
  			}
  			if(nb_init == 0 && str.charAt(i) == '#' ){
  			
- 				System.out.println("IL Faut concatener");
- 				for(;++i<str.length() && (str.charAt(i) ==' ' || str.charAt(i) =='#'););
+ 				while(++i<str.length() && (str.charAt(i) ==' ' || str.charAt(i) =='#'));
 		
 				nb_init=1;
 		 		init=str.charAt(i);
@@ -354,22 +329,16 @@ public class Bibtex {
 		 			i++;
 		 		}
 		 		else{
-			 		
 			 		if(init == '{'){
 			 			fin='}';
 			 			i++;
 			 		}
-			 		else {
+			 		else 
 						fin='V';
-						
-					}
-		 		
 		 		}
 		 		
- 		 		System.out.println("IL Faut concatener"+fin);
  			}	
  			tmp += str.charAt(i);
- 			System.out.println(str.charAt(i) + "  " +nb_init);
 
 		}
  		return false;//terminer sans fin
