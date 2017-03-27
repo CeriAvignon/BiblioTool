@@ -134,4 +134,11 @@ public final class MyGraph {
 		
 		
 	} 
+	
+	public static List<Reference> listRefRecherce(){
+		List<Reference> references = new ArrayList<Reference>();
+		// liste d noeuds et liste des references
+		
+		return references;
+	} 
 }
