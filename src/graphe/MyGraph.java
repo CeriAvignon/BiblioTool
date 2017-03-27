@@ -141,4 +141,7 @@ public final class MyGraph {
 		
 		return references;
 	} 
+	// public static List<Node> verifyNodes()  methode qui permet de verifier si l article deja existe dans le graphe
+
 }
+
