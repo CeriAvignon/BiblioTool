@@ -14,15 +14,12 @@ public class ManipulateGraph {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		MyGraph.setArticles(MyGraph.retournerListeArticles());
-		MyGraph.setReferences(MyGraph.ListeReference());
+		MyGraph.setArticles(MyGraph.listeArticles());
+		MyGraph.setReferences(MyGraph.listeReference());
 		
 		DirectedGraph dg = MyGraph.createDirectedGraph();
 		
 		System.out.println("Nodes: " + dg.getNodeCount() + " Edges: " + dg.getEdgeCount());
-		
-		
-		
 		
 		
 		

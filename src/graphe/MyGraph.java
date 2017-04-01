@@ -1,6 +1,7 @@
 package graphe;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.gephi.graph.api.Column;
@@ -31,8 +32,8 @@ public final class MyGraph {
 		DirectedGraph directedGraph = graphModel.getDirectedGraph();
 		createColumns();
 		
-		articles = retournerListeArticles();
-		references = ListeReference();
+		articles = listeArticles();
+		references = listeReference();
 		
 		for (Article article : articles) {
 			Node n0 = graphModel.factory().newNode(String.valueOf(article.getIdArt()));
@@ -68,6 +69,17 @@ public final class MyGraph {
 		return directedGraph;
 	}
 	
+	public static void createAuthorsGraph(){
+		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+		pc.newProject();
+		Workspace workspace = pc.getCurrentWorkspace();
+		
+		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
+		DirectedGraph authorGraph = graphModel.getDirectedGraph();
+		
+		
+	}
+	
 	public static void createColumns(){
 		
 		idArt = graphModel.getNodeTable().addColumn("id_Article", Integer.class);
@@ -84,6 +96,7 @@ public final class MyGraph {
 		ref = graphModel.getNodeTable().addColumn("reference", Integer.class);
 		status = graphModel.getNodeTable().addColumn("status", Boolean.class);
 	}
+	
 	
 	public static List<Article> getArticles() {
 		return articles;
@@ -102,19 +115,29 @@ public final class MyGraph {
 	}
 
 	// methode implementee par le groupe web-mining
-	public static List<Article> retournerListeArticles() {
+	public static List<Article> listeArticles() {
 		List<Article> articles = new ArrayList<Article>();
 		for (int i = 0; i < 6; i++) {
 			Article art = new Article();
 			art.setIdArt(i + 1);
 			art.setTitleArt("article" + (i + 1));
+			art.setAuthor(testListAuthor());
 			articles.add(art);
 		}
 		return articles;
 	}
 
+	public static List<Author> testListAuthor(){
+		List<Author> test = new ArrayList<Author>();
+		for (int i = 0; i < 5; i++) {
+			Author a = new Author(i, "nom_author"+i+1, "prenom_author"+i+1, "affiliation"+i+1);
+			test.add(a);
+		}
+		return test;
+	}
+	
 	// methode implementee par le groupe web-mining
-	public static List<Reference> ListeReference() {
+	public static List<Reference> listeReference() {
 		List<Reference> references = new ArrayList<Reference>();
 		for (int i = 1; i <= 5; i++) {
 			Reference ref = new Reference();
@@ -123,5 +146,30 @@ public final class MyGraph {
 			references.add(ref);
 		}
 		return references;
+	}
+	
+	public static List<Author> listAllAuthors(){
+		List<Author> authors = new ArrayList<Author>();
+		List<Article> articles = listeArticles();
+		Iterator<Author> iterate_auth;
+		for (Article article : articles) {
+			iterate_auth = article.getAuthor().iterator();
+			while(iterate_auth.hasNext()){
+				Author auth = iterate_auth.next();
+				authors.add(auth);
+			}
+		}
+		return authors;
+	}
+	
+	public static List<Author> listAuthorsByArticle(Article article){
+		List<Author> authors = new ArrayList<Author>();
+		Iterator<Author> iterate_auth = article.getAuthor().iterator();
+		while(iterate_auth.hasNext()){
+			Author auth = iterate_auth.next();
+			authors.add(auth);
+		}
+		
+		return authors;
 	}
 }
