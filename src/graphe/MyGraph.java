@@ -56,11 +56,11 @@ public final class MyGraph {
 			directedGraph.addNode(n0);
 		}
 		
-		System.out.println("les attributs du node sont :");
+	/*	System.out.println("les attributs du node sont :");
 		for (Column col : graphModel.getNodeTable()) {
             System.out.println(col.getTitle());
 		}
-		
+		*/
 		for (Reference reference : references) {
 			//System.out.println(reference.getTarget());
 			Edge e1 = graphModel.factory().newEdge(directedGraph.getNode(String.valueOf(reference.getSource())),
@@ -131,11 +131,9 @@ public final class MyGraph {
 	
 	public static DirectedGraph updateGraph(){
 		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
-		//pc.newProject();
 		Workspace workspace = pc.getCurrentWorkspace();
 		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
 		DirectedGraph directedGraph = graphModel.getDirectedGraph();
-		//createColumns();
 		
 		List<Article> listArticl= returnNewList();
 
@@ -161,10 +159,10 @@ public final class MyGraph {
 			directedGraph.addNode(n1);
 		}
 		
-		System.out.println("les attributs du node sont :");
+		/*System.out.println("les attributs du node sont :");
 		for (Column col : graphModel.getNodeTable()) {
             System.out.println(col.getTitle());
-		}
+		}*/
 		
      	for (Reference reference : listRef) {
 			//System.out.println(reference.getTarget());
@@ -197,6 +195,33 @@ public final class MyGraph {
 		}
 		return references;
 		
+	}
+	public static List<Node> listOfNodes(){
+
+		List<Node> list = new ArrayList<Node>();
+		List<Article> listArticl= returnNewList();
+		for (Article article : listArticl) {
+			Node n1 = graphModel.factory().newNode(String.valueOf(article.getIdArt()));
+			n1.setLabel(article.getTitleArt());
+			n1.setAttribute(idArt, article.getIdArt());
+			n1.setAttribute(pubYear, article.getPubYear());
+			n1.setAttribute(author, article.getAuthor());
+			n1.setAttribute(titleArt, article.getTitleArt());
+			n1.setAttribute(doi, article.getDoi());
+			n1.setAttribute(numPage, article.getNumPage());
+			n1.setAttribute(nbPage, article.getNbPage());
+			n1.setAttribute(numVol, article.getNumVol());
+			n1.setAttribute(numIssue, article.getNumIssue());
+			n1.setAttribute(journal, article.getJournal());
+			n1.setAttribute(urlArt, article.getUrlArt());
+			n1.setAttribute(ref, article.getReferences());
+			n1.setAttribute(status, article.getStatus());
+			
+			list.add(n1);
+		}
+		
+		
+		return list ;
 	}
 
 	
