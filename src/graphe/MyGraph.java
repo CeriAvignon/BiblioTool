@@ -186,7 +186,7 @@ public final class MyGraph {
 		}
 		return articles;
 	}
-	// methode implemente par web-Mining
+	// methode implemente par web-Mining 
 	public static List<Reference> ListNewReferences() {
 		List<Reference> references = new ArrayList<Reference>();
 		for (int i = 7; i <= 8; i++) {
@@ -196,6 +196,7 @@ public final class MyGraph {
 			references.add(ref);
 		}
 		return references;
+		
 	}
 
 	
