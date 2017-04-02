@@ -17,19 +17,17 @@ import org.openide.util.Lookup;
 public final class MyGraph {
 	
 	public static List<Article> articles;
+
 	public static List<Reference> references;
 	public static GraphModel graphModel;
 	private MyGraph() { }
-	
+
 	public static Column idArt, titleArt, author, doi, pubYear, numPage, nbPage, numVol, numIssue, journal, urlArt, ref, status;
 	
 	public static DirectedGraph createDirectedGraph(){
 		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
 		pc.newProject();
 		Workspace workspace = pc.getCurrentWorkspace();
-		
-		
-		
 		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
 		DirectedGraph directedGraph = graphModel.getDirectedGraph();
 		createColumns();
@@ -60,7 +58,7 @@ public final class MyGraph {
 		
 		System.out.println("les attributs du node sont :");
 		for (Column col : graphModel.getNodeTable()) {
-            System.out.println(col);
+            System.out.println(col.getTitle());
 		}
 		
 		for (Reference reference : references) {
@@ -72,7 +70,7 @@ public final class MyGraph {
 		
 		return directedGraph;
 	}
-	
+
 	public static void createColumns(){
 		
 		idArt = graphModel.getNodeTable().addColumn("id_Article", Integer.class);
@@ -129,19 +127,76 @@ public final class MyGraph {
 		}
 		return references;
 	}
-	public static void createGrapheNode(){
-		// liste d noeuds et liste des references
-		
-		
-	} 
 	
-	public static List<Reference> listRefRecherce(){
-		List<Reference> references = new ArrayList<Reference>();
-		// liste d noeuds et liste des references
+	
+	public static DirectedGraph updateGraph(){
+		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+		//pc.newProject();
+		Workspace workspace = pc.getCurrentWorkspace();
+		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
+		DirectedGraph directedGraph = graphModel.getDirectedGraph();
+		//createColumns();
 		
+		List<Article> listArticl= returnNewList();
+
+		List<Reference> listRef=ListNewReferences();
+		
+		for (Article article : listArticl) {
+			Node n1 = graphModel.factory().newNode(String.valueOf(article.getIdArt()));
+			n1.setLabel(article.getTitleArt());
+			n1.setAttribute(idArt, article.getIdArt());
+			n1.setAttribute(pubYear, article.getPubYear());
+			n1.setAttribute(author, article.getAuthor());
+			n1.setAttribute(titleArt, article.getTitleArt());
+			n1.setAttribute(doi, article.getDoi());
+			n1.setAttribute(numPage, article.getNumPage());
+			n1.setAttribute(nbPage, article.getNbPage());
+			n1.setAttribute(numVol, article.getNumVol());
+			n1.setAttribute(numIssue, article.getNumIssue());
+			n1.setAttribute(journal, article.getJournal());
+			n1.setAttribute(urlArt, article.getUrlArt());
+			n1.setAttribute(ref, article.getReferences());
+			n1.setAttribute(status, article.getStatus());
+			
+			directedGraph.addNode(n1);
+		}
+		
+		System.out.println("les attributs du node sont :");
+		for (Column col : graphModel.getNodeTable()) {
+            System.out.println(col.getTitle());
+		}
+		
+     	for (Reference reference : listRef) {
+			//System.out.println(reference.getTarget());
+			Edge e1 = graphModel.factory().newEdge(directedGraph.getNode(String.valueOf(reference.getSource())),
+					directedGraph.getNode(String.valueOf(reference.getTarget())), 0, 1.0, true);
+		directedGraph.addEdge(e1);
+	}
+		
+		return directedGraph;
+	}
+	// methode implemente par webMining
+	public static List<Article> returnNewList() {
+		List<Article> articles = new ArrayList<Article>();
+		for (int i = 7; i <=8; i++) {
+			Article art = new Article();
+			art.setIdArt(i + 1);
+			art.setTitleArt("article" + (i + 1));
+			articles.add(art);
+		}
+		return articles;
+	}
+	// methode implemente par web-Mining
+	public static List<Reference> ListNewReferences() {
+		List<Reference> references = new ArrayList<Reference>();
+		for (int i = 7; i <= 8; i++) {
+			Reference ref = new Reference();
+			ref.setSource(i+1);
+			ref.setTarget(i-2);
+			references.add(ref);
+		}
 		return references;
-	} 
-	// public static List<Node> verifyNodes()  methode qui permet de verifier si l article deja existe dans le graphe
+	}
 
+	
 }
-
