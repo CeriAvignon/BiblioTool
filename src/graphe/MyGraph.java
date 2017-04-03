@@ -22,15 +22,16 @@ public final class MyGraph {
 	private MyGraph() { }
 	
 	public static Column idArt, titleArt, author, doi, pubYear, numPage, nbPage, numVol, numIssue, journal, urlArt, ref, status;
+	public static Column idAuth, name_auth, first_name, affiliation;
 	
 	public static DirectedGraph createDirectedGraph(){
 		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
 		pc.newProject();
 		Workspace workspace = pc.getCurrentWorkspace();
 		
-		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
+		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace);
 		DirectedGraph directedGraph = graphModel.getDirectedGraph();
-		createColumns();
+		createArticleColumns();
 		
 		articles = listeArticles();
 		references = listeReference();
@@ -40,7 +41,6 @@ public final class MyGraph {
 			n0.setLabel(article.getTitleArt());
 			n0.setAttribute(idArt, article.getIdArt());
 			n0.setAttribute(pubYear, article.getPubYear());
-			n0.setAttribute(author, article.getAuthor());
 			n0.setAttribute(titleArt, article.getTitleArt());
 			n0.setAttribute(doi, article.getDoi());
 			n0.setAttribute(numPage, article.getNumPage());
@@ -51,11 +51,14 @@ public final class MyGraph {
 			n0.setAttribute(urlArt, article.getUrlArt());
 			//n0.setAttribute(ref, article.getReferences());
 			n0.setAttribute(status, article.getStatus());
+			for (Author auth : article.getAuthor()) {
+				n0.setAttribute(author, auth.getFirst_name()+" "+auth.getName_auth());
+			}
 			
 			directedGraph.addNode(n0);
 		}
 		
-		System.out.println("les attributs du node sont :");
+		System.out.println("les attributs du node sont: ");
 			for (Column col : graphModel.getNodeTable()) {
 			System.out.println(col);
 		}
@@ -69,19 +72,62 @@ public final class MyGraph {
 		return directedGraph;
 	}
 	
-	public static void createAuthorsGraph(){
+	public static DirectedGraph createAuthorsGraph(){
 		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
 		pc.newProject();
 		Workspace workspace = pc.getCurrentWorkspace();
 		
-		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
+		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace);
 		DirectedGraph authorGraph = graphModel.getDirectedGraph();
+		createAuthorColumns();
 		
+		List<Author> authors = listAllAuthors();
+		references = listeReference();
 		
+		for (Author author : authors) {
+			Node n0 = graphModel.factory().newNode();
+			n0.setAttribute(idAuth, author.getId_auth());
+			n0.setAttribute(name_auth, author.getName_auth());
+			n0.setAttribute(first_name, author.getFirst_name());
+			n0.setAttribute(affiliation, author.getAffiliation());
+			
+			authorGraph.addNode(n0);
+		}
+		
+		for (Reference ref : references) {
+			
+		}
+		
+		return authorGraph;
 	}
 	
-	public static void createColumns(){
+	public static DirectedGraph createAuthorsGraph(Article article){
+		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+		pc.newProject();
+		Workspace workspace = pc.getCurrentWorkspace();
 		
+		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace);
+		DirectedGraph authorGraph = graphModel.getDirectedGraph();
+		createAuthorColumns();
+		
+		List<Author> authors = listAuthorsByArticle(article);
+		references = listeReference();
+		
+		for (Author author : authors) {
+			Node n0 = graphModel.factory().newNode();
+			n0.setAttribute(idAuth, author.getId_auth());
+			n0.setAttribute(name_auth, author.getName_auth());
+			n0.setAttribute(first_name, author.getFirst_name());
+			n0.setAttribute(affiliation, author.getAffiliation());
+			
+			authorGraph.addNode(n0);
+		}
+		
+		
+		return authorGraph;
+	}
+	
+	public static void createArticleColumns(){
 		idArt = graphModel.getNodeTable().addColumn("id_Article", Integer.class);
 		titleArt = graphModel.getNodeTable().addColumn("title_Article", String.class);
 		author = graphModel.getNodeTable().addColumn("authors", String.class);
@@ -97,6 +143,12 @@ public final class MyGraph {
 		status = graphModel.getNodeTable().addColumn("status", Boolean.class);
 	}
 	
+	public static void createAuthorColumns(){
+		idAuth = graphModel.getNodeTable().addColumn("id_Author", Integer.class);
+		name_auth = graphModel.getNodeTable().addColumn("name_Author", String.class);
+		first_name = graphModel.getNodeTable().addColumn("first_name", String.class);
+		affiliation = graphModel.getNodeTable().addColumn("afficliation", String.class);
+	}
 	
 	public static List<Article> getArticles() {
 		return articles;
@@ -130,7 +182,7 @@ public final class MyGraph {
 	public static List<Author> testListAuthor(){
 		List<Author> test = new ArrayList<Author>();
 		for (int i = 0; i < 5; i++) {
-			Author a = new Author(i, "nom_author"+i+1, "prenom_author"+i+1, "affiliation"+i+1);
+			Author a = new Author(i, "nom_author"+(i+1), "prenom_author"+(i+1), "affiliation"+(i+1));
 			test.add(a);
 		}
 		return test;
