@@ -1,4 +1,5 @@
 package graphical_interface;
+
 import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;

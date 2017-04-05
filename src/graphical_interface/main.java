@@ -1,4 +1,5 @@
 package graphical_interface;
+
 import java.io.IOException;
 import org.gephi.layout.plugin.AutoLayout;
 import org.gephi.layout.plugin.force.StepDisplacement;
@@ -148,7 +149,7 @@ public class main {
 		//sauvegarde le graphe dans un fichier gexf
 		ExportController ec = Lookup.getDefault().lookup(ExportController.class);
 	    try {
-	        ec.exportFile(new File("bin/gephi/testGephi.gexf"));
+	        ec.exportFile(new File("bin/graphical_interface/testGephi.gexf"));
 	    } catch (IOException ex) {
 	        ex.printStackTrace();
 	        return;
@@ -159,18 +160,18 @@ public class main {
     	MyGraph.setArticles(MyGraph.retournerListeArticles());
 		MyGraph.setReferences(MyGraph.ListeReference());
 		DirectedGraph dg = MyGraph.createDirectedGraph();
-		//MyGraph.generateFileGexfFromGraph(dg);
 		main myGraph = new main(dg);
 		//myGraph.loadMatrix();
 		//myGraph.layoutGraph();
 		//myGraph.changeColor();
+		System.out.println("Nodes: " + myGraph.directedGraph.getNodeCount() + " Edges: " + myGraph.directedGraph.getEdgeCount());
 		myGraph.saveGexf();
-		System.out.println("Nodes: " + myGraph.directedGraph.getNodeCount() + " Edges: " + myGraph.directedGraph.getEdgeCount());	
+		myGraph.script();
 		for (Edge e : myGraph.directedGraph.getEdges()) {
 			System.out.println(e.getId()+" : " + e.getSource().getId() + " -> " + e.getTarget().getId());
 		}
-		myGraph.script();
         MyGraph.showNeighbors(myGraph.directedGraph);
+
     }
 
 }

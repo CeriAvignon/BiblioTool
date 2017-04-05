@@ -1,5 +1,8 @@
 package graphical_interface;
+
 import javax.swing.*;
+
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -13,7 +16,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.gephi.graph.api.GraphController;
+import org.gephi.graph.api.GraphModel;
 import org.gephi.graph.api.Node;
+import org.gephi.graph.api.DirectedGraph;
 import org.gephi.graph.api.Edge;
 import org.gephi.preview.api.G2DTarget;
 import org.gephi.preview.api.PreviewController;
@@ -24,6 +29,12 @@ import org.gephi.project.api.ProjectController;
 import org.gephi.project.api.Workspace;
 import org.openide.util.Lookup;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  *
@@ -44,8 +55,8 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
     private Timer wheelTimer;
     private boolean inited;
     private final boolean isRetina;
-    private ArrayList hideNode;
-    private ArrayList hideEdges;
+    private Map<Node,ArrayList<Edge>> hideNodeEdge = new HashMap<Node,ArrayList<Edge>>();
+    
     
     public PreviewSketch(G2DTarget target) {
         this.target = target;
@@ -85,25 +96,26 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
         MouseListenerTemplate test=new MouseListenerTemplate();
         ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
         Workspace workspace = pc.getCurrentWorkspace();
-
         for (Node node : Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace).getGraph().getNodes()) {
         	if(test.clickingInNode(node,tmpPME)){
-        		// si on click sur un noeud, il affiche le popup menu
-        		//RightClickMenu rcmenu=new RightClickMenu(this,node);
-	    		JPopupMenu popup = new JPopupMenu();
-	    		JMenuItem mntmHide = new JMenuItem("Masquer ce noeud");
-	    		popup.add(mntmHide);
-	            popup.show(e.getComponent(), e.getX(), e.getY());
-	    		mntmHide.addActionListener( new ActionListener()
-	    		{
-	    		    public void actionPerformed(ActionEvent e)
-	    		    {
-	    		    	hideNode(node);
-	    	        	tmpPME.setConsumed(true);
-	    	        	return;
-	    		    }
-	    		});
-	        	System.out.println("on the node " + node.getLabel());
+	        	if(SwingUtilities.isRightMouseButton(e)) // check right click 
+	        	{
+        			// if we click on a noeud then it show the popup menu
+		    		JPopupMenu popup = new JPopupMenu();
+		    		JMenuItem mntmHide = new JMenuItem("Masquer ce noeud");
+		    		popup.add(mntmHide);
+		            popup.show(e.getComponent(), e.getX(), e.getY());
+		    		mntmHide.addActionListener( new ActionListener()
+		    		{
+		    		    public void actionPerformed(ActionEvent e)
+		    		    {
+		    		    	hideNode(node);
+		    	        	tmpPME.setConsumed(true);
+		    	        	return;
+		    		    }
+		    		});
+		        	System.out.println("on the node " + node.getLabel());
+	        	}
         	} 
 	
         }
@@ -239,25 +251,52 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
     {
     	try
     	{
+    		// loading data
   	  	  ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
 	      Workspace workspace = pc.getCurrentWorkspace();
-	      for (Node n : Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace).getGraph().getNodes()) {   
-	    	  if(n==node)
-	    	  {
-              	System.out.println(n.getLabel());
+          GraphModel graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace);
+    	  DirectedGraph directedGraph = graphModel.getDirectedGraph();
+    	  PreviewController previewController = Lookup.getDefault().lookup(PreviewController.class);
+    	  
+	      for (Node n : graphModel.getGraph().getNodes().toArray()) {   
+	    	  if(n.getLabel().equals(node.getLabel())) // if its node is matched
+	    	  {  
+	    		  ArrayList<Edge> edgeList = new ArrayList<Edge>();
+	    		  for (Edge edge : graphModel.getGraph().getEdges()) 
+	    		  {   
+	    			  if(edge.getSource().getId() == n.getId() || edge.getTarget().getId() ==n.getId() )
+		   	    	  {
+		    			  edgeList.add(edge);
+		   	    	  }
+	    		  }
+	    		  this.hideNodeEdge.put(node, edgeList);
+	    		  afficherList();
+	    		  System.out.println("removing.");
+	    		  directedGraph.removeNode(n); // removing a nodes
+	    		  previewController.refreshPreview(); 
+	    		  refreshLoop.refreshSketch();
 	    	  }
 	      }
-	      for (Edge edge : Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace).getGraph().getEdges()) {   
-	    	  if(edge.getSource().getId() == node.getId() || edge.getTarget().getId() ==node.getId() )
-	    	  {
-              	System.out.println(edge.getSource().getLabel() + " " +edge.getTarget().getLabel());
-	    	  }
-	      }
-    		
     	}catch(Exception ex){
     		System.out.println("Cannot find this node.");
     	}
 	
+    }
+    
+    // Debug of collection
+    public void afficherList()
+    {
+        System.out.println("Parcours de l'objet HashMap : ");
+        Set<Entry<Node, ArrayList<Edge>>> setHm = this.hideNodeEdge.entrySet();
+        Iterator<Entry<Node, ArrayList<Edge>>> it = setHm.iterator();
+        while(it.hasNext()){
+        	Entry<Node, ArrayList<Edge>> e = it.next();
+        	for(int i = 0;i<e.getValue().size();i++)
+        	{
+        		System.out.println(e.getKey().getLabel() + " : " + e.getValue().get(i).getSource().getLabel()+" -> "+e.getValue().get(i).getTarget().getLabel());
+        	}
+           
+        }
     }
     
     private class RefreshLoop {

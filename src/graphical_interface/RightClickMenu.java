@@ -1,4 +1,5 @@
 package graphical_interface;
+
 import org.gephi.graph.api.Node;
 import org.gephi.project.api.ProjectController;
 import org.gephi.project.api.Workspace;
@@ -26,32 +27,20 @@ import org.gephi.graph.api.GraphController;
  */
 public class RightClickMenu extends JPopupMenu implements ActionListener{ 
     private Node node;
-	
-    
+	JMenuItem mntmHide = new JMenuItem("Masquer ce noeud");
+	JMenuItem mntmDevelope = new JMenuItem("Déveloper");
+	JMenuItem mntmDomain = new JMenuItem("Créer une domaine");
     public RightClickMenu(Node node){}
     
 	public RightClickMenu(JPanel center,Node node){
-		JMenuItem mntmHide = new JMenuItem("Masquer ce noeud");
-		JMenuItem mntmDevelope = new JMenuItem("Déveloper");
-		JMenuItem mntmDomain = new JMenuItem("Créer une domaine");
+
 		add(mntmHide);
 		add(mntmDevelope);
 		add(mntmDomain);
-		center.addMouseListener(new MouseAdapter() { // mouse handler
-            public void mouseReleased(MouseEvent event) { 
-                if(event.getButton() == MouseEvent.BUTTON3) // check if it's right clcik
-                {
-                	show(event.getComponent(), event.getX(), event.getY());                  	
-                }
-                else {
-            		setVisible(false);
-                }
-            } 
-        });
 		mntmHide.addActionListener( this );
+		mntmDevelope.addActionListener( this );
 		this.node = node ;
 	}
-	
 	public void addNode(Node node)
 	{
 		this.node=node;
@@ -59,7 +48,18 @@ public class RightClickMenu extends JPopupMenu implements ActionListener{
 	
     public void actionPerformed(ActionEvent e)
     {
-    	hideNode();
+    	if(e.getActionCommand()==mntmHide.getText())
+    	{
+        	hideNode();
+    	}
+    	else if(e.getActionCommand()==mntmDevelope.getText())
+    	{
+    		
+    	}
+    	else if(e.getActionCommand()==mntmDomain.getText())
+    	{
+    		
+    	}
     }
     
     public void hideNode()
@@ -78,6 +78,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener{
               	System.out.println(edge.getId());
 	    	  }
 	      }
+
     }
 	
 }

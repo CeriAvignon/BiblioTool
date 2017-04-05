@@ -1,4 +1,5 @@
 package graphical_interface;
+
 import org.gephi.graph.api.Node;
 import org.gephi.preview.api.Item;
 
