@@ -14,7 +14,7 @@
           <attvalue for="isselected" value="false"></attvalue>
         </attvalues>
         <viz:size value="10.0"></viz:size>
-        <viz:position x="135.72795" y="168.11163"></viz:position>
+        <viz:position x="254.97598" y="-149.60281"></viz:position>
         <viz:color r="255" g="0" b="0"></viz:color>
       </node>
       <node id="2" label="article2">
@@ -22,7 +22,7 @@
           <attvalue for="isselected" value="false"></attvalue>
         </attvalues>
         <viz:size value="10.0"></viz:size>
-        <viz:position x="240.72263" y="-1.6739674"></viz:position>
+        <viz:position x="22.608812" y="-267.3085"></viz:position>
         <viz:color r="255" g="0" b="0"></viz:color>
       </node>
       <node id="3" label="article3">
@@ -30,7 +30,7 @@
           <attvalue for="isselected" value="false"></attvalue>
         </attvalues>
         <viz:size value="10.0"></viz:size>
-        <viz:position x="97.91506" y="-105.72862"></viz:position>
+        <viz:position x="-87.669334" y="-76.24016"></viz:position>
         <viz:color r="255" g="0" b="0"></viz:color>
       </node>
       <node id="4" label="article4">
@@ -38,7 +38,7 @@
           <attvalue for="isselected" value="false"></attvalue>
         </attvalues>
         <viz:size value="10.0"></viz:size>
-        <viz:position x="-29.875528" y="47.68546"></viz:position>
+        <viz:position x="137.53004" y="58.612366"></viz:position>
         <viz:color r="0" g="255" b="0"></viz:color>
       </node>
       <node id="5" label="article5">
@@ -46,7 +46,7 @@
           <attvalue for="isselected" value="false"></attvalue>
         </attvalues>
         <viz:size value="10.0"></viz:size>
-        <viz:position x="-145.03362" y="229.08704"></viz:position>
+        <viz:position x="376.21982" y="167.18956"></viz:position>
         <viz:color r="0" g="255" b="0"></viz:color>
       </node>
       <node id="6" label="article6">
@@ -54,7 +54,7 @@
           <attvalue for="isselected" value="false"></attvalue>
         </attvalues>
         <viz:size value="10.0"></viz:size>
-        <viz:position x="-0.6145978" y="334.34338"></viz:position>
+        <viz:position x="474.1187" y="-35.508797"></viz:position>
         <viz:color r="0" g="255" b="0"></viz:color>
       </node>
     </nodes>

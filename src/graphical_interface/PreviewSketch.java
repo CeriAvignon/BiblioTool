@@ -15,12 +15,10 @@ import org.gephi.preview.api.G2DTarget;
 import org.gephi.preview.api.PreviewController;
 import org.gephi.preview.api.PreviewMouseEvent;
 import org.gephi.preview.api.Vector;
+import org.gephi.project.api.ProjectController;
+import org.gephi.project.api.Workspace;
 import org.openide.util.Lookup;
 
-/**
- *
- * @author mbastian
- */
 public class PreviewSketch extends JPanel implements MouseListener, MouseWheelListener, MouseMotionListener {
 
     private static final int WHEEL_TIMER = 500;
@@ -70,6 +68,16 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
 
     @Override
     public void mouseClicked(MouseEvent e) {
+    	///// popup
+    	PreviewMouseEvent tmpPME=buildPreviewMouseEvent(e, PreviewMouseEvent.Type.CLICKED);
+        MouseListenerTemplate test=new MouseListenerTemplate();
+        ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+        PreviewController mouse = Lookup.getDefault().lookup(PreviewController.class);
+        mouse.getModel().getProperties();
+        Workspace workspace = pc.getCurrentWorkspace();
+        test.mouseClicked(tmpPME, mouse.getModel().getProperties(), workspace);
+        //////
+        
         if (previewController.sendMouseEvent(buildPreviewMouseEvent(e, PreviewMouseEvent.Type.CLICKED))) {
             refreshLoop.refreshSketch();
         }
@@ -190,6 +198,8 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
 
     private class RefreshLoop {
 
+    	
+    	
         private final long DELAY = 100;
         private final AtomicBoolean running = new AtomicBoolean();
         private final AtomicBoolean refresh = new AtomicBoolean();
