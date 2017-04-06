@@ -48,6 +48,10 @@ public class ManipulateGraph {
 		
 		 ArrayList<ArrayList<Node>> cocite=new  ArrayList<ArrayList<Node>>();
 		 ArrayList<Node> n=new ArrayList<Node> ();
+		 cocite=MyGraph.returnNodesCocite();
+		System.out.println("");
+		System.out.println("***Le resultat de regroupement des noeuds par cocitation (co_cité) ****");
+
 		for(int h =0;h<cocite.size();h++)
 		{
 			n = cocite.get(h);
@@ -61,7 +65,11 @@ public class ManipulateGraph {
 			}
 			
 			
-		}	
+		}
+		System.out.println("");
+
+		System.out.println("***Affichage des arcs qui relient les noeuds co_cité ****");
+
 		DirectedGraph dg1 = MyGraph.createUndirectedGraph(cocite);
 
 		for (Edge e : dg1.getEdges())

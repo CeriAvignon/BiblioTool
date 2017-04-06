@@ -60,12 +60,12 @@ public final class MyGraph {
 			directedGraph.addNode(n0);
 		}
 		
-		System.out.println("les attributs du node sont :");
+		/*System.out.println("les attributs du node sont :");
 			for (Column col : graphModel.getNodeTable()) {
 				
 
 			System.out.println(col);
-		}
+		}*/
 			
 		for (Reference reference : references) {
 			Edge e1 = graphModel.factory().newEdge(directedGraph.getNode(String.valueOf(reference.getSource())),
@@ -189,23 +189,27 @@ public final class MyGraph {
 	
 	
 	
-	/*************CoCité******************/
+	/*************co_cité******************/
+	/**La methode returnNodesCocite() regroupe les noeuds qui sont cité
+	 *  par un même noeud et retourne  le resultat dans une liste qui contient dans chaque element 
+	 * une autre liste de noeud qui contient ce regrepement par co_cité ***/
+	
 	public static ArrayList<ArrayList<Node>> returnNodesCocite()
 	{
 		int nbLigne=0;
 		DirectedGraph directedGraph1 = createDirectedGraph();
 		nbLigne=directedGraph1.getEdgeCount();
-		System.out.println("numberRow: " + nbLigne);
+		//System.out.println("numberRow: " + nbLigne);
 		EdgeIterable eI=directedGraph1.getEdges();//iterateur sur le tableau des arcs
 		Edge[] tabEdges=eI.toArray();//tableau des edges
 
 		ArrayList<ArrayList<Node>> listeNodeCoCite = new ArrayList<ArrayList<Node>>();
 		
-		for (int i=0; i <tabEdges.length; i++) 
+		/*for (int i=0; i <tabEdges.length; i++) 
 		{
 			System.out.println("Les information du noeud "+tabEdges[i].getSource().getLabel()+"->"+tabEdges[i].getTarget().getLabel());
 		}
-
+*/
 		
 		for(int i=0;i<nbLigne-1;i++)
 		{
@@ -232,7 +236,7 @@ public final class MyGraph {
 	}
 	
 	
-	/*Le resultat doit être undirected graph, mais pour le moment j'ai fait directed graph*/
+	/****Le resultat doit être undirected graph, mais pour le moment j'ai fait directed graph****/
 	public static DirectedGraph createUndirectedGraph(ArrayList<ArrayList<Node>> listeNodeCoCite){
 		DirectedGraph directedGraph1 = createDirectedGraph();
 		EdgeIterable eI=directedGraph1.getEdges();//iterateur sur le tableau des arcs
@@ -242,7 +246,7 @@ public final class MyGraph {
 			directedGraph1.removeEdge(tabEdges[i]);//suppression de tous les anciens arcs entre les sommets
         }
 		int nbLigne=directedGraph1.getEdgeCount();
-        System.out.println("nbEdges:"+nbLigne);
+       // System.out.println("nbEdges:"+nbLigne);
 		 ArrayList<Node> n=new ArrayList<Node> ();
 
         for(int h =0;h<listeNodeCoCite.size();h++)
@@ -280,11 +284,8 @@ public final class MyGraph {
 		return directedGraph1;
 	}
 	
-	/*******/
+	/******fin co_cité********/
 	
-	
-	
-	/******/
 	
 	
 	
