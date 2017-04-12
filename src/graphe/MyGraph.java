@@ -1,7 +1,9 @@
 package graphe;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.gephi.graph.api.Column;
 import org.gephi.graph.api.DirectedGraph;
@@ -14,7 +16,7 @@ import org.gephi.project.api.ProjectController;
 import org.gephi.project.api.Workspace;
 import org.openide.util.Lookup;
 
-public final class MyGraph {
+public final class MyGraph{
 	
 	public static List<Article> articles;
 
@@ -119,12 +121,17 @@ public final class MyGraph {
 	// methode implementee par le groupe web-mining
 	public static List<Reference> ListeReference() {
 		List<Reference> references = new ArrayList<Reference>();
-		for (int i = 1; i <= 5; i++) {
-			Reference ref = new Reference();
-			ref.setSource(i);
-			ref.setTarget(i + 1);
-			references.add(ref);
-		}
+		
+		Reference ref1 = new Reference();
+		ref1.setSource(1);
+		ref1.setTarget(4);
+		Reference ref2 = new Reference();
+		ref2.setSource(2);
+		ref2.setTarget(5);
+		Reference ref3 = new Reference();
+		ref3.setSource(3);
+		ref3.setTarget(4);
+		references.add(ref1);references.add(ref2);references.add(ref3);
 		return references;
 	}
 	
@@ -134,9 +141,9 @@ public final class MyGraph {
 		Workspace workspace = pc.getCurrentWorkspace();
 		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
 		DirectedGraph directedGraph = graphModel.getDirectedGraph();
-		
+		//method webmining
 		List<Article> listArticl= returnNewList();
-
+         // methode webmining
 		List<Reference> listRef=ListNewReferences();
 		
 		for (Article article : listArticl) {
@@ -178,21 +185,45 @@ public final class MyGraph {
 		List<Article> articles = new ArrayList<Article>();
 		for (int i = 7; i <=8; i++) {
 			Article art = new Article();
-			art.setIdArt(i + 1);
-			art.setTitleArt("article" + (i + 1));
+			art.setIdArt(i );
+			art.setTitleArt("article"+i);
+			art.setNbPage(500);
 			articles.add(art);
-		}
+		}	
+
 		return articles;
 	}
+	/*public static List<Article> returnDistinctList() {
+		List<Article> articles =returnNewList();
+		List<Article> DistincArt =new ArrayList<Article>();
+	  for (Article article : articles) {
+		  if(!DistincArt.contains(article)){
+			  System.out.println(article.getIdArt());
+			  System.out.println(article.getTitleArt());
+			  DistincArt.add(article);
+	
+		  }else rtyrrt9
+		
+	}
+		return DistincArt ;
+	}
+*/
 	// methode implemente par web-Mining 
 	public static List<Reference> ListNewReferences() {
 		List<Reference> references = new ArrayList<Reference>();
-		for (int i = 7; i <= 8; i++) {
-			Reference ref = new Reference();
-			ref.setSource(i+1);
-			ref.setTarget(i-2);
-			references.add(ref);
-		}
+		Reference ref1 = new Reference();
+		ref1.setSource(7);
+		ref1.setTarget(8);
+		Reference ref2 = new Reference();
+		ref2.setSource(7);
+		ref2.setTarget(5);
+		Reference ref3 = new Reference();
+		ref3.setSource(8);
+		ref3.setTarget(1);
+		references.add(ref1);
+		references.add(ref2);
+		references.add(ref3);
+	
 		return references;
 		
 	}

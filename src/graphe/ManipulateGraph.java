@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.TreeSet;
 import org.gephi.graph.api.*;
 import org.gephi.graph.api.Edge;
 import org.gephi.io.exporter.api.ExportController;
@@ -24,15 +24,20 @@ public class ManipulateGraph {
 		MyGraph.setReferences(MyGraph.ListeReference());
 
 		DirectedGraph dg = MyGraph.createDirectedGraph();
-		DirectedGraph dg2 = MyGraph.updateGraph();
-		System.out.println("Nodes: " + dg2.getNodeCount() + " Edges: " + dg2.getEdgeCount());
+	   // DirectedGraph dg2 = MyGraph.updateGraph();
+		//System.out.println("Nodes: " + dg2.getNodeCount() + " Edges: " + dg2.getEdgeCount());
+		System.out.println("Nodes: " + dg.getNodeCount() + " Edges: " + dg.getEdgeCount());
 		List<Node> listOfNodes=MyGraph.listOfNodes();
 		for(Node l:listOfNodes){
-			System.out.println(l.getAttribute(MyGraph.idArt));
+			System.out.print(l.getAttribute(MyGraph.idArt));
 			System.out.println(l.getAttribute(MyGraph.titleArt));
 			
 		}
-		 PreviewModel previewModel = Lookup.getDefault().lookup(PreviewController.class).getModel();
+		
+		//MyGraph.returnDistinctList();
+		
+		
+		/* PreviewModel previewModel = Lookup.getDefault().lookup(PreviewController.class).getModel();
 	        previewModel.getProperties().putValue(PreviewProperty.SHOW_NODE_LABELS, Boolean.TRUE);
 	        previewModel.getProperties().putValue(PreviewProperty.NODE_LABEL_PROPORTIONAL_SIZE, Boolean.FALSE);
 		 ExportController ec = Lookup.getDefault().lookup(ExportController.class);
@@ -41,10 +46,9 @@ public class ManipulateGraph {
 	        } catch (IOException ex) {
 	            ex.printStackTrace();
 	            return;
-	        }
+	        }*/
 		
-		
-		
+
 		
 	}
 }
