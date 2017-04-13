@@ -4,18 +4,24 @@ import org.gephi.graph.api.DirectedGraph;
 import org.gephi.graph.api.Edge;
 
 
+
 import java.io.IOException;
+
 import org.gephi.layout.plugin.AutoLayout;
 import org.gephi.layout.plugin.force.StepDisplacement;
 import org.gephi.layout.plugin.force.yifanHu.YifanHuLayout;
 import org.gephi.layout.plugin.forceAtlas.ForceAtlasLayout;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
+
 import org.gephi.graph.api.Node;
+
 import javax.swing.JFrame;
+
 import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphModel;
 import org.gephi.graph.api.DirectedGraph;
@@ -67,6 +73,15 @@ public class Main {
         //Append imported data to GraphAPI
         importController.process(container, new DefaultProcessor(), workspace);
 
+        //create a Domain on the node in the string isDomain
+        String isDomain = "3";		
+		for (Node node : Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace).getGraph().getNodes()) {
+			if(node.getId().toString().compareTo(isDomain) == 0){
+				node.setSize(30);
+				node.setG(1);
+			}
+		}
+		
         //Preview configuration
         PreviewController previewController = Lookup.getDefault().lookup(PreviewController.class);
         PreviewModel previewModel = previewController.getModel();
@@ -97,6 +112,7 @@ public class Main {
                 previewSketch.resetZoom();
             }
         });
+
         frame.setVisible(true);
     }
 
@@ -166,7 +182,7 @@ public class Main {
 		DirectedGraph dg = MyGraph.createDirectedGraph();
 		MyGraph.generateFileGexfFromGraph(dg);
 		Main myGraph = new Main(dg);
-		//myGraph.loadMatrix(); //bug re-execution (mais affiche en ligne quand ça marche)
+		//myGraph.loadMatrix(); //bug re-execution (mais affiche en ligne quand ï¿½a marche)
 		myGraph.layoutGraph();
 		myGraph.changeColor();
 		myGraph.saveGexf();

@@ -1,7 +1,11 @@
 package graphical_interface;
 
 import javax.swing.*;
+
+import java.awt.BorderLayout;
 import java.awt.Graphics;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -18,6 +22,7 @@ import org.gephi.preview.api.G2DTarget;
 import org.gephi.preview.api.PreviewController;
 import org.gephi.preview.api.PreviewMouseEvent;
 import org.gephi.preview.api.PreviewProperties;
+import org.gephi.preview.api.RenderTarget;
 import org.gephi.preview.api.Vector;
 import org.gephi.project.api.ProjectController;
 import org.gephi.project.api.Workspace;
@@ -102,11 +107,38 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
         if (!previewController.sendMouseEvent(tmpPME)) {
             setMoving(false);
         }
-    	if(SwingUtilities.isLeftMouseButton(e)) { //si clique gauche
+
+		String isDomain = "3";
+		boolean onDomain = false;
+		MouseListenerTemplate isClicked=new MouseListenerTemplate();
+		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+		Workspace workspace = pc.getCurrentWorkspace();
+		
+		for (Node node : Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace).getGraph().getNodes()) {
+			if(isClicked.clickingInNode(node,tmpPME) && node.getId().toString().compareTo(isDomain) == 0){
+				onDomain = true;
+			}
+		}
+        
+    	if(SwingUtilities.isLeftMouseButton(e) && onDomain) { //si clique gauche sur le domaine du graphe
+            G2DTarget target = (G2DTarget) previewController.getRenderTarget(RenderTarget.G2D_TARGET);
+            final PreviewSketch previewSketch = new PreviewSketch(target);
+            previewController.refreshPreview();
+            
     		JFrame frame = new JFrame();
     		frame.setBounds(e.getX(),e.getY(), 250, 250);
-    		frame.setVisible(true);
-    		//System.out.println(e.getX()+" / "+e.getY());
+    		frame.setLayout(new BorderLayout());
+
+            frame.add(previewSketch, BorderLayout.CENTER);
+            frame.setSize(700, 500);
+            
+            frame.addComponentListener(new ComponentAdapter() {
+                @Override
+                public void componentShown(ComponentEvent e) {
+                    previewSketch.resetZoom();
+                }
+            });
+            frame.setVisible(true);
     	}
         refreshLoop.refreshSketch();
     }
