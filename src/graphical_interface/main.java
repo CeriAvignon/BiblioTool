@@ -14,6 +14,11 @@ import org.gephi.graph.api.Node;
 import javax.swing.JFrame;
 import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphModel;
+import org.gephi.graph.api.GraphView;
+import org.gephi.filters.api.FilterController;
+import org.gephi.filters.api.Query;
+import org.gephi.filters.api.Range;
+import org.gephi.filters.plugin.graph.DegreeRangeBuilder.DegreeRangeFilter;
 import org.gephi.graph.api.DirectedGraph;
 import org.gephi.graph.api.Edge;
 import org.gephi.io.importer.api.Container;
@@ -149,7 +154,7 @@ public class main {
 		//sauvegarde le graphe dans un fichier gexf
 		ExportController ec = Lookup.getDefault().lookup(ExportController.class);
 	    try {
-	        ec.exportFile(new File("bin/graphical_interface/testGephi.gexf"));
+	        ec.exportFile(new File("bin/gephi/testGephi.gexf"));
 	    } catch (IOException ex) {
 	        ex.printStackTrace();
 	        return;
@@ -167,6 +172,7 @@ public class main {
 		System.out.println("Nodes: " + myGraph.directedGraph.getNodeCount() + " Edges: " + myGraph.directedGraph.getEdgeCount());
 		myGraph.saveGexf();
 		myGraph.script();
+
 		for (Edge e : myGraph.directedGraph.getEdges()) {
 			System.out.println(e.getId()+" : " + e.getSource().getId() + " -> " + e.getTarget().getId());
 		}

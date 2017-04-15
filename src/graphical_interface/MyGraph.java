@@ -54,45 +54,6 @@ public final class MyGraph {
 		return directedGraph;
 	}
 	
-	public static void generateFileGexfFromGraph(DirectedGraph directedGraph)
-	{
-		try{
-				File file=new File("src/gephi/testGephi.gexf"); // d��finir l'arborescence
-				file.createNewFile();
-				FileWriter fw=new FileWriter(file);
-				String date =new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(Calendar.getInstance().getTime());
-				// general header for gexf
-				String header="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-				header += "<gexf xmlns:viz=\"http:///www.gexf.net/1.1draft/viz\" version=\"1.1\" xmlns=\"http://www.gexf.net/1.1draft\">\n";
-				header += "<meta lastmodifieddate=\""+date+"\">\n";
-				header += "<creator>Gephi 0.7</creator>\n</meta>\n";
-				header += "<graph defaultedgetype=\"directed\" idtype=\"string\" type=\"static\">\n";
-				header += "<attributes class=\"node\" mode=\"static\">\n";
-				header += "<attribute id=\"modularity_class\" title=\"Modularity Class\" type=\"integer\"/>\n</attributes>\n";
-				fw.write(header);
-				
-				// information of nodes and egds
-				fw.write("<nodes>\n");
-				for(Node n : directedGraph.getNodes()) {
-					String str = "<node id=\""+n.getId()+"\" label=\""+n.getLabel()+"\">\n";
-					str += "<viz:size value=\"25\"/>\n";
-					str += "<viz:color b=\"181\" g=\"228\" r=\"255\"/>\n</node>\n";
-					fw.write(str);
-				}
-				fw.write("</nodes>\n");
-				
-				fw.write("<edges>\n");
-				for (Edge e : directedGraph.getEdges()) {
-					String str = "<edge id=\""+e.getId()+"\" source=\""+ e.getSource().getId()+"\" target=\""+e.getTarget().getId()+"\"></edge>\n";
-					fw.write(str);
-				}
-				fw.write("</edges>\n</graph>\n</gexf>\n");
-				fw.close(); // fermer le fichier �� la fin des traitements
-		} 
-		catch (Exception e) {
-		}
-
-	}
 	
 	/**
 	 * @author yang shuai

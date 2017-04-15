@@ -1,111 +1,110 @@
 package graphical_interface;
 
+import java.awt.Color;
 import java.io.File;
+import java.io.IOException;
 
 import org.gephi.appearance.api.AppearanceController;
 import org.gephi.appearance.api.AppearanceModel;
 import org.gephi.filters.api.FilterController;
+import org.gephi.filters.api.FilterLibrary;
 import org.gephi.filters.api.Query;
 import org.gephi.filters.api.Range;
+import org.gephi.filters.plugin.attribute.AttributeRangeBuilder;
 import org.gephi.filters.plugin.graph.DegreeRangeBuilder.DegreeRangeFilter;
 import org.gephi.filters.plugin.graph.EgoBuilder.EgoFilter;
 import org.gephi.filters.plugin.operator.INTERSECTIONBuilder.IntersectionOperator;
+import org.gephi.filters.plugin.operator.MASKBuilderEdge;
+import org.gephi.filters.plugin.operator.MASKBuilderEdge.MaskEdgeOperator;
 import org.gephi.filters.plugin.partition.PartitionBuilder.NodePartitionFilter;
+import org.gephi.filters.plugin.partition.PartitionBuilder.PartitionFilter;
+import org.gephi.filters.spi.Filter;
+import org.gephi.filters.spi.FilterBuilder;
+import org.gephi.filters.spi.FilterProperty;
+import org.gephi.filters.spi.NodeFilter;
+import org.gephi.graph.api.Column;
+
 import org.gephi.graph.api.DirectedGraph;
 import org.gephi.graph.api.Edge;
+import org.gephi.graph.api.Graph;
 import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphModel;
 import org.gephi.graph.api.GraphView;
 import org.gephi.graph.api.Node;
+import org.gephi.graph.api.Subgraph;
+import org.gephi.graph.api.UndirectedGraph;
 import org.gephi.io.importer.api.Container;
+import org.gephi.io.importer.api.EdgeDirectionDefault;
 import org.gephi.io.importer.api.ImportController;
 import org.gephi.io.processor.plugin.DefaultProcessor;
+import org.gephi.layout.plugin.force.StepDisplacement;
+import org.gephi.layout.plugin.force.yifanHu.YifanHuLayout;
+import org.gephi.preview.api.PreviewController;
+import org.gephi.preview.api.PreviewModel;
+import org.gephi.preview.api.PreviewProperty;
+import org.gephi.preview.types.DependantOriginalColor;
+import org.gephi.preview.types.EdgeColor;
 import org.gephi.project.api.ProjectController;
 import org.gephi.project.api.Workspace;
+import org.gephi.statistics.plugin.GraphDistance;
 import org.openide.util.Lookup;
 
 public class Filtering {
-
-    public void script() {
+    public void script(Node n) {
         //Init a project - and therefore a workspace
         ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
         pc.newProject();
         Workspace workspace = pc.getCurrentWorkspace();
 
         //Get controllers and models
-        ImportController importController = Lookup.getDefault().lookup(ImportController.class);
         GraphModel graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
-        AppearanceModel appearanceModel = Lookup.getDefault().lookup(AppearanceController.class).getModel();
+        PreviewModel previewModel = Lookup.getDefault().lookup(PreviewController.class).getModel();
+        ImportController importController = Lookup.getDefault().lookup(ImportController.class);
+        FilterController filterController = Lookup.getDefault().lookup(FilterController.class);
+        AppearanceController appearanceController = Lookup.getDefault().lookup(AppearanceController.class);
+        AppearanceModel appearanceModel = appearanceController.getModel();
 
         //Import file
         Container container;
         try {
             File file = new File(getClass().getResource("testGephi.gexf").toURI());
             container = importController.importFile(file);
+            container.getLoader().setEdgeDefault(EdgeDirectionDefault.DIRECTED);   //Force DIRECTED
         } catch (Exception ex) {
             ex.printStackTrace();
             return;
         }
-
+        
         //Append imported data to GraphAPI
         importController.process(container, new DefaultProcessor(), workspace);
-
-        //Filter, remove degree < 10
-        FilterController filterController = Lookup.getDefault().lookup(FilterController.class);
-        DegreeRangeFilter degreeFilter = new DegreeRangeFilter();
-        degreeFilter.init(graphModel.getGraph());
-        degreeFilter.setRange(new Range(2, Integer.MAX_VALUE));     //Remove nodes with degree < 10
-        Query query = filterController.createQuery(degreeFilter);
-        GraphView view = filterController.filter(query);
-        graphModel.setVisibleView(view);    //Set the filter result as the visible view
+        System.out.println("Nodes: " + n.getLabel());
         
-        //Count nodes and edges on filtered graph
-        DirectedGraph graph = graphModel.getDirectedGraphVisible();
-        System.out.println("Nodes: " + graph.getNodeCount() + " Edges: " + graph.getEdgeCount());
-	    for (Node node : graph.getNodes()) {
-	    	System.out.println("Node: "+node.getLabel() );
-	    	for (Edge edge : graph.getEdges()) {   
-	    		if(edge.getSource().getId() == node.getId() || edge.getTarget().getId() ==node.getId() )
-	    		{
-	    			System.out.println("Edge: "+edge.getSource().getLabel() + " " +edge.getTarget().getLabel());
-	    		}
-	    	}
-	    }
-        /*
-        //Filter, keep partition 'Blogarama'. Build partition with 'source' column in the data
-        NodePartitionFilter partitionFilter = new NodePartitionFilter(graphModel.getNodeTable().getColumn("source"), appearanceModel);
-        partitionFilter.unselectAll();
-        partitionFilter.addPart("Blogarama");
-        Query query2 = filterController.createQuery(partitionFilter);
-        GraphView view2 = filterController.filter(query2);
-        graphModel.setVisibleView(view2);    //Set the filter result as the visible view
+        //See if graph is well imported
+        DirectedGraph graph = graphModel.getDirectedGraph();
+        System.out.println("Nodes: " + graph.getNodeCount());
+        System.out.println("Edges: " + graph.getEdgeCount());
 
-        //Count nodes and edges on filtered graph
-        graph = graphModel.getDirectedGraphVisible();
-        System.out.println("Nodes: " + graph.getNodeCount() + " Edges: " + graph.getEdgeCount());
-
-        //Combine two filters with AND - Set query and query2 as sub-query of AND
-        IntersectionOperator intersectionOperator = new IntersectionOperator();
-        Query query3 = filterController.createQuery(intersectionOperator);
-        filterController.setSubQuery(query3, query);
-        filterController.setSubQuery(query3, query2);
-        GraphView view3 = filterController.filter(query3);
-        graphModel.setVisibleView(view3);    //Set the filter result as the visible view
-
-        //Count nodes and edges on filtered graph
-        graph = graphModel.getDirectedGraphVisible();
-        System.out.println("Nodes: " + graph.getNodeCount() + " Edges: " + graph.getEdgeCount());
-
-        //Ego filter
+        //Ego filter hide a node
         EgoFilter egoFilter = new EgoFilter();
-        egoFilter.setPattern("obamablog.com"); //Regex accepted
-        egoFilter.setDepth(1);
+        egoFilter.setPattern(n.getLabel());
+        egoFilter.setDepth(graph.getEdgeCount());
+        egoFilter.setSelf(false);
         Query queryEgo = filterController.createQuery(egoFilter);
         GraphView viewEgo = filterController.filter(queryEgo);
         graphModel.setVisibleView(viewEgo);    //Set the filter result as the visible view
 
+        
+        //Preview
+        previewModel.getProperties().putValue(PreviewProperty.SHOW_NODE_LABELS, Boolean.TRUE);
+        previewModel.getProperties().putValue(PreviewProperty.NODE_LABEL_COLOR, new DependantOriginalColor(Color.BLACK));
+        previewModel.getProperties().putValue(PreviewProperty.EDGE_CURVED, Boolean.FALSE);
+        previewModel.getProperties().putValue(PreviewProperty.EDGE_OPACITY, 50);
+        previewModel.getProperties().putValue(PreviewProperty.BACKGROUND_COLOR, Color.WHITE);
+        
         //Count nodes and edges on filtered graph
         graph = graphModel.getDirectedGraphVisible();
-        System.out.println("Nodes: " + graph.getNodeCount() + " Edges: " + graph.getEdgeCount());*/
+        System.out.println("Nodes: " + graph.getNodeCount() + " Edges: " + graph.getEdgeCount());
     }
+    
+    
 }

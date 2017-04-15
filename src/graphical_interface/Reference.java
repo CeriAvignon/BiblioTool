@@ -1,4 +1,5 @@
 package graphical_interface;
+
 public class Reference {
 	private int id;
 	// objet de type article

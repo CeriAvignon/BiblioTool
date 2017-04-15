@@ -17,7 +17,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphModel;
+import org.gephi.graph.api.GraphView;
 import org.gephi.graph.api.Node;
+import org.gephi.filters.api.FilterController;
+import org.gephi.filters.api.Query;
+import org.gephi.filters.api.Range;
+import org.gephi.filters.plugin.graph.DegreeRangeBuilder.DegreeRangeFilter;
+import org.gephi.filters.spi.NodeFilter;
 import org.gephi.graph.api.DirectedGraph;
 import org.gephi.graph.api.Edge;
 import org.gephi.preview.api.G2DTarget;
@@ -272,7 +278,17 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
 	    		  this.hideNodeEdge.put(node, edgeList);
 	    		  afficherList();
 	    		  System.out.println("removing.");
-	    		  directedGraph.removeNode(n); // removing a nodes
+	    		  Filtering filter=new Filtering();
+	    		  filter.script(node);
+	    		  /*FilterController filterController = Lookup.getDefault().lookup(FilterController.class);
+	    	        DegreeRangeFilter degreeFilter = new DegreeRangeFilter();
+	    	        degreeFilter.init(graphModel.getGraph());
+	    	        degreeFilter.setRange(new Range(2, Integer.MAX_VALUE));    //Remove nodes with degree < 10
+	    	        Query query = filterController.createQuery(degreeFilter);
+	    	        GraphView view = filterController.filter(query);
+	    	        graphModel.setVisibleView(view);    //Set the filter result as the visible view
+	    	        */
+	    		  //directedGraph.removeNode(n); // removing a nodes
 	    		  previewController.refreshPreview(); 
 	    		  refreshLoop.refreshSketch();
 	    	  }

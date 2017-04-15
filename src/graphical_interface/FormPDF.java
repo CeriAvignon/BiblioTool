@@ -15,6 +15,8 @@ import java.awt.TextField;
 
 public class FormPDF extends JPanel {
 	
+	private String fileName;
+	
 	public FormPDF(){
 		setBounds(0,0,950,700);
 		setVisible(true);
@@ -29,6 +31,7 @@ public class FormPDF extends JPanel {
 		JButton btnSubmitResearch = new JButton("Submit");
 		btnSubmitResearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				getGraph();
 				setVisible(false);
 			}
@@ -56,7 +59,7 @@ public class FormPDF extends JPanel {
 				JFileChooser fc = new JFileChooser();
 				fc.showOpenDialog(null);
 				File file= fc.getSelectedFile();
-				String fileName = file.getName();
+				fileName = file.getName();
 				textField.setText(fileName);
 				System.out.println(fc.getSelectedFile().getAbsolutePath());
 			}
