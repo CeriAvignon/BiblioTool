@@ -24,9 +24,9 @@ public class ManipulateGraph {
 		MyGraph.setReferences(MyGraph.ListeReference());
 
 		DirectedGraph dg = MyGraph.createDirectedGraph();
-	   // DirectedGraph dg2 = MyGraph.updateGraph();
-		//System.out.println("Nodes: " + dg2.getNodeCount() + " Edges: " + dg2.getEdgeCount());
-		System.out.println("Nodes: " + dg.getNodeCount() + " Edges: " + dg.getEdgeCount());
+	   DirectedGraph dg2 = MyGraph.updateGraph();
+		System.out.println("Nodes: " + dg2.getNodeCount() + " Edges: " + dg2.getEdgeCount());
+		//System.out.println("Nodes: " + dg.getNodeCount() + " Edges: " + dg.getEdgeCount());
 		List<Node> listOfNodes=MyGraph.listOfNodes();
 		for(Node l:listOfNodes){
 			System.out.print(l.getAttribute(MyGraph.idArt));
