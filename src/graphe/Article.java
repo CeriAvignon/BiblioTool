@@ -17,7 +17,7 @@ public class Article {
 	private int nbPage;
 	private int numVol;
 	private int numIssue;
-	private String journal;
+	private Journal journal;
 	private String urlArt;
 	private List<Reference> references;
 	private Boolean status;
@@ -25,7 +25,7 @@ public class Article {
 	public Article() { }
 
 	public Article(int idArt, String titleArt,List<Author> author , String doi, int pubYear, int numPage, int nbPage, int numVol,
-			int numIssue, String journal, String urlArt, List<Reference> references, Boolean status) {
+			int numIssue, Journal journal, String urlArt, List<Reference> references, Boolean status) {
 		super();
 		this.idArt = idArt;
 		this.titleArt = titleArt;
@@ -114,11 +114,11 @@ public class Article {
 		this.numIssue = numIssue;
 	}
 
-	public String getJournal() {
+	public 	Journal getJournal() {
 		return journal;
 	}
 
-	public void setJournal(String journal) {
+	public 	void setJournal(Journal journal) {
 		this.journal = journal;
 	}
 

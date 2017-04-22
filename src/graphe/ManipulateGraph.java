@@ -24,13 +24,14 @@ public class ManipulateGraph {
 		}
 		System.out.println("Nodes: " + dg.getNodeCount() + " Edges: " + dg.getEdgeCount());
 		
-		List<Reference>ListRef= MyGraph.exportRef(MyGraph.returnlistenode());
+	/*	List<Reference>ListRef= MyGraph.exportRef(MyGraph.returnlistenode());
+		for(Reference ref:ListRef)
+			ref.afficher();
+		*/
+		List<Reference>ListRef= MyGraph.exportRefOfJournal();
 		for(Reference ref:ListRef)
 			ref.afficher();   
-		
-		
-		
-		
-		
-	}
+	
+		}
+
 }

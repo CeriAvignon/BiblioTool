@@ -176,4 +176,100 @@ public final class MyGraph {
 	 }
 	return listRef;
 	}
+	// methode implementé par webMining 
+	static public int returnIdOfJournalByIdArt(int id_art)
+	{
+		List<Article> listArticl =listeArticlesTestJournaux();
+		for(Article a:listArticl)
+		{
+			if(a.getIdArt()==id_art)
+			{
+				int id=a.getJournal().getId();
+				return id;
+			}
+		}
+		return 0;
+	}
+public static List<Article> listeArticlesTestJournaux() {
+		
+		List<Article> articles = new ArrayList<Article>();
+
+		for (int i = 0; i < 4; i++) {
+			List<Reference> references = new ArrayList<Reference>();
+			Reference a=new Reference();
+			
+			Article art = new Article();
+			Journal j=new Journal();
+			j.setId(i+1*10);
+			j.setTitre("journal"+(i + 1));
+			a.setId(i+1);
+			a.setSource(i+1);
+			a.setTarget(i+2);
+			references.add(a);
+			art.setIdArt(i + 1);
+			art.setTitleArt("article" + (i + 1));
+			art.setReferences(references);
+			art.setJournal(j);
+			articles.add(art);
+		}
+		List<Reference> references = new ArrayList<Reference>();
+		Article art=new Article();
+		Journal j=new Journal();
+		j.setId(50);
+		j.setTitre("journal 5");
+		Reference b=new Reference();
+		b.setId(5);
+		b.setSource(5);
+		b.setTarget(2);
+		references.add(b);
+		art.setIdArt(5);
+		art.setTitleArt("article 5");
+		art.setReferences(references);
+		art.setJournal(j);
+		articles.add(art);
+		return articles;
+	}
+	// tache 30 exporter les references des journaux
+	static List<Reference> exportRefOfJournal()
+	{
+		 int i=1;
+		 List<Reference> listRef=ListeReferenceOfArticle() ;
+		 List<Reference> newListOfRef=new ArrayList<Reference>();
+		 for (Reference ref:listRef)
+		 {
+			 	int source=returnIdOfJournalByIdArt(ref.getSource());
+			 	//System.out.println("source  "+source);
+			 	int target=returnIdOfJournalByIdArt(ref.getTarget());
+			 	Reference a= new Reference();
+			 	a.setId(i);
+			 	a.setSource(source);
+			 	a.setTarget(target);
+			 	newListOfRef.add(a);
+			 	i++;
+			}
+		 
+		return newListOfRef;
+	}
+	
+	// methode implemente par web mining
+	public static List<Reference> ListeReferenceOfArticle() {
+		List<Article> listArticl =listeArticlesTestJournaux();
+		List<Reference> references = new ArrayList<Reference>();
+		
+		for(Article a:listArticl)
+		{
+				for(Reference ref:a.getReferences())
+					{
+					Reference r=ref;
+					references.add(r);
+					}
+			
+		}
+
+		return references;
+	}
+	
+	
+	
+	
 }
