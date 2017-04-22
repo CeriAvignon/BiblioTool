@@ -1,5 +1,9 @@
 package graphe;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +14,9 @@ import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphModel;
 import org.gephi.graph.api.Node;
 import org.gephi.graph.impl.GraphModelImpl;
+import org.gephi.io.exporter.api.ExportController;
+import org.gephi.io.exporter.spi.CharacterExporter;
+import org.gephi.io.exporter.spi.Exporter;
 import org.gephi.project.api.ProjectController;
 import org.gephi.project.api.Workspace;
 import org.openide.util.Lookup;
@@ -17,19 +24,18 @@ import org.openide.util.Lookup;
 public final class MyGraph {
 	
 	public static List<Article> articles;
+	public static List<Article> articles2;
+
 	public static List<Reference> references;
 	public static GraphModel graphModel;
 	private MyGraph() { }
-	
+
 	public static Column idArt, titleArt, author, doi, pubYear, numPage, nbPage, numVol, numIssue, journal, urlArt, ref, status;
 	
 	public static DirectedGraph createDirectedGraph(){
 		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
 		pc.newProject();
 		Workspace workspace = pc.getCurrentWorkspace();
-		
-		
-		
 		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
 		DirectedGraph directedGraph = graphModel.getDirectedGraph();
 		createColumns();
@@ -60,7 +66,7 @@ public final class MyGraph {
 		
 		System.out.println("les attributs du node sont :");
 		for (Column col : graphModel.getNodeTable()) {
-            System.out.println(col);
+            System.out.println(col.getTitle());
 		}
 		
 		for (Reference reference : references) {
@@ -69,10 +75,61 @@ public final class MyGraph {
 					directedGraph.getNode(String.valueOf(reference.getTarget())), 0, 1.0, true);
 			directedGraph.addEdge(e1);
 		}
+		for(Edge e : directedGraph.getEdges()) {
+		    System.out.println(e.getSource().getId()+" -> "+e.getTarget().getId());
+		}
+		for(Node e : directedGraph.getNodes()) {
+		    System.out.println(e.getAttribute(idArt));
+		}
+	
+		return directedGraph;
+	}
+	public static DirectedGraph createDirectedGraph2(){
+		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+		//pc.newProject();
+		Workspace workspace = pc.getCurrentWorkspace();
+		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
+		DirectedGraph directedGraph = graphModel.getDirectedGraph();
+		//createColumns();
+		
+		articles2 = retournerListeArticles2();
+		references = ListeReference();
+		
+		
+		for (Article article : articles2) {
+			Node n1 = graphModel.factory().newNode(String.valueOf(article.getIdArt()));
+			n1.setLabel(article.getTitleArt());
+			n1.setAttribute(idArt, article.getIdArt());
+			n1.setAttribute(pubYear, article.getPubYear());
+			n1.setAttribute(author, article.getAuthor());
+			n1.setAttribute(titleArt, article.getTitleArt());
+			n1.setAttribute(doi, article.getDoi());
+			n1.setAttribute(numPage, article.getNumPage());
+			n1.setAttribute(nbPage, article.getNbPage());
+			n1.setAttribute(numVol, article.getNumVol());
+			n1.setAttribute(numIssue, article.getNumIssue());
+			n1.setAttribute(journal, article.getJournal());
+			n1.setAttribute(urlArt, article.getUrlArt());
+			n1.setAttribute(ref, article.getReferences());
+			n1.setAttribute(status, article.getStatus());
+			
+			directedGraph.addNode(n1);
+		}
+		
+		System.out.println("les attributs du node sont :");
+		for (Column col : graphModel.getNodeTable()) {
+            System.out.println(col.getTitle());
+		}
+		
+//		for (Reference reference : references) {
+//			//System.out.println(reference.getTarget());
+//			Edge e1 = graphModel.factory().newEdge(directedGraph.getNode(String.valueOf(reference.getSource())),
+//			directedGraph.getNode(String.valueOf(reference.getTarget())), 0, 1.0, true);
+//			directedGraph.addEdge(e1);
+//		}
 		
 		return directedGraph;
 	}
-	
 	public static void createColumns(){
 		
 		idArt = graphModel.getNodeTable().addColumn("id_Article", Integer.class);
@@ -106,6 +163,12 @@ public final class MyGraph {
 		MyGraph.references = references;
 	}
 
+	public static List<Article> getArticles2() {
+		return articles2;
+	}
+	public static void setArticles2(List<Article> articles2) {
+		MyGraph.articles2 = articles2;
+	}
 	// methode implementee par le groupe web-mining
 	public static List<Article> retournerListeArticles() {
 		List<Article> articles = new ArrayList<Article>();
@@ -116,6 +179,16 @@ public final class MyGraph {
 			articles.add(art);
 		}
 		return articles;
+	}
+	public static List<Article> retournerListeArticles2() {
+		List<Article> articles2 = new ArrayList<Article>();
+		for (int i = 7; i <=8; i++) {
+			Article art = new Article();
+			art.setIdArt(i + 1);
+			art.setTitleArt("article" + (i + 1));
+			articles2.add(art);
+		}
+		return articles2;
 	}
 
 	// methode implementee par le groupe web-mining
@@ -129,4 +202,51 @@ public final class MyGraph {
 		}
 		return references;
 	}
+	
+	 public static void exportGraph(){
+		 //Export full graph gexf
+	 ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+	 Workspace workspace = pc.getCurrentWorkspace();
+	 ExportController ec = Lookup.getDefault().lookup(ExportController.class);
+	 try {
+	     ec.exportFile(new File("graphe.gexf"));
+	 } catch (IOException ex) {
+	     ex.printStackTrace();
+	     return;
+	 }
+	}
+	 //return chemin,nom du fichier, enumeration des extensionn
+	  public static void exportGraph(String extension){
+			 //Export full graph gexf
+		  if(extension=="gexf"){
+			  ExportController ec = Lookup.getDefault().lookup(ExportController.class);
+			   try {
+			       ec.exportFile(new File("graphe.gexf"));
+			   } catch (IOException ex) {
+			       ex.printStackTrace();
+			       return;
+			   }
+			  
+		  }
+		  else{
+			  ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+			   Workspace workspace = pc.getCurrentWorkspace();
+			   ExportController ec = Lookup.getDefault().lookup(ExportController.class);
+			   //Export GML
+		        Exporter exporterGraphML = ec.getExporter("graphml");     //Get GraphML exporter
+		        exporterGraphML.setWorkspace(workspace);
+		        StringWriter stringWriter = new StringWriter();
+		        ec.exportWriter(stringWriter, (CharacterExporter) exporterGraphML);
+		        FileWriter fw = null;
+		        try {
+		            fw = new FileWriter("graphe.graphml");
+		            fw.write(stringWriter.toString());
+		            fw.close();
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }
+			  
+		  }
+			  
+		   }
 }
