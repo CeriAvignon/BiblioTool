@@ -1,7 +1,9 @@
 package graphe;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.gephi.graph.api.Column;
 import org.gephi.graph.api.DirectedGraph;
@@ -14,22 +16,20 @@ import org.gephi.project.api.ProjectController;
 import org.gephi.project.api.Workspace;
 import org.openide.util.Lookup;
 
-public final class MyGraph {
+public final class MyGraph{
 	
 	public static List<Article> articles;
+
 	public static List<Reference> references;
 	public static GraphModel graphModel;
 	private MyGraph() { }
-	
+
 	public static Column idArt, titleArt, author, doi, pubYear, numPage, nbPage, numVol, numIssue, journal, urlArt, ref, status;
 	
 	public static DirectedGraph createDirectedGraph(){
 		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
 		pc.newProject();
 		Workspace workspace = pc.getCurrentWorkspace();
-		
-		
-		
 		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
 		DirectedGraph directedGraph = graphModel.getDirectedGraph();
 		createColumns();
@@ -52,12 +52,17 @@ public final class MyGraph {
 			n0.setAttribute(numIssue, article.getNumIssue());
 			n0.setAttribute(journal, article.getJournal());
 			n0.setAttribute(urlArt, article.getUrlArt());
+			n0.setAttribute(ref, article.getReferences());
 			n0.setAttribute(status, article.getStatus());
 			
 			directedGraph.addNode(n0);
 		}
-	
 		
+	/*	System.out.println("les attributs du node sont :");
+		for (Column col : graphModel.getNodeTable()) {
+            System.out.println(col.getTitle());
+		}
+		*/
 		for (Reference reference : references) {
 			//System.out.println(reference.getTarget());
 			Edge e1 = graphModel.factory().newEdge(directedGraph.getNode(String.valueOf(reference.getSource())),
@@ -67,14 +72,7 @@ public final class MyGraph {
 		
 		return directedGraph;
 	}
-	
-	public void changeStatusArticle(Node a) {
-		
-		a.setAttribute(status,true);
-		int id= Integer.parseInt((String) a.getId());
-	  // setStatus(id); methode de web mining 
-	}
-	
+
 	public static void createColumns(){
 		
 		idArt = graphModel.getNodeTable().addColumn("id_Article", Integer.class);
@@ -110,19 +108,11 @@ public final class MyGraph {
 
 	// methode implementee par le groupe web-mining
 	public static List<Article> retournerListeArticles() {
-		
 		List<Article> articles = new ArrayList<Article>();
 		for (int i = 0; i < 6; i++) {
-			Reference a=new Reference();
-			List<Reference> references = new ArrayList<Reference>();
 			Article art = new Article();
-			a.setId(i+1);
-			a.setSource(i+1);
-			a.setTarget(i+2);
-			references.add(a);
 			art.setIdArt(i + 1);
 			art.setTitleArt("article" + (i + 1));
-			art.setReferences(references);
 			articles.add(art);
 		}
 		return articles;
@@ -131,49 +121,140 @@ public final class MyGraph {
 	// methode implementee par le groupe web-mining
 	public static List<Reference> ListeReference() {
 		List<Reference> references = new ArrayList<Reference>();
-		for (int i = 1; i <= 5; i++) {
-			Reference ref = new Reference();
-			ref.setSource(i);
-			ref.setTarget(i + 1);
-			references.add(ref);
-		}
+		
+		Reference ref1 = new Reference();
+		ref1.setSource(1);
+		ref1.setTarget(4);
+		Reference ref2 = new Reference();
+		ref2.setSource(2);
+		ref2.setTarget(5);
+		Reference ref3 = new Reference();
+		ref3.setSource(3);
+		ref3.setTarget(4);
+		references.add(ref1);references.add(ref2);references.add(ref3);
 		return references;
 	}
 	
-	public static List<Node> returnlistenode(){
-		DirectedGraph dg = createDirectedGraph();
-		List<Node> ln = new ArrayList<>();
-		int j = 1;
-		for (Node node : dg.getNodes()) {
-			if (j<4) {
-				ln.add(node);
-				j++;
-			}
+	
+	public static DirectedGraph updateGraph(){
+		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+		Workspace workspace = pc.getCurrentWorkspace();
+		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
+		DirectedGraph directedGraph = graphModel.getDirectedGraph();
+		//method webmining
+		List<Article> listArticl= returnNewList();
+         // methode webmining
+		List<Reference> listRef=ListNewReferences();
+		
+		for (Article article : listArticl) {
+			Node n1 = graphModel.factory().newNode(String.valueOf(article.getIdArt()));
+			n1.setLabel(article.getTitleArt());
+			n1.setAttribute(idArt, article.getIdArt());
+			n1.setAttribute(pubYear, article.getPubYear());
+			n1.setAttribute(author, article.getAuthor());
+			n1.setAttribute(titleArt, article.getTitleArt());
+			n1.setAttribute(doi, article.getDoi());
+			n1.setAttribute(numPage, article.getNumPage());
+			n1.setAttribute(nbPage, article.getNbPage());
+			n1.setAttribute(numVol, article.getNumVol());
+			n1.setAttribute(numIssue, article.getNumIssue());
+			n1.setAttribute(journal, article.getJournal());
+			n1.setAttribute(urlArt, article.getUrlArt());
+			n1.setAttribute(ref, article.getReferences());
+			n1.setAttribute(status, article.getStatus());
 			
+			directedGraph.addNode(n1);
 		}
-		return ln ;
+		
+		/*System.out.println("les attributs du node sont :");
+		for (Column col : graphModel.getNodeTable()) {
+            System.out.println(col.getTitle());
+		}*/
+		
+     	for (Reference reference : listRef) {
+			//System.out.println(reference.getTarget());
+			Edge e1 = graphModel.factory().newEdge(directedGraph.getNode(String.valueOf(reference.getSource())),
+					directedGraph.getNode(String.valueOf(reference.getTarget())), 0, 1.0, true);
+		directedGraph.addEdge(e1);
 	}
-	//test (cette fonction pour recuperer les données de la base de données)
-	static List<Reference> refList(int idAarticl){
-		List<Reference> listRef=new ArrayList<Reference>();
-		List<Article> listArticl =retournerListeArticles();
-		for(Article a:listArticl){
-			if(a.getIdArt()==idAarticl){
-				listRef=a.getReferences();	}
+		
+		return directedGraph;
+	}
+	// methode implemente par webMining
+	public static List<Article> returnNewList() {
+		List<Article> articles = new ArrayList<Article>();
+		for (int i = 7; i <=8; i++) {
+			Article art = new Article();
+			art.setIdArt(i );
+			art.setTitleArt("article"+i);
+			art.setNbPage(500);
+			articles.add(art);
+		}	
+
+		return articles;
+	}
+	/*public static List<Article> returnDistinctList() {
+		List<Article> articles =returnNewList();
+		List<Article> DistincArt =new ArrayList<Article>();
+	  for (Article article : articles) {
+		  if(!DistincArt.contains(article)){
+			  System.out.println(article.getIdArt());
+			  System.out.println(article.getTitleArt());
+			  DistincArt.add(article);
+	
+		  }else rtyrrt9
+		
+	}
+		return DistincArt ;
+	}
+*/
+	// methode implemente par web-Mining 
+	public static List<Reference> ListNewReferences() {
+		List<Reference> references = new ArrayList<Reference>();
+		Reference ref1 = new Reference();
+		ref1.setSource(7);
+		ref1.setTarget(8);
+		Reference ref2 = new Reference();
+		ref2.setSource(7);
+		ref2.setTarget(5);
+		Reference ref3 = new Reference();
+		ref3.setSource(8);
+		ref3.setTarget(1);
+		references.add(ref1);
+		references.add(ref2);
+		references.add(ref3);
+	
+		return references;
+		
+	}
+	public static List<Node> listOfNodes(){
+
+		List<Node> list = new ArrayList<Node>();
+		List<Article> listArticl= returnNewList();
+		for (Article article : listArticl) {
+			Node n1 = graphModel.factory().newNode(String.valueOf(article.getIdArt()));
+			n1.setLabel(article.getTitleArt());
+			n1.setAttribute(idArt, article.getIdArt());
+			n1.setAttribute(pubYear, article.getPubYear());
+			n1.setAttribute(author, article.getAuthor());
+			n1.setAttribute(titleArt, article.getTitleArt());
+			n1.setAttribute(doi, article.getDoi());
+			n1.setAttribute(numPage, article.getNumPage());
+			n1.setAttribute(nbPage, article.getNbPage());
+			n1.setAttribute(numVol, article.getNumVol());
+			n1.setAttribute(numIssue, article.getNumIssue());
+			n1.setAttribute(journal, article.getJournal());
+			n1.setAttribute(urlArt, article.getUrlArt());
+			n1.setAttribute(ref, article.getReferences());
+			n1.setAttribute(status, article.getStatus());
+			
+			list.add(n1);
 		}
-	return listRef;
+		
+		
+		return list ;
 	}
 
-	// methode pour determiner les réferences des noeuds selectionneé
-	static List<Reference> exportRef(List<Node> listOfNode){
-	 List<Reference> listRef=new ArrayList<Reference>();
-	 for (Node node:listOfNode){
-		 int id= Integer.parseInt((String) node.getId());
-		  List<Reference> listBD=refList(id); 
-		for (Reference ref:listBD){
-			listRef.add(ref);
-		}
-	 }
-	return listRef;
-	}
+	
+	
 }
