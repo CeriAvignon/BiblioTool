@@ -118,6 +118,7 @@ public final class MyGraph {
 			Article art = new Article();
 			a.setId(i+1);
 			a.setSource(i+1);
+			a.setTarget(i+2);
 			references.add(a);
 			art.setIdArt(i + 1);
 			art.setTitleArt("article" + (i + 1));
