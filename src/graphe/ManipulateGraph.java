@@ -26,7 +26,7 @@ public class ManipulateGraph {
 		
 		List<Reference>ListRef= MyGraph.exportRef(MyGraph.returnlistenode());
 		for(Reference ref:ListRef)
-			ref.afficher();
+			ref.afficher();   
 		
 		
 		
