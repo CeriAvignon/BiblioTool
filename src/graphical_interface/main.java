@@ -39,7 +39,7 @@ import org.gephi.io.exporter.api.ExportController;
  */
 public class main {
 
-	public DirectedGraph directedGraph;
+	public DirectedGraph directedGraph; 
 
 	public main(){}
 	
@@ -154,7 +154,7 @@ public class main {
 		//sauvegarde le graphe dans un fichier gexf
 		ExportController ec = Lookup.getDefault().lookup(ExportController.class);
 	    try {
-	        ec.exportFile(new File("bin/gephi/testGephi.gexf"));
+	        ec.exportFile(new File("bin/graphical_interface/testGephi.gexf"));
 	    } catch (IOException ex) {
 	        ex.printStackTrace();
 	        return;

@@ -62,6 +62,8 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
     private boolean inited;
     private final boolean isRetina;
     private Map<Node,ArrayList<Edge>> hideNodeEdge = new HashMap<Node,ArrayList<Edge>>();
+    private Node nodeHideSave = null;
+    private Query saveQuery = null;
     
     
     public PreviewSketch(G2DTarget target) {
@@ -279,7 +281,8 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
 	    		  afficherList();
 	    		  System.out.println("removing.");
 	    		  Filtering filter=new Filtering();
-	    		  filter.script(node);
+	    		  saveQuery = filter.script(node,false, this.saveQuery);
+	    		  nodeHideSave = node;
 	    		  /*FilterController filterController = Lookup.getDefault().lookup(FilterController.class);
 	    	        DegreeRangeFilter degreeFilter = new DegreeRangeFilter();
 	    	        degreeFilter.init(graphModel.getGraph());
