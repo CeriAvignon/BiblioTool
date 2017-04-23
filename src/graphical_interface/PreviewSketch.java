@@ -1,6 +1,10 @@
 package graphical_interface;
 
+import javax.swing.*;
+
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -9,18 +13,40 @@ import java.awt.event.MouseWheelListener;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import org.gephi.graph.api.GraphController;
+import org.gephi.graph.api.GraphModel;
+import org.gephi.graph.api.GraphView;
+import org.gephi.graph.api.Node;
+import org.gephi.filters.api.FilterController;
+import org.gephi.filters.api.Query;
+import org.gephi.filters.api.Range;
+import org.gephi.filters.plugin.graph.DegreeRangeBuilder.DegreeRangeFilter;
+import org.gephi.filters.spi.NodeFilter;
+import org.gephi.graph.api.DirectedGraph;
+import org.gephi.graph.api.Edge;
 import org.gephi.preview.api.G2DTarget;
 import org.gephi.preview.api.PreviewController;
 import org.gephi.preview.api.PreviewMouseEvent;
+import org.gephi.preview.api.PreviewProperties;
 import org.gephi.preview.api.Vector;
+import org.gephi.project.api.ProjectController;
+import org.gephi.project.api.Workspace;
 import org.openide.util.Lookup;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  *
  * @author mbastian
  */
+
 public class PreviewSketch extends JPanel implements MouseListener, MouseWheelListener, MouseMotionListener {
 
     private static final int WHEEL_TIMER = 500;
@@ -35,7 +61,11 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
     private Timer wheelTimer;
     private boolean inited;
     private final boolean isRetina;
-
+    private Map<Node,ArrayList<Edge>> hideNodeEdge = new HashMap<Node,ArrayList<Edge>>();
+    private Node nodeHideSave = null;
+    private Query saveQuery = null;
+    
+    
     public PreviewSketch(G2DTarget target) {
         this.target = target;
         previewController = Lookup.getDefault().lookup(PreviewController.class);
@@ -70,13 +100,55 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (previewController.sendMouseEvent(buildPreviewMouseEvent(e, PreviewMouseEvent.Type.CLICKED))) {
+        PreviewMouseEvent tmpPME=buildPreviewMouseEvent(e, PreviewMouseEvent.Type.CLICKED);
+        MouseListenerTemplate test=new MouseListenerTemplate();
+        ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+        Workspace workspace = pc.getCurrentWorkspace();
+        for (Node node : Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace).getGraph().getNodes()) {
+        	if(test.clickingInNode(node,tmpPME)){
+	        	if(SwingUtilities.isRightMouseButton(e)) // check right click 
+	        	{
+        			// if we click on a noeud then it show the popup menu
+		    		JPopupMenu popup = new JPopupMenu();
+		    		JMenuItem mntmHide = new JMenuItem("Masquer ce noeud");
+		    		JMenuItem mntmDisplay = new JMenuItem("Re-afficher le dernier noeud");
+		    		popup.add(mntmHide);
+		    		if(this.nodeHideSave != null)
+		    			popup.add(mntmDisplay);
+		            popup.show(e.getComponent(), e.getX(), e.getY());
+		    		mntmHide.addActionListener( new ActionListener()
+		    		{
+		    		    public void actionPerformed(ActionEvent e)
+		    		    {
+		    		    	hideNode(node);
+		    	        	tmpPME.setConsumed(true);
+		    	        	return;
+		    		    }
+		    		});
+		    		mntmDisplay.addActionListener( new ActionListener()
+		    		{
+		    		    public void actionPerformed(ActionEvent e)
+		    		    {
+		    		    	displayNode(node);
+		    	        	tmpPME.setConsumed(true);
+		    	        	nodeHideSave = null;
+		    	        	return;
+		    		    }
+		    		});
+		        	System.out.println("on the node " + node.getLabel());
+	        	}
+        	} 
+	
+        }
+
+        if (previewController.sendMouseEvent(tmpPME)) {
             refreshLoop.refreshSketch();
         }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
+    	
         previewController.sendMouseEvent(buildPreviewMouseEvent(e, PreviewMouseEvent.Type.PRESSED));
         ref.set(e.getX(), e.getY());
         lastMove.set(target.getTranslate());
@@ -86,12 +158,14 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (!previewController.sendMouseEvent(buildPreviewMouseEvent(e, PreviewMouseEvent.Type.RELEASED))) {
+        PreviewMouseEvent tmpPME=buildPreviewMouseEvent(e, PreviewMouseEvent.Type.RELEASED);
+        if (!previewController.sendMouseEvent(tmpPME)) {
             setMoving(false);
         }
 
         refreshLoop.refreshSketch();
     }
+
 
     @Override
     public void mouseEntered(MouseEvent e) {
@@ -188,6 +262,121 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
         return new PreviewMouseEvent((int) pos.x, (int) pos.y, type, button, null);
     }
 
+    /**
+     * @author Yang Shuai
+     * This function allow to hide a node and those edges.
+     * can be used for the function redisplayHideNode(Node node);
+     */
+    
+    public void hideNode(Node node)
+    {
+    	try
+    	{
+    		// loading data
+  	  	  ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+	      Workspace workspace = pc.getCurrentWorkspace();
+          GraphModel graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace);
+    	  DirectedGraph directedGraph = graphModel.getDirectedGraph();
+    	  PreviewController previewController = Lookup.getDefault().lookup(PreviewController.class);
+    	  
+	      for (Node n : graphModel.getGraph().getNodes().toArray()) {   
+	    	  if(n.getLabel().equals(node.getLabel())) // if its node is matched
+	    	  {  
+	    		  ArrayList<Edge> edgeList = new ArrayList<Edge>();
+	    		  for (Edge edge : graphModel.getGraph().getEdges()) 
+	    		  {   
+	    			  if(edge.getSource().getId() == n.getId() || edge.getTarget().getId() ==n.getId() )
+		   	    	  {
+		    			  edgeList.add(edge);
+		   	    	  }
+	    		  }
+	    		  this.hideNodeEdge.put(node, edgeList);
+	    		  afficherList();
+	    		  System.out.println("removing.");
+	    		  Filtering filter=new Filtering();
+	    		  saveQuery = filter.script(node,false, this.saveQuery);
+	    		  nodeHideSave = node;
+	    		  /*FilterController filterController = Lookup.getDefault().lookup(FilterController.class);
+	    	        DegreeRangeFilter degreeFilter = new DegreeRangeFilter();
+	    	        degreeFilter.init(graphModel.getGraph());
+	    	        degreeFilter.setRange(new Range(2, Integer.MAX_VALUE));    //Remove nodes with degree < 10
+	    	        Query query = filterController.createQuery(degreeFilter);
+	    	        GraphView view = filterController.filter(query);
+	    	        graphModel.setVisibleView(view);    //Set the filter result as the visible view
+	    	        */
+	    		  //directedGraph.removeNode(n); // removing a nodes
+	    		  previewController.refreshPreview(); 
+	    		  refreshLoop.refreshSketch();
+	    	  }
+	      }
+    	}catch(Exception ex){
+    		System.out.println("Cannot find this node.");
+    	}
+	
+    }
+    
+    public void displayNode(Node node)
+    {
+    	try
+    	{
+    		// loading data
+  	  	  ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+	      Workspace workspace = pc.getCurrentWorkspace();
+          GraphModel graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace);
+    	  PreviewController previewController = Lookup.getDefault().lookup(PreviewController.class);
+    	  
+	      for (Node n : graphModel.getGraph().getNodes().toArray()) {   
+	    	  if(n.getLabel().equals(node.getLabel())) // if its node is matched
+	    	  {  
+	    		  ArrayList<Edge> edgeList = new ArrayList<Edge>();
+	    		  for (Edge edge : graphModel.getGraph().getEdges()) 
+	    		  {   
+	    			  if(edge.getSource().getId() == n.getId() || edge.getTarget().getId() ==n.getId() )
+		   	    	  {
+		    			  edgeList.add(edge);
+		   	    	  }
+	    		  }
+	    		  this.hideNodeEdge.put(node, edgeList);
+	    		  afficherList();
+	    		  System.out.println("not removing.");
+	    		  Filtering filter=new Filtering();
+	    		  saveQuery = filter.script(node, true, this.saveQuery);
+	    		  
+	    		  /*FilterController filterController = Lookup.getDefault().lookup(FilterController.class);
+	    	        DegreeRangeFilter degreeFilter = new DegreeRangeFilter();
+	    	        degreeFilter.init(graphModel.getGraph());
+	    	        degreeFilter.setRange(new Range(2, Integer.MAX_VALUE));    //Remove nodes with degree < 10
+	    	        Query query = filterController.createQuery(degreeFilter);
+	    	        GraphView view = filterController.filter(query);
+	    	        graphModel.setVisibleView(view);    //Set the filter result as the visible view
+	    	        */
+	    		  //directedGraph.removeNode(n); // removing a nodes
+	    		  previewController.refreshPreview(); 
+	    		  refreshLoop.refreshSketch();
+	    	  }
+	      }
+    	}catch(Exception ex){
+    		System.out.println("Cannot find this node.");
+    	}
+	
+    }
+    
+    // Debug of collection
+    public void afficherList()
+    {
+        System.out.println("Parcours de l'objet HashMap : ");
+        Set<Entry<Node, ArrayList<Edge>>> setHm = this.hideNodeEdge.entrySet();
+        Iterator<Entry<Node, ArrayList<Edge>>> it = setHm.iterator();
+        while(it.hasNext()){
+        	Entry<Node, ArrayList<Edge>> e = it.next();
+        	for(int i = 0;i<e.getValue().size();i++)
+        	{
+        		System.out.println(e.getKey().getLabel() + " : " + e.getValue().get(i).getSource().getLabel()+" -> "+e.getValue().get(i).getTarget().getLabel());
+        	}
+           
+        }
+    }
+    
     private class RefreshLoop {
 
         private final long DELAY = 100;
@@ -232,3 +421,5 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
         }
     }
 }
+
+
