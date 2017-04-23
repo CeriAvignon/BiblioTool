@@ -50,7 +50,7 @@ import org.gephi.statistics.plugin.GraphDistance;
 import org.openide.util.Lookup;
 
 public class Filtering {
-    public void script(Node n) {
+    public Query script(Node n, boolean display, Query q) {
         //Init a project - and therefore a workspace
         ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
         pc.newProject();
@@ -72,7 +72,7 @@ public class Filtering {
             container.getLoader().setEdgeDefault(EdgeDirectionDefault.DIRECTED);   //Force DIRECTED
         } catch (Exception ex) {
             ex.printStackTrace();
-            return;
+            return null;
         }
         
         //Append imported data to GraphAPI
@@ -89,9 +89,25 @@ public class Filtering {
         egoFilter.setPattern(n.getLabel());
         egoFilter.setDepth(graph.getEdgeCount());
         egoFilter.setSelf(false);
-        Query queryEgo = filterController.createQuery(egoFilter);
-        GraphView viewEgo = filterController.filter(queryEgo);
-        graphModel.setVisibleView(viewEgo);    //Set the filter result as the visible view
+
+		System.out.println("oui : "+display);
+        Query queryEgo = null;
+        if(q != null)
+        	queryEgo = q;
+        if(!display) {
+        	queryEgo = filterController.createQuery(egoFilter);
+        	GraphView viewEgo = filterController.filter(queryEgo);
+        	graphModel.setVisibleView(viewEgo);    //Set the filter result as the visible view
+        }
+        else {
+        	filterController.remove(queryEgo);
+        	if(queryEgo != null)
+        		System.out.println("oui");
+        	else
+        		System.out.println("non");
+        	/*GraphView viewEgo = filterController.filter(queryEgo);
+        	graphModel.setVisibleView(viewEgo);*/
+        }
 
         
         //Preview
@@ -104,6 +120,7 @@ public class Filtering {
         //Count nodes and edges on filtered graph
         graph = graphModel.getDirectedGraphVisible();
         System.out.println("Nodes: " + graph.getNodeCount() + " Edges: " + graph.getEdgeCount());
+        return queryEgo;
     }
     
     

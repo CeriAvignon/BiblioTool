@@ -62,6 +62,8 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
     private boolean inited;
     private final boolean isRetina;
     private Map<Node,ArrayList<Edge>> hideNodeEdge = new HashMap<Node,ArrayList<Edge>>();
+    private Node nodeHideSave = null;
+    private Query saveQuery = null;
     
     
     public PreviewSketch(G2DTarget target) {
@@ -109,7 +111,10 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
         			// if we click on a noeud then it show the popup menu
 		    		JPopupMenu popup = new JPopupMenu();
 		    		JMenuItem mntmHide = new JMenuItem("Masquer ce noeud");
+		    		JMenuItem mntmDisplay = new JMenuItem("Re-afficher le dernier noeud");
 		    		popup.add(mntmHide);
+		    		if(this.nodeHideSave != null)
+		    			popup.add(mntmDisplay);
 		            popup.show(e.getComponent(), e.getX(), e.getY());
 		    		mntmHide.addActionListener( new ActionListener()
 		    		{
@@ -118,6 +123,14 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
 		    		    	hideNode(node);
 		    	        	tmpPME.setConsumed(true);
 		    	        	return;
+		    		    }
+		    		});
+		    		mntmDisplay.addActionListener( new ActionListener()
+		    		{
+		    		    public void actionPerformed(ActionEvent e)
+		    		    {
+		    	        	tmpPME.setConsumed(true);
+		    		    	return;
 		    		    }
 		    		});
 		        	System.out.println("on the node " + node.getLabel());
@@ -279,7 +292,8 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
 	    		  afficherList();
 	    		  System.out.println("removing.");
 	    		  Filtering filter=new Filtering();
-	    		  filter.script(node);
+	    		  saveQuery = filter.script(node,false, this.saveQuery);
+	    		  nodeHideSave = node;
 	    		  /*FilterController filterController = Lookup.getDefault().lookup(FilterController.class);
 	    	        DegreeRangeFilter degreeFilter = new DegreeRangeFilter();
 	    	        degreeFilter.init(graphModel.getGraph());
