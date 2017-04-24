@@ -10,6 +10,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -19,6 +22,11 @@ import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphModel;
 import org.gephi.graph.api.GraphView;
 import org.gephi.graph.api.Node;
+import org.gephi.io.exporter.api.ExportController;
+import org.gephi.io.exporter.preview.ExporterBuilderPDF;
+import org.gephi.io.exporter.preview.PDFExporter;
+import org.gephi.io.exporter.spi.GraphExporter;
+import org.gephi.io.exporter.spi.GraphFileExporterBuilder;
 import org.gephi.filters.api.FilterController;
 import org.gephi.filters.api.Query;
 import org.gephi.filters.api.Range;
@@ -34,6 +42,9 @@ import org.gephi.preview.api.Vector;
 import org.gephi.project.api.ProjectController;
 import org.gephi.project.api.Workspace;
 import org.openide.util.Lookup;
+
+import com.itextpdf.text.PageSize;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -122,17 +133,136 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
 		    	        	return;
 		    		    }
 		    		});
+
 		        	System.out.println("on the node " + node.getLabel());
 	        	}
         	} 
-	
+        	else 
+        	{
+        		if(SwingUtilities.isRightMouseButton(e)) // check right click 
+        		{
+    	    		JPopupMenu popup = new JPopupMenu();
+    	    		JMenu mntmSave = new JMenu("Sauvegarder sous...");
+		    		JMenuItem mntmSavePdf = new JMenuItem("PDF");
+		    		JMenu mnSaveGexf = new JMenu("GEXF");
+		    		JMenuItem mntmFullGraphe = new JMenuItem("Le graphe entier");
+		    		JMenuItem mntmFilteredGraphe = new JMenuItem("Le graphe filtré");
+		    		mnSaveGexf.add(mntmFullGraphe);
+		    		mnSaveGexf.add(mntmFilteredGraphe);
+		    		mntmSave.add(mntmSavePdf);
+		    		mntmSave.add(mnSaveGexf);
+    	    		popup.add(mntmSave);
+    	            popup.show(e.getComponent(), e.getX(), e.getY());
+    	            mntmSavePdf.addActionListener( new ActionListener()
+    	    		{
+    	    		    public void actionPerformed(ActionEvent e)
+    	    		    {
+    	    		    	savePdf();
+    	    	        	tmpPME.setConsumed(true);
+    	    	        	return;
+    	    		    }
+    	    		});
+    	            mntmFilteredGraphe.addActionListener( new ActionListener()
+    	    		{
+    	    		    public void actionPerformed(ActionEvent e)
+    	    		    {
+    	    		    	saveFilteredGexf();
+    	    	        	tmpPME.setConsumed(true);
+    	    	        	return;
+    	    		    }
+    	    		});
+    	            mntmFullGraphe.addActionListener( new ActionListener()
+    	    		{
+    	    		    public void actionPerformed(ActionEvent e)
+    	    		    {
+    	    		    	saveFullGexf();
+    	    	        	tmpPME.setConsumed(true);
+    	    	        	return;
+    	    		    }
+    	    		});
+    	            
+            	}
+        	}
         }
 
         if (previewController.sendMouseEvent(tmpPME)) {
             refreshLoop.refreshSketch();
         }
     }
-
+    /*
+     * Export the graph into a file pdf
+     * */
+    public void savePdf()
+    {
+    	JFileChooser fs = new JFileChooser();
+    	fs.setDialogTitle("Sauvegarde en PDF");
+    	fs.setFileFilter(new FileTypeFilter(".pdf","PDF"));
+     	int result = fs.showSaveDialog(null);
+    	if(result == JFileChooser.APPROVE_OPTION){
+    		File file=fs.getSelectedFile();
+    		String filePath = file.getPath()+".pdf";
+    		ExportController ec = Lookup.getDefault().lookup(ExportController.class);
+    		//export
+    		try {
+    		   ec.exportFile(new File(filePath));
+    		} catch (IOException ex) {
+    		   ex.printStackTrace();
+    		   return;
+    		}
+    		System.out.println(file.getPath());
+    	}
+    }
+    /*
+     * Export the filtered graph into a file Gexf
+     * */
+    public void saveFilteredGexf()
+    {
+    	JFileChooser fs = new JFileChooser();
+    	fs.setDialogTitle("Sauvegarde en Gexf");
+    	fs.setFileFilter(new FileTypeFilter(".gexf","GEXF"));
+     	int result = fs.showSaveDialog(null);
+    	if(result == JFileChooser.APPROVE_OPTION){
+    		File file=fs.getSelectedFile();
+    		String filePath = file.getPath()+".gexf";
+    		ExportController ec = Lookup.getDefault().lookup(ExportController.class);
+    		////Only exports the visible (filtered) graph
+    		GraphExporter exporter = (GraphExporter) ec.getExporter("gexf");     //Get GEXF exporter
+    		exporter.setExportVisible(true);  //Only exports the visible (filtered) graph
+            ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+    		Workspace workspace = pc.getCurrentWorkspace();
+    		exporter.setWorkspace(workspace);
+    		try {
+    		    ec.exportFile(new File(filePath), exporter);
+    		} catch (IOException ex) {
+    		    ex.printStackTrace();
+    		    return;
+    		}
+    		System.out.println(file.getPath());
+    	}
+    }
+    /*
+     * Export the full graph into a file Gexf
+     * */
+    public void saveFullGexf()
+    {
+    	JFileChooser fs = new JFileChooser();
+    	fs.setDialogTitle("Sauvegarde en Gexf");
+    	fs.setFileFilter(new FileTypeFilter(".gexf","GEXF"));
+     	int result = fs.showSaveDialog(null);
+    	if(result == JFileChooser.APPROVE_OPTION){
+    		File file=fs.getSelectedFile();
+    		String filePath = file.getPath()+".gexf";
+    		// export full graph
+    		ExportController ec = Lookup.getDefault().lookup(ExportController.class);
+    		try {
+    		    ec.exportFile(new File(filePath));
+    		} catch (IOException ex) {
+    		    ex.printStackTrace();
+    		    return;
+    		}
+    		System.out.println(file.getPath());
+    	}
+    }
     @Override
     public void mousePressed(MouseEvent e) {
     	
