@@ -36,7 +36,6 @@ import org.openide.util.Lookup;
 public final class MyGraph {
 	
 	public static List<Article> articles;
-	public static List<Article> articles2;
 	public static List<Reference> references;
 	public static GraphModel graphModel;
 	private MyGraph() { }
@@ -107,53 +106,6 @@ public final class MyGraph {
 	
 		return directedGraph;
 	}
-	public static DirectedGraph createDirectedGraph2(){
-		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
-		//pc.newProject();
-		Workspace workspace = pc.getCurrentWorkspace();
-		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
-		DirectedGraph directedGraph = graphModel.getDirectedGraph();
-		//createColumns();
-		
-		articles2 = retournerListeArticles2();
-		references = listeReference();
-		
-		
-		for (Article article : articles2) {
-			Node n1 = graphModel.factory().newNode(String.valueOf(article.getIdArt()));
-			n1.setLabel(article.getTitleArt());
-			n1.setAttribute(idArt, article.getIdArt());
-			n1.setAttribute(pubYear, article.getPubYear());
-			n1.setAttribute(author, article.getAuthor());
-			n1.setAttribute(titleArt, article.getTitleArt());
-			n1.setAttribute(doi, article.getDoi());
-			n1.setAttribute(numPage, article.getNumPage());
-			n1.setAttribute(nbPage, article.getNbPage());
-			n1.setAttribute(numVol, article.getNumVol());
-			n1.setAttribute(numIssue, article.getNumIssue());
-			n1.setAttribute(journal, article.getJournal());
-			n1.setAttribute(urlArt, article.getUrlArt());
-			n1.setAttribute(ref, article.getReferences());
-			n1.setAttribute(status, article.getStatus());
-			
-			directedGraph.addNode(n1);
-		}
-		
-		System.out.println("les attributs du node sont :");
-		for (Column col : graphModel.getNodeTable()) {
-            System.out.println(col.getTitle());
-		}
-		
-//		for (Reference reference : references) {
-//			//System.out.println(reference.getTarget());
-//			Edge e1 = graphModel.factory().newEdge(directedGraph.getNode(String.valueOf(reference.getSource())),
-//			directedGraph.getNode(String.valueOf(reference.getTarget())), 0, 1.0, true);
-//			directedGraph.addEdge(e1);
-//		}
-		
-		return directedGraph;
-	}
-	
 	public static DirectedGraph createAuthorsGraph(){
 		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
 		pc.newProject();
@@ -174,13 +126,10 @@ public final class MyGraph {
 			n0.setAttribute(affiliation, author.getAffiliation());
 			authorGraph.addNode(n0);
 		}
-		
 		for (Reference ref : references) {
 			System.out.println(ref.getSource()+ "->" +ref.getTarget());
 			Edge e1 = graphModel.factory().newEdge(authorGraph.getNode(String.valueOf(ref.getSource())),authorGraph.getNode(String.valueOf(ref.getTarget())), 0, 1.0, true);
-			authorGraph.addEdge(e1);
-			
-			
+			//authorGraph.addEdge(e1);
 		}
 		
 		return authorGraph;
@@ -238,7 +187,7 @@ public final class MyGraph {
 	// methode implementee par le groupe web-mining
 	public static List<Article> listeArticles() {
 		List<Article> articles = new ArrayList<Article>();
-		for (int i = 1; i < 6; i++) {
+		for (int i = 1; i < 7; i++) {
 			Article art = new Article();
 			art.setIdArt(i);
 			art.setTitleArt("article" + (i));
@@ -260,19 +209,11 @@ public final class MyGraph {
 	//on crée une liste d'auteurs
 	public static List<Author> testListAuthor(){
 		List<Author> test = new ArrayList<Author>();
-		for (int i = 1; i < 6; i++) {
+		for (int i = 1; i < 7; i++) {
 			Author a = new Author(i, "nom_author"+(i), "prenom_author"+(i), "affiliation"+(i));
 			test.add(a);
 		}
 		return test;
-	}
-	//methode implementé par web-mining
-
-	public static List<Article> getArticles2() {
-		return articles2;
-	}
-	public static void setArticles2(List<Article> articles2) {
-		MyGraph.articles2 = articles2;
 	}
 	// methode implementee par le groupe web-mining
 	public static List<Article> retournerListeArticles() {
