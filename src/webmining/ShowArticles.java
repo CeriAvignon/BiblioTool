@@ -1,3 +1,4 @@
+package webmining;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,7 +9,7 @@ import java.util.List;
 
 public class ShowArticles {
     
-	// Déclaration
+	// DÃ©claration
 
          public static ResultSet rs;
 
@@ -29,10 +30,10 @@ public class ShowArticles {
 	   	 
 	   		con = Connexion.ConnecterDB();
 		   	  
-	   	  //Création d'un statement
+	   	  //CrÃ©ation d'un statement
 
 	  
-		   	  // exécution requéte
+		   	  // exÃ©cution requÃ©te
 	   	  try {
 	   		st = con.createStatement();
 		   	   String sql ="select * from article ";
@@ -43,7 +44,7 @@ public class ShowArticles {
 			e1.printStackTrace();
 		}
 
-                 // création d'un objet article		 			
+                 // crÃ©ation d'un objet article		 			
 	 	
 			List<Article> list = new ArrayList<Article>();
 
@@ -81,20 +82,20 @@ public class ShowArticles {
 				
 		
 		
-		//Création d'une liste des articles
+		//CrÃ©ation d'une liste des articles
 				
 		
 		// Remplir la liste avec des articles
 		
 				for(int i = 0; i < nbr-1; i++)
 				{
-					System.out.println("donnée à l'indice " + i + " = " + list.get(i));
+					System.out.println("donnÃ©e Ã  l'indice " + i + " = " + list.get(i));
 				}
 		
 		   	   
 	   	     try { 
 
-	   	          //Etape 5: libérer ressources de la mémoire
+	   	          //Etape 5: libÃ©rer ressources de la mÃ©moire
 	   	          con.close();
 	   	         } catch (SQLException e) {
 	   	          e.printStackTrace();
