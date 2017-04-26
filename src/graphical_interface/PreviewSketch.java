@@ -13,6 +13,7 @@ import java.awt.event.MouseWheelListener;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -25,6 +26,8 @@ import org.gephi.graph.api.Node;
 import org.gephi.io.exporter.api.ExportController;
 import org.gephi.io.exporter.preview.ExporterBuilderPDF;
 import org.gephi.io.exporter.preview.PDFExporter;
+import org.gephi.io.exporter.spi.CharacterExporter;
+import org.gephi.io.exporter.spi.Exporter;
 import org.gephi.io.exporter.spi.GraphExporter;
 import org.gephi.io.exporter.spi.GraphFileExporterBuilder;
 import org.gephi.filters.api.FilterController;
@@ -136,9 +139,13 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
 
 		        	System.out.println("on the node " + node.getLabel());
 	        	}
+	        	break;
+
         	} 
+        	
         	else 
         	{
+	        	System.out.println("not on node");
         		if(SwingUtilities.isRightMouseButton(e)) // check right click 
         		{
     	    		JPopupMenu popup = new JPopupMenu();
@@ -147,12 +154,23 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
 		    		JMenu mnSaveGexf = new JMenu("GEXF");
 		    		JMenuItem mntmFullGraphe = new JMenuItem("Le graphe entier");
 		    		JMenuItem mntmFilteredGraphe = new JMenuItem("Le graphe filtré");
+		    		JMenuItem mntmGraphMl = new JMenuItem("GrapheML");
 		    		mnSaveGexf.add(mntmFullGraphe);
 		    		mnSaveGexf.add(mntmFilteredGraphe);
 		    		mntmSave.add(mntmSavePdf);
 		    		mntmSave.add(mnSaveGexf);
+		    		mntmSave.add(mntmGraphMl);
     	    		popup.add(mntmSave);
     	            popup.show(e.getComponent(), e.getX(), e.getY());
+    	            mntmGraphMl.addActionListener( new ActionListener()
+    	    		{
+    	    		    public void actionPerformed(ActionEvent e)
+    	    		    {
+    	    		    	saveGraphMl();
+    	    	        	tmpPME.setConsumed(true);
+    	    	        	return;
+    	    		    }
+    	    		});
     	            mntmSavePdf.addActionListener( new ActionListener()
     	    		{
     	    		    public void actionPerformed(ActionEvent e)
@@ -180,7 +198,6 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
     	    	        	return;
     	    		    }
     	    		});
-    	            
             	}
         	}
         }
@@ -188,6 +205,36 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
         if (previewController.sendMouseEvent(tmpPME)) {
             refreshLoop.refreshSketch();
         }
+    }
+    
+    /*
+     * Export the graph into a file GrapheMl
+     * */
+    public void saveGraphMl()
+    {
+        ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+        Workspace workspace = pc.getCurrentWorkspace();
+    	JFileChooser fs = new JFileChooser();
+    	fs.setDialogTitle("Sauvegarde en GrapheML");
+    	fs.setFileFilter(new FileTypeFilter(".graphml","graphml"));
+     	int result = fs.showSaveDialog(null);
+    	if(result == JFileChooser.APPROVE_OPTION){
+    		File file=fs.getSelectedFile();
+    		String filePath = file.getPath()+".graphml";
+    		ExportController ec = Lookup.getDefault().lookup(ExportController.class);
+    		//export
+    		Exporter exporterGraphML = ec.getExporter("graphml");     //Get GraphML exporter
+            exporterGraphML.setWorkspace(workspace);
+            StringWriter stringWriter = new StringWriter();
+            ec.exportWriter(stringWriter, (CharacterExporter) exporterGraphML);
+            try {
+    		    ec.exportFile(new File(filePath), exporterGraphML);
+    		} catch (IOException ex) {
+    		    ex.printStackTrace();
+    		    return;
+    		}
+    		System.out.println(file.getPath());
+    	}
     }
     /*
      * Export the graph into a file pdf
