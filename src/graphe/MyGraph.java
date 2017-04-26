@@ -215,16 +215,20 @@ public final class MyGraph {
 	     return;
 	 }
 	}
-	 //return chemin,nom du fichier, enumeration des extensionn
-	  public static void exportGraph(String extension){
+	 //énumeration pour les extensions
+	 public enum Extension {
+		    GEXF,
+		    GML		  
+	 }
+	 //return chemin,nom du fichier et reçoit par paramétre choix d'une extension
+	  public static String exportGraph(Extension ext){
 			 //Export full graph gexf
-		  if(extension=="gexf"){
+		  if(ext==Extension.GEXF){
 			  ExportController ec = Lookup.getDefault().lookup(ExportController.class);
 			   try {
 			       ec.exportFile(new File("graphe.gexf"));
 			   } catch (IOException ex) {
 			       ex.printStackTrace();
-			       return;
 			   }
 			  
 		  }
@@ -247,6 +251,7 @@ public final class MyGraph {
 		        }
 			  
 		  }
+	       return System.getProperty("user.dir")+"/graphe."+ext;
 			  
 		   }
 }

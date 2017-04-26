@@ -28,6 +28,7 @@ public class ManipulateGraph {
 		DirectedGraph dg = MyGraph.createDirectedGraph();
 		DirectedGraph dg2 = MyGraph.createDirectedGraph2();
 		System.out.println("Nodes: " + dg2.getNodeCount() + " Edges: " + dg2.getEdgeCount());
-		MyGraph.exportGraph("gml");
+		String var = MyGraph.exportGraph(MyGraph.Extension.GML);
+		System.out.println(var);
 	}
 }
