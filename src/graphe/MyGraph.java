@@ -17,12 +17,14 @@ import org.openide.util.Lookup;
 public final class MyGraph {
 	
 	public static List<Article> articles;
+	public static List<Journal> journaux;
 	public static List<Reference> references;
 	public static GraphModel graphModel;
 	private MyGraph() { }
 	
 	public static Column idArt, titleArt, author, doi, pubYear, numPage, nbPage, numVol, numIssue, journal, urlArt, ref, status;
-	
+	public static Column idJour, titleJour;
+
 	public static DirectedGraph createDirectedGraph(){
 		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
 		pc.newProject();
@@ -67,7 +69,36 @@ public final class MyGraph {
 		
 		return directedGraph;
 	}
-	
+	public static DirectedGraph createGraphJournal(){
+		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+		pc.newProject();
+		Workspace workspace = pc.getCurrentWorkspace();
+		
+		
+		
+		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
+		DirectedGraph directedGraph = graphModel.getDirectedGraph();
+		createColumnsJour();
+		
+		journaux = retournerListeJournaux();
+		
+		
+		for (Journal jour : journaux) {
+			Node n0 = graphModel.factory().newNode(String.valueOf(jour.getId()));
+			n0.setLabel(jour.getTitre());
+			n0.setAttribute(idJour, jour.getId());
+			directedGraph.addNode(n0);
+		}
+		references = exportRefOfJournal();
+		for (Reference reference : references) {
+			//System.out.println(reference.getTarget());
+			Edge e1 = graphModel.factory().newEdge(directedGraph.getNode(String.valueOf(reference.getSource())),
+					directedGraph.getNode(String.valueOf(reference.getTarget())), 0, 1.0, true);
+			directedGraph.addEdge(e1);
+		}
+		
+		return directedGraph;
+	}
 	public void changeStatusArticle(Node a) {
 		
 		a.setAttribute(status,true);
@@ -91,7 +122,11 @@ public final class MyGraph {
 		ref = graphModel.getNodeTable().addColumn("reference", Integer.class);
 		status = graphModel.getNodeTable().addColumn("status", Boolean.class);
 	}
-	
+public static void createColumnsJour(){
+		
+		idJour = graphModel.getNodeTable().addColumn("idJour", Integer.class);
+		titleJour = graphModel.getNodeTable().addColumn("titleJour", String.class);
+	}
 	public static List<Article> getArticles() {
 		return articles;
 	}
@@ -127,7 +162,21 @@ public final class MyGraph {
 		}
 		return articles;
 	}
+	public static List<Journal> retournerListeJournaux() {
+		
+		List<Journal> journaux = new ArrayList<Journal>();
+		for (int i = 10; i < 15; i++) {
+			
+			Journal jour = new Journal();
+		
+			jour.setId(i);
+			jour.setTitre("journal" + (i));
 
+
+			journaux.add(jour);
+		}
+		return journaux;
+	}
 	// methode implementee par le groupe web-mining
 	public static List<Reference> ListeReference() {
 		List<Reference> references = new ArrayList<Reference>();
@@ -215,7 +264,7 @@ public static List<Article> listeArticlesTestJournaux() {
 		List<Reference> references = new ArrayList<Reference>();
 		Article art=new Article();
 		Journal j=new Journal();
-		j.setId(50);
+		j.setId(14);
 		j.setTitre("journal 5");
 		Reference b=new Reference();
 		b.setId(5);
