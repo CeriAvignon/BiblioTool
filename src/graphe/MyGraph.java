@@ -218,6 +218,7 @@ public final class MyGraph {
 		}
 		return references;
 	}
+
 	
 	public static List<Author> listAllAuthors(){
 		List<Author> authors = new ArrayList<Author>();
@@ -330,5 +331,34 @@ public final class MyGraph {
         }
 	}
 	
+	
+
+	public static void changeStatusArticl(Node a) {
+		
+		a.setAttribute(status,true);
+		//int id= Integer.parseInt((String) a.getId());
+	  // setStatus(id); methode de web mining 
+	}
+	public static Node creerNode(Article article){
+		Node n0 = graphModel.factory().newNode(String.valueOf(article.getIdArt()));
+		n0.setLabel(article.getTitleArt());
+		n0.setAttribute(idArt, article.getIdArt());
+		n0.setAttribute(pubYear, article.getPubYear());
+		n0.setAttribute(author, article.getAuthor());
+		n0.setAttribute(titleArt, article.getTitleArt());
+		n0.setAttribute(doi, article.getDoi());
+		n0.setAttribute(numPage, article.getNumPage());
+		n0.setAttribute(nbPage, article.getNbPage());
+		n0.setAttribute(numVol, article.getNumVol());
+		n0.setAttribute(numIssue, article.getNumIssue());
+		n0.setAttribute(journal, article.getJournal());
+		n0.setAttribute(urlArt, article.getUrlArt());
+		n0.setAttribute(ref, article.getReferences());
+		n0.setAttribute(status, article.getStatus());
+		return n0;
+		
+		
+		
+	}
 	
 }
