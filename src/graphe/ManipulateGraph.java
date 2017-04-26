@@ -24,29 +24,13 @@ public class ManipulateGraph {
 		MyGraph.setReferences(MyGraph.ListeReference());
 
 		DirectedGraph dg = MyGraph.createDirectedGraph();
-	   DirectedGraph dg2 = MyGraph.updateGraph();
-		System.out.println("Nodes: " + dg2.getNodeCount() + " Edges: " + dg2.getEdgeCount());
-		//System.out.println("Nodes: " + dg.getNodeCount() + " Edges: " + dg.getEdgeCount());
-		List<Node> listOfNodes=MyGraph.listOfNodes();
-		for(Node l:listOfNodes){
-			System.out.print(l.getAttribute(MyGraph.idArt));
-			System.out.println(l.getAttribute(MyGraph.titleArt));
-			
-		}
+		 System.out.println("avant la mise a jour du graph");
+	     System.out.println("Nodes: " + dg.getNodeCount() + " Edges: " + dg.getEdgeCount());
+	    DirectedGraph dg2 = MyGraph.updateGraph();// on mis a jour le graphe
+	     System.out.println("apres la mise a jour du graph");
+	     System.out.println("Nodes: " + dg.getNodeCount() + " Edges: " + dg.getEdgeCount());
+	   
 		
-		//MyGraph.returnDistinctList();
-		
-		
-		/* PreviewModel previewModel = Lookup.getDefault().lookup(PreviewController.class).getModel();
-	        previewModel.getProperties().putValue(PreviewProperty.SHOW_NODE_LABELS, Boolean.TRUE);
-	        previewModel.getProperties().putValue(PreviewProperty.NODE_LABEL_PROPORTIONAL_SIZE, Boolean.FALSE);
-		 ExportController ec = Lookup.getDefault().lookup(ExportController.class);
-	        try {
-	            ec.exportFile(new File("ExportGraph.pdf"));
-	        } catch (IOException ex) {
-	            ex.printStackTrace();
-	            return;
-	        }*/
 		
 
 		
