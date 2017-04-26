@@ -42,6 +42,10 @@ public class ManipulateGraph {
 		
 		
 		//MyGraph.partitionGraph(authorGraph);
+<<<<<<< HEAD
+=======
+		//MyGraph.partitionGraph(authorGraph, MyGraph.pubYear);
+>>>>>>> MG-23
 		
 		String var = MyGraph.exportGraph(MyGraph.Extension.GML);
 		System.out.println(var);
