@@ -1,3 +1,5 @@
+
+package webmining
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -6,7 +8,7 @@ import java.util.Scanner;
 
 public class UpdateArticle {
 	
-	// Déclaration
+	// DÃ©claration
 
     public static ResultSet rs;
     public int nbr=1;
@@ -27,13 +29,13 @@ public class UpdateArticle {
   	 
   		con = Connexion.ConnecterDB();
 	   	  
-  	  //Création d'un statement
+  	  //CrÃ©ation d'un statement
 
  
-	   	  // exécution requéte
+	   	  // exÃ©cution requÃ©te
   		
   		Scanner sc = new Scanner(System.in);
-  		System.out.println("Veuillez saisir l'ID de l'article à Modifier :");
+  		System.out.println("Veuillez saisir l'ID de l'article Ã  Modifier :");
   		String str = sc.nextLine();
   		System.out.println("Vous avez saisi : " + str);
   		int entier= Integer.parseInt(str);
@@ -103,7 +105,7 @@ public class UpdateArticle {
 	   	   
   	     try { 
 
-  	          //Etape 5: libérer ressources de la mémoire
+  	          //Etape 5: libÃ©rer ressources de la mÃ©moire
   	          con.close();
   	         } catch (SQLException e) {
   	          e.printStackTrace();
