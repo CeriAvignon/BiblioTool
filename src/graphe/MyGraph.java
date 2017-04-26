@@ -243,9 +243,9 @@ public static void createColumnsJour(){
 		}
 		return 0;
 	}
-	// methodes listeArticlesTestJournaux() :creer des articles et les journaux et les references pour 
-	//tester la methode exportRefOfJournal 
-	//normalement on utilise la liste des articles retournés par la BDD
+	/* methodes listeArticlesTestJournaux() :creer des articles (id,titre,journal,ref ...) pour 
+	tester la methode exportRefOfJournal 
+	normalement on utilise la liste des articles retournés par la BDD*/
 public static List<Article> listeArticlesTestJournaux() {
 		
 		List<Article> articles = new ArrayList<Article>();
