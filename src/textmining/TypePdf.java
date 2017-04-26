@@ -12,7 +12,7 @@ public class TypePdf {
  *     1		= fichier texte cohérent
  *     -2    	= txt incohérent: Erreur probable de convertion pdf->txt 
  */
-    public int typeTXT(String [] text)
+    public static int typeTXT(String [] text)
     {
         int nbLigneTest=20;
         int tolerence=20; 
