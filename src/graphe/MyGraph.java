@@ -69,6 +69,11 @@ public final class MyGraph {
 		
 		articles = listeArticles();
 		references = listeReference();
+		for(Article a : articles)
+			System.out.println("id article: " + a.getIdArt());
+		
+		for(Reference ref : references)
+			System.out.println("edge: " + ref.getSource() + " -> " + ref.getTarget());
 		
 		for (Article article : articles) {
 			Node n0 = graphModel.factory().newNode(String.valueOf(article.getIdArt()));
@@ -219,7 +224,7 @@ public final class MyGraph {
 	public static List<Article> retournerListeArticles() {
 		
 		List<Article> articles = new ArrayList<Article>();
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i <= 6; i++) {
 			Reference a=new Reference();
 			List<Reference> references = new ArrayList<Reference>();
 			Article art = new Article();
@@ -249,7 +254,7 @@ public final class MyGraph {
 	// methode implementee par le groupe web-mining
 	public static List<Reference> listeReference() {
 		List<Reference> references = new ArrayList<Reference>();
-		for (int i = 1; i <= 5; i++) {
+		for (int i = 1; i < 5; i++) {
 			Reference ref = new Reference();
 			ref.setSource(i);
 			ref.setTarget(i + 1);
