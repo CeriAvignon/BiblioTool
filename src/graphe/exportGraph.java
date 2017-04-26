@@ -23,7 +23,7 @@ public class exportGraph {
 
 	public static void main(String[] args) {
 		MyGraph.setArticles(MyGraph.retournerListeArticles());
-		MyGraph.setReferences(MyGraph.ListeReference());
+		MyGraph.setReferences(MyGraph.listeReference());
 		exportGraph();
 
 	}
