@@ -18,7 +18,7 @@ public class Article{
 	  public boolean status;
 	  
 	  public List<Author> listAuthor = new ArrayList<Author>(); //liste des auteurs
-	  public List<Journal> listJournal = new ArrayList<Journal>();//liste des journals
+	  public List<Article> listArticle = new ArrayList<Article>();//liste des journals
 	  public List<Reference> listReference= new ArrayList<Reference>(); //liste des article cité et l'article qui est cité
 	  
 	  
@@ -85,13 +85,13 @@ public class Article{
 
 	    	    this.listAuthor = listAuthor;
 	    	  }
-	     public List<Journal> getListJournal(List<Journal> listJournal) {
+	     public List<Article> getListArticle(List<Article> listArticle) {
 	    	 
-	    	 return listJournal;
+	    	 return listArticle;
 	     }
-	     public void setListJournal(List<Journal> listJournal) {
+	     public void setListArticle(List<Article> listArticle) {
 
-	    	    this.listJournal = listJournal;
+	    	    this.listArticle = listArticle;
 	    	  }
 	     
          public List<Reference> getListReference(List<Reference> listReference) {
@@ -103,25 +103,25 @@ public class Article{
 	    	    this.listReference = listReference;
 	     }
 	     
-	     public void addAuthor(Author Author){
-	    	 this.listAuthor.add(Author);
+	     public void addAuthor(Author author){
+	    	 this.listAuthor.add(author);
 	     }
 	     
-	     public void removeAuthor(Author Author){
-	    	 this.listAuthor.remove(Author);
+	     public void removeAuthor(Author author){
+	    	 this.listAuthor.remove(author);
 	     }
-	     public void addJournal(Journal Journal){
-	    	 this.listJournal.add(Journal);
+	     public void addArticle(Article article){
+	    	 this.listArticle.add(article);
 	     }	   
          
-	     public void removeJournal(Journal Journal){
-	    	 this.listJournal.remove(Journal);
+	     public void removeArticle(Article article){
+	    	 this.listArticle.remove(article);
 	     }	
-	     public void addReference(Reference Reference){
-	    	 this.listReference.add(Reference);
+	     public void addReference(Reference reference){
+	    	 this.listReference.add(reference);
 	     }
-	     public void removeReference(Reference Reference){
-	    	 this.listReference.remove(Reference);
+	     public void removeReference(Reference reference){
+	    	 this.listReference.remove(reference);
 	     }
 }
 	     

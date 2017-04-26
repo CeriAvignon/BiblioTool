@@ -1,5 +1,7 @@
 package webmining;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class JournalDao extends Dao<Journal> {
 	
@@ -27,9 +29,21 @@ public class JournalDao extends Dao<Journal> {
 	}
 
 	@Override
-	public Journal find(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public Journal find(int idJour) {
+		Journal journal = new Journal(idJour, null);  
+		  ResultSet result=null;
 
+		    try {
+		    	result = this.connect.createStatement(
+		        ResultSet.TYPE_SCROLL_INSENSITIVE, 
+		        ResultSet.CONCUR_READ_ONLY
+		      ).executeQuery("SELECT * FROM Journal WHERE idJour = " + idJour);
+		        if(result.first())
+		          journal = new Journal(idJour, result.getString("nameJour"));         
+		    
+		    } catch (SQLException e) {
+		      e.printStackTrace();
+		    }
+		    return journal;
+      }
 }
