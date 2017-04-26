@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns">
+<key attr.name="label" attr.type="string" for="node" id="label"/>
+<key attr.name="Edge Label" attr.type="string" for="edge" id="edgelabel"/>
+<key attr.name="weight" attr.type="double" for="edge" id="weight"/>
+<key attr.name="Edge Id" attr.type="string" for="edge" id="edgeid"/>
+<key attr.name="r" attr.type="int" for="node" id="r"/>
+<key attr.name="g" attr.type="int" for="node" id="g"/>
+<key attr.name="b" attr.type="int" for="node" id="b"/>
+<key attr.name="x" attr.type="float" for="node" id="x"/>
+<key attr.name="y" attr.type="float" for="node" id="y"/>
+<key attr.name="size" attr.type="float" for="node" id="size"/>
+<key attr.name="id_Author" attr.type="int" for="node" id="id_author"/>
+<key attr.name="name_Author" attr.type="string" for="node" id="name_author"/>
+<key attr.name="first_name" attr.type="string" for="node" id="first_name"/>
+<key attr.name="afficliation" attr.type="string" for="node" id="afficliation"/>
+<graph edgedefault="directed">
+<node id="0">
+<data key="id_author">0</data>
+<data key="name_author">nom_author1</data>
+<data key="first_name">prenom_author1</data>
+<data key="afficliation">affiliation1</data>
+<data key="size">0.0</data>
+<data key="r">0</data>
+<data key="g">0</data>
+<data key="b">0</data>
+<data key="x">0.0</data>
+<data key="y">0.0</data>
+</node>
+<node id="1">
+<data key="id_author">1</data>
+<data key="name_author">nom_author2</data>
+<data key="first_name">prenom_author2</data>
+<data key="afficliation">affiliation2</data>
+<data key="size">0.0</data>
+<data key="r">0</data>
+<data key="g">0</data>
+<data key="b">0</data>
+<data key="x">0.0</data>
+<data key="y">0.0</data>
+</node>
+<node id="2">
+<data key="id_author">2</data>
+<data key="name_author">nom_author3</data>
+<data key="first_name">prenom_author3</data>
+<data key="afficliation">affiliation3</data>
+<data key="size">0.0</data>
+<data key="r">0</data>
+<data key="g">0</data>
+<data key="b">0</data>
+<data key="x">0.0</data>
+<data key="y">0.0</data>
+</node>
+<node id="3">
+<data key="id_author">3</data>
+<data key="name_author">nom_author4</data>
+<data key="first_name">prenom_author4</data>
+<data key="afficliation">affiliation4</data>
+<data key="size">0.0</data>
+<data key="r">0</data>
+<data key="g">0</data>
+<data key="b">0</data>
+<data key="x">0.0</data>
+<data key="y">0.0</data>
+</node>
+<node id="4">
+<data key="id_author">4</data>
+<data key="name_author">nom_author5</data>
+<data key="first_name">prenom_author5</data>
+<data key="afficliation">affiliation5</data>
+<data key="size">0.0</data>
+<data key="r">0</data>
+<data key="g">0</data>
+<data key="b">0</data>
+<data key="x">0.0</data>
+<data key="y">0.0</data>
+</node>
+</graph>
+</graphml>
