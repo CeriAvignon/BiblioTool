@@ -41,6 +41,7 @@ public final class MyGraph{
 	
 	public static List<Article> articles;
 
+	public static List<Journal> journaux;
 	public static List<Reference> references;
 	public static GraphModel graphModel;
 	private MyGraph() { }
@@ -63,6 +64,7 @@ public final class MyGraph{
 	public static void setReferences(List<Reference> references) {
 		MyGraph.references = references;
 	}
+	public static Column idJour, titleJour;
 
 	public static DirectedGraph createDirectedGraph(){
 		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
@@ -109,6 +111,40 @@ public final class MyGraph{
             System.out.println(col.getTitle());
 		}
 		*/
+	
+		
+		for (Reference reference : references) {
+			//System.out.println(reference.getTarget());
+			Edge e1 = graphModel.factory().newEdge(directedGraph.getNode(String.valueOf(reference.getSource())),
+					directedGraph.getNode(String.valueOf(reference.getTarget())), 0, 1.0, true);
+			directedGraph.addEdge(e1);
+		}
+		
+		return directedGraph;
+	}
+	// creer un graphe des journaux
+	public static DirectedGraph createGraphJournal(){
+		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+		pc.newProject();
+		Workspace workspace = pc.getCurrentWorkspace();
+		
+		
+		
+		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
+		DirectedGraph directedGraph = graphModel.getDirectedGraph();
+		createColumnsJour();
+		
+		journaux = retournerListeJournaux();
+		
+		
+		for (Journal jour : journaux) {
+			Node n0 = graphModel.factory().newNode(String.valueOf(jour.getId()));
+			n0.setLabel(jour.getTitre());
+			n0.setAttribute(idJour, jour.getId());
+			directedGraph.addNode(n0);
+		}
+		references = exportRefOfJournals();
+		//créer des liens entre les journaux a partir de la fonction exportRefOfJournal() 
 		for (Reference reference : references) {
 			Edge e1 = graphModel.factory().newEdge(directedGraph.getNode(String.valueOf(reference.getSource())),
 					directedGraph.getNode(String.valueOf(reference.getTarget())), 0, 1.0, true);
@@ -151,6 +187,12 @@ public final class MyGraph{
 		}
 		
 		return authorGraph;
+	}
+	public void changeStatusArticle(Node a) {
+		
+		a.setAttribute(status,true);
+		int id= Integer.parseInt((String) a.getId());
+	  // setStatus(id); methode de web mining 
 	}
 	
 	public static DirectedGraph createAuthorsGraph(Article article){
@@ -202,6 +244,14 @@ public final class MyGraph{
 		first_name = graphModel.getNodeTable().addColumn("first_name", String.class);
 		affiliation = graphModel.getNodeTable().addColumn("afficliation", String.class);
 	}
+		public static void createColumnsJour(){
+		
+		idJour = graphModel.getNodeTable().addColumn("idJour", Integer.class);
+		titleJour = graphModel.getNodeTable().addColumn("titleJour", String.class);
+	}
+	
+
+	
 
 	// methode implementee par le groupe web-mining
 	public static List<Article> listeArticles() {
@@ -238,7 +288,7 @@ public final class MyGraph{
 	public static List<Article> retournerListeArticles() {
 		
 		List<Article> articles = new ArrayList<Article>();
-		for (int i = 0; i <= 6; i++) {
+		for (int i = 0; i < 6; i++) {
 			Reference a=new Reference();
 			List<Reference> references = new ArrayList<Reference>();
 			Article art = new Article();
@@ -253,7 +303,21 @@ public final class MyGraph{
 		}
 		return articles;
 	}
+	// créer liste des journaux (pour le test)
+	public static List<Journal> retournerListeJournaux() {
+		
+		List<Journal> journaux = new ArrayList<Journal>();
+		for (int i = 10; i < 15; i++) {
+			
+			Journal jour = new Journal();
+		
+			jour.setId(i);
+			jour.setTitre("journal" + (i));
 
+		}
+		
+		return journaux;
+	}
 	public static List<Article> retournerListeArticles2() {
 		List<Article> articles2 = new ArrayList<Article>();
 		for (int i = 7; i <=8; i++) {
@@ -265,6 +329,7 @@ public final class MyGraph{
 		return articles2;
 	}
 
+			
 	// methode implementee par le groupe web-mining
 	public static List<Reference> listeReference() {
 		List<Reference> references = new ArrayList<Reference>();
@@ -424,6 +489,30 @@ public final class MyGraph{
 			if(a.getIdArt()==idArticle){
 				listRef=a.getReferences();	
 				}
+		}
+		return listRef;
+	}
+	
+	public static List<Node> returnlistenode(){
+		DirectedGraph dg = createDirectedGraph();
+		List<Node> ln = new ArrayList<>();
+		int j = 1;
+		for (Node node : dg.getNodes()) {
+			if (j<4) {
+				ln.add(node);
+				j++;
+			}
+			
+		}
+		return ln ;
+	}
+	//test (cette fonction pour recuperer les données de la base de données)
+	static List<Reference> refList(int idAarticl){
+		List<Reference> listRef=new ArrayList<Reference>();
+		List<Article> listArticl =retournerListeArticles();
+		for(Article a:listArticl){
+			if(a.getIdArt()==idAarticl){
+				listRef=a.getReferences();	}
 		}
 	return listRef;
 	}
@@ -586,4 +675,118 @@ public final class MyGraph{
 	return DistincArt ;
 }
 */
+
+	// methode pour determiner les réferences des noeuds selectionneé
+	static List<Reference> exportRef(List<Node> listOfNode){
+	 List<Reference> listRef=new ArrayList<Reference>();
+	 for (Node node:listOfNode){
+		 int id= Integer.parseInt((String) node.getId());
+		  List<Reference> listBD=refList(id); 
+		for (Reference ref:listBD){
+			listRef.add(ref);
+		}
+	 }
+	return listRef;
+	}
+	
+	// methode implementé par webMining permet de retourner l id du journal associé a l id d'article
+	static public int returnIdOfJournalByIdArt(int id_art)
+	{
+		List<Article> listArticl =listeArticlesTestJournaux();
+		for(Article a:listArticl)
+		{
+			if(a.getIdArt()==id_art)
+			{
+				int id=a.getJournal().getId();
+				return id;
+			}
+		}
+		return 0;
+	}
+	/* methodes listeArticlesTestJournaux() :creer des articles (id,titre,journal,ref ...) pour 
+	tester la methode exportRefOfJournal 
+	normalement on utilise la liste des articles retournés par la BDD*/
+public static List<Article> listeArticlesTestJournaux() {
+		
+		List<Article> articles = new ArrayList<Article>();
+
+		for (int i = 0; i < 4; i++) {
+			List<Reference> references = new ArrayList<Reference>();
+			Reference a=new Reference();
+			
+			Article art = new Article();
+			Journal j=new Journal();
+			j.setId(i+1*10);
+			j.setTitre("journal"+(i + 1));
+			a.setId(i+1);
+			a.setSource(i+1);
+			a.setTarget(i+2);
+			references.add(a);
+			art.setIdArt(i + 1);
+			art.setTitleArt("article" + (i + 1));
+			art.setReferences(references);
+			art.setJournal(j);
+			articles.add(art);
+		}
+		List<Reference> references = new ArrayList<Reference>();
+		Article art=new Article();
+		Journal j=new Journal();
+		j.setId(14);
+		j.setTitre("journal 5");
+		Reference b=new Reference();
+		b.setId(5);
+		b.setSource(5);
+		b.setTarget(2);
+		references.add(b);
+		art.setIdArt(5);
+		art.setTitleArt("article 5");
+		art.setReferences(references);
+		art.setJournal(j);
+		articles.add(art);
+		return articles;
+	}
+	// tache 30 exporter les references des journaux pour creér de liens entre
+   // les noeuds journaus
+	static List<Reference> exportRefOfJournals()
+	{
+		 int i=1;
+		// ListeReferenceOfArticle() methode de webminin base de données
+		 List<Reference> listRef=ListeReferenceOfArticle() ;
+		 List<Reference> newListOfRef=new ArrayList<Reference>();
+		 for (Reference ref:listRef)
+		 {       // je récupére l id du journal correspodant a l id d article (source et target)
+			 	int source=returnIdOfJournalByIdArt(ref.getSource());
+			 	//System.out.println("source  "+source);
+			 	int target=returnIdOfJournalByIdArt(ref.getTarget());
+			 	Reference a= new Reference();
+			 	a.setId(i);
+			 	a.setSource(source);
+			 	a.setTarget(target);
+			 	newListOfRef.add(a);
+			 	i++;
+			}
+		 
+		return newListOfRef;
+	}
+	
+	// methode implemente par web mining qui retourne liste des references des articles 
+	public static List<Reference> ListeReferenceOfArticle() 
+	{
+		List<Article> listArticl =listeArticlesTestJournaux();
+		List<Reference> references = new ArrayList<Reference>();
+		
+		for(Article a:listArticl)
+		{
+				for(Reference ref:a.getReferences())
+					{
+					Reference r=ref;
+					references.add(r);
+					}
+		}
+		return references;
+	}
+	
+	
+	
+	
 }

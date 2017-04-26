@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 import org.gephi.graph.api.*;
+
 import org.gephi.graph.api.Edge;
 import org.gephi.io.exporter.api.ExportController;
 import org.gephi.preview.api.PreviewController;
@@ -44,6 +45,10 @@ public class ManipulateGraph {
 		MyGraph.changeStatusArticl(noeud);
 		System.out.println("le nouveau statut de l'article est "+noeud.getAttribute("status"));
 		
+		System.out.println("les attributs du node sont :");
+		for (Column col : MyGraph.graphModel.getNodeTable()) {
+            System.out.println(col);
+		}
 		System.out.println("Nodes: " + dg.getNodeCount() + " Edges: " + dg.getEdgeCount());
 		for (Node node : dg.getNodes()) {
 			System.out.println(node.getAttribute("id_Article"));
@@ -83,4 +88,7 @@ public class ManipulateGraph {
 	     System.out.println("Nodes: " + dg1.getNodeCount() + " Edges: " + dg1.getEdgeCount());
 	}
 	
+
+	
+
 }
