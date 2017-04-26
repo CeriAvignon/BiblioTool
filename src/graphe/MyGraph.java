@@ -15,6 +15,10 @@ import org.gephi.appearance.api.PartitionFunction;
 import org.gephi.appearance.plugin.PartitionElementColorTransformer;
 import org.gephi.appearance.plugin.palette.Palette;
 import org.gephi.appearance.plugin.palette.PaletteManager;
+import java.util.Collection;
+import java.util.List;
+import java.util.TreeSet;
+
 import org.gephi.graph.api.Column;
 import org.gephi.graph.api.DirectedGraph;
 import org.gephi.graph.api.Edge;
@@ -33,9 +37,10 @@ import org.gephi.project.api.Workspace;
 import org.gephi.statistics.plugin.Modularity;
 import org.openide.util.Lookup;
 
-public final class MyGraph {
+public final class MyGraph{
 	
 	public static List<Article> articles;
+
 	public static List<Reference> references;
 	public static GraphModel graphModel;
 	private MyGraph() { }
@@ -62,6 +67,7 @@ public final class MyGraph {
 	public static DirectedGraph createDirectedGraph(){
 		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
 		pc.newProject();
+
 		Workspace workspace = pc.getCurrentWorkspace();		
 		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace);
 		DirectedGraph directedGraph = graphModel.getDirectedGraph();
@@ -97,6 +103,12 @@ public final class MyGraph {
 			directedGraph.addNode(n0);
 		}
 			
+		
+	/*	System.out.println("les attributs du node sont :");
+		for (Column col : graphModel.getNodeTable()) {
+            System.out.println(col.getTitle());
+		}
+		*/
 		for (Reference reference : references) {
 			Edge e1 = graphModel.factory().newEdge(directedGraph.getNode(String.valueOf(reference.getSource())),
 					directedGraph.getNode(String.valueOf(reference.getTarget())), 0, 1.0, true);
@@ -111,6 +123,7 @@ public final class MyGraph {
 	
 		return directedGraph;
 	}
+
 	public static DirectedGraph createAuthorsGraph(){
 		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
 		pc.newProject();
@@ -148,6 +161,7 @@ public final class MyGraph {
 		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace);
 		DirectedGraph authorGraph = graphModel.getDirectedGraph();
 		createAuthorColumns();
+
 		
 		List<Author> authors = listAuthorsByArticle(article);
 
@@ -254,14 +268,101 @@ public final class MyGraph {
 	// methode implementee par le groupe web-mining
 	public static List<Reference> listeReference() {
 		List<Reference> references = new ArrayList<Reference>();
+
 		for (int i = 1; i < 5; i++) {
 			Reference ref = new Reference();
 			ref.setSource(i);
 			ref.setTarget(i + 1);
 			references.add(ref);
 		}
+		
+		Reference ref1 = new Reference();
+		ref1.setSource(1);
+		ref1.setTarget(4);
+		Reference ref2 = new Reference();
+		ref2.setSource(2);
+		ref2.setTarget(5);
+		Reference ref3 = new Reference();
+		ref3.setSource(3);
+		ref3.setTarget(4);
+		references.add(ref1);references.add(ref2);references.add(ref3);
 		return references;
 	}
+	
+	// methode pour mettre a jour le graphe apres le developpement d'un noeud
+	public static DirectedGraph updateGraph(){
+		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+		Workspace workspace = pc.getCurrentWorkspace();
+		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
+		DirectedGraph directedGraph = graphModel.getDirectedGraph();
+		//method webmining
+		List<Article> listArticl= returnNewList();
+         // methode webmining
+		List<Reference> listRef=ListNewReferences();
+		
+		for (Article article : listArticl) {
+			Node n1 = graphModel.factory().newNode(String.valueOf(article.getIdArt()));
+			n1.setLabel(article.getTitleArt());
+			n1.setAttribute(idArt, article.getIdArt());
+			n1.setAttribute(pubYear, article.getPubYear());
+			n1.setAttribute(author, article.getAuthor());
+			n1.setAttribute(titleArt, article.getTitleArt());
+			n1.setAttribute(doi, article.getDoi());
+			n1.setAttribute(numPage, article.getNumPage());
+			n1.setAttribute(nbPage, article.getNbPage());
+			n1.setAttribute(numVol, article.getNumVol());
+			n1.setAttribute(numIssue, article.getNumIssue());
+			n1.setAttribute(journal, article.getJournal());
+			n1.setAttribute(urlArt, article.getUrlArt());
+			n1.setAttribute(ref, article.getReferences());
+			n1.setAttribute(status, article.getStatus());
+			
+			directedGraph.addNode(n1);
+		}	
+     	for (Reference reference : listRef) {
+			//System.out.println(reference.getTarget());
+			Edge e1 = graphModel.factory().newEdge(directedGraph.getNode(String.valueOf(reference.getSource())),
+					directedGraph.getNode(String.valueOf(reference.getTarget())), 0, 1.0, true);
+		directedGraph.addEdge(e1);
+	}
+		
+		return directedGraph;
+	}
+	// methode implemente par webMining (la nouvelle recherche) permet de retourner
+	//la liste des articles associés a la nouvelle recherche
+	public static List<Article> returnNewList() {
+		List<Article> articles = new ArrayList<Article>();
+		for (int i = 7; i <=8; i++) {
+			Article art = new Article();
+			art.setIdArt(i );
+			art.setTitleArt("article"+i);
+			art.setNbPage(500);
+			articles.add(art);
+		}	
+
+		return articles;
+	}
+
+	// methode implemente par web-Mining : liste des references de la nouvelle recherche
+	public static List<Reference> ListNewReferences() {
+		List<Reference> references = new ArrayList<Reference>();
+		Reference ref1 = new Reference();
+		ref1.setSource(7);
+		ref1.setTarget(8);
+		Reference ref2 = new Reference();
+		ref2.setSource(7);
+		ref2.setTarget(5);
+		Reference ref3 = new Reference();
+		ref3.setSource(8);
+		ref3.setTarget(1);
+		references.add(ref1);
+		references.add(ref2);
+		references.add(ref3);
+	
+		return references;
+		
+	}
+
 
 	public static List<Author> listAllAuthors(){
 		List<Author> authors = new ArrayList<Author>();
@@ -469,4 +570,20 @@ public final class MyGraph {
 	
 
 
+	
+	/*public static List<Article> returnDistinctList() {
+	List<Article> articles =returnNewList();
+	List<Article> DistincArt =new ArrayList<Article>();
+  for (Article article : articles) {
+	  if(!DistincArt.contains(article)){
+		  System.out.println(article.getIdArt());
+		  System.out.println(article.getTitleArt());
+		  DistincArt.add(article);
+
+	  }else rtyrrt9
+	
+}
+	return DistincArt ;
+}
+*/
 }

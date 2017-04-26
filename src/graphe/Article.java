@@ -147,7 +147,33 @@ public class Article {
 	}
 
 	
+//	@Override
+//	 public int hashCode() {
+//	 final int prime = 31;
+//	 int result = 1;
+//	 result = prime * result + age;
+//	 result = prime * result + ((name == null) ? 0 : name.hashCode());
+//	 return result;
+//	 }
 
+	    @Override
+	public boolean equals(Object obj) {
+	    if (this == obj)
+	        return true;
+	    if (obj == null)
+	        return false;
+	    if (getClass() != obj.getClass())
+	        return false;
+	    Article other = (Article) obj;
+	    if (titleArt != other.titleArt)
+	        return false;
+	    if (titleArt == null) {
+	        if (other.titleArt != null)
+	            return false;
+	    } else if (!titleArt.equals(other.titleArt))
+	        return false;
+	    return true;
+	}
 	
 
 }
