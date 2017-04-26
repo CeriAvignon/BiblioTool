@@ -98,10 +98,10 @@ public final class MyGraph {
 			directedGraph.addEdge(e1);
 		}
 		for(Edge e : directedGraph.getEdges()) {
-		    System.out.println(e.getSource().getId()+" -> "+e.getTarget().getId());
+		   // System.out.println(e.getSource().getId()+" -> "+e.getTarget().getId());
 		}
 		for(Node e : directedGraph.getNodes()) {
-		    System.out.println(e.getAttribute(idArt));
+		   // System.out.println(e.getAttribute(idArt));
 		}
 	
 		return directedGraph;
@@ -433,11 +433,7 @@ public final class MyGraph {
 		n0.setAttribute(ref, article.getReferences());
 		n0.setAttribute(status, article.getStatus());
 		return n0;
-		
-		
-		
 	}
-	
 	//retourne la liste des references d'auteurs
 	public static List<Reference> exportRefAuthors(List<Author> authors,List<Article> articles){
 		//List articles avec authors

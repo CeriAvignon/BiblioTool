@@ -27,6 +27,14 @@ public class ManipulateGraph {
 		MyGraph.setReferences(MyGraph.listeReference());
 		
 		DirectedGraph dg = MyGraph.createDirectedGraph();
+		Article art = new Article();
+		art.setIdArt(5);
+		art.setTitleArt("article5");
+		art.setStatus(false);
+		Node noeud;
+		noeud= MyGraph.creerNode(art);
+		MyGraph.changeStatusArticl(noeud);
+		System.out.println("le nouveau statut de l'article est "+noeud.getAttribute("status"));
 		
 		System.out.println("Nodes: " + dg.getNodeCount() + " Edges: " + dg.getEdgeCount());
 		for (Node node : dg.getNodes()) {
@@ -52,19 +60,10 @@ public class ManipulateGraph {
 		
 		String var = MyGraph.exportGraph(MyGraph.Extension.GML);
 		System.out.println(var);
-		Article art = new Article();
-		art.setIdArt(5);
-		art.setTitleArt("article5");
-		art.setStatus(false);
-		Node noeud;
-		noeud= MyGraph.creerNode(art);
-		MyGraph.changeStatusArticl(noeud);
-		System.out.println(noeud.getAttribute("status"));
-		
+	
 		PartitionGraph partitionGraph = new PartitionGraph();
         partitionGraph.script();
-        //MG-22 Export graph test
-		System.out.println(var);
+      
 		
 }
 }
