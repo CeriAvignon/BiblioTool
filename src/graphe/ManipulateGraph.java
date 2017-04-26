@@ -20,7 +20,14 @@ public class ManipulateGraph {
 		DirectedGraph dg = MyGraph.createDirectedGraph();
 		
 		System.out.println("Nodes: " + dg.getNodeCount() + " Edges: " + dg.getEdgeCount());
-		
+		Article art = new Article();
+		art.setIdArt(5);
+		art.setTitleArt("article5");
+		art.setStatus(false);
+		Node noeud;
+		noeud= MyGraph.creerNode(art);
+		MyGraph.changeStatusArticl(noeud);
+		System.out.println(noeud.getAttribute("status"));
 		
 		
 		
