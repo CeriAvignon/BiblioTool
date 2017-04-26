@@ -353,6 +353,7 @@ public final class MyGraph{
 		references.add(ref1);references.add(ref2);references.add(ref3);
 		return references;
 	}
+
 	
 	// methode pour mettre a jour le graphe apres le developpement d'un noeud
 	public static DirectedGraph updateGraph(){
@@ -493,7 +494,8 @@ public final class MyGraph{
 		return listRef;
 	}
 	
-	public static List<Node> returnlistenode(){
+	// methode de test (Interface graphique):  retourne la liste des noeuds selectionnes
+	public static List<Node> returnlistenodeSelect(){
 		DirectedGraph dg = createDirectedGraph();
 		List<Node> ln = new ArrayList<>();
 		int j = 1;
@@ -506,8 +508,9 @@ public final class MyGraph{
 		}
 		return ln ;
 	}
-	//test (cette fonction pour recuperer les données de la base de données)
-	static List<Reference> refList(int idAarticl){
+	//methode implemente par le group webMining permet de retourner les reference d'un article 
+	//
+	static List<Reference> returnRefByIdArt(int idAarticl){
 		List<Reference> listRef=new ArrayList<Reference>();
 		List<Article> listArticl =retournerListeArticles();
 		for(Article a:listArticl){
@@ -681,7 +684,7 @@ public final class MyGraph{
 	 List<Reference> listRef=new ArrayList<Reference>();
 	 for (Node node:listOfNode){
 		 int id= Integer.parseInt((String) node.getId());
-		  List<Reference> listBD=refList(id); 
+		  List<Reference> listBD=returnRefByIdArt(id); 
 		for (Reference ref:listBD){
 			listRef.add(ref);
 		}

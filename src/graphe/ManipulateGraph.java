@@ -70,6 +70,15 @@ public class ManipulateGraph {
 		//MyGraph.partitionGraph(authorGraph);
 
 		//MyGraph.partitionGraph(authorGraph, MyGraph.pubYear);
+
+		//afficher les references des noeuds selectionnés
+		List<Reference>ListRef= MyGraph.exportRef(MyGraph.returnlistenodeSelect());
+		for(Reference ref:ListRef)
+			ref.afficher();   
+		
+		
+		
+		
 		
 		String var = MyGraph.exportGraph(MyGraph.Extension.GML);
 		System.out.println(var);
