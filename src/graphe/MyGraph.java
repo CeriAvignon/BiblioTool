@@ -69,6 +69,7 @@ public final class MyGraph {
 		
 		return directedGraph;
 	}
+	// creer un graphe des journaux
 	public static DirectedGraph createGraphJournal(){
 		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
 		pc.newProject();
@@ -89,7 +90,8 @@ public final class MyGraph {
 			n0.setAttribute(idJour, jour.getId());
 			directedGraph.addNode(n0);
 		}
-		references = exportRefOfJournal();
+		references = exportRefOfJournals();
+		//créer des liens entre les journaux a partir de la fonction exportRefOfJournal() 
 		for (Reference reference : references) {
 			//System.out.println(reference.getTarget());
 			Edge e1 = graphModel.factory().newEdge(directedGraph.getNode(String.valueOf(reference.getSource())),
@@ -162,6 +164,7 @@ public static void createColumnsJour(){
 		}
 		return articles;
 	}
+	// créer liste des journaux (pour le test)
 	public static List<Journal> retournerListeJournaux() {
 		
 		List<Journal> journaux = new ArrayList<Journal>();
@@ -225,7 +228,8 @@ public static void createColumnsJour(){
 	 }
 	return listRef;
 	}
-	// methode implementé par webMining 
+	
+	// methode implementé par webMining permet de retourner l id du journal associé a l id d'article
 	static public int returnIdOfJournalByIdArt(int id_art)
 	{
 		List<Article> listArticl =listeArticlesTestJournaux();
@@ -239,6 +243,9 @@ public static void createColumnsJour(){
 		}
 		return 0;
 	}
+	// methodes listeArticlesTestJournaux() :creer des articles et les journaux et les references pour 
+	//tester la methode exportRefOfJournal 
+	//normalement on utilise la liste des articles retournés par la BDD
 public static List<Article> listeArticlesTestJournaux() {
 		
 		List<Article> articles = new ArrayList<Article>();
@@ -278,14 +285,16 @@ public static List<Article> listeArticlesTestJournaux() {
 		articles.add(art);
 		return articles;
 	}
-	// tache 30 exporter les references des journaux
-	static List<Reference> exportRefOfJournal()
+	// tache 30 exporter les references des journaux pour creér de liens entre
+   // les noeuds journaus
+	static List<Reference> exportRefOfJournals()
 	{
 		 int i=1;
+		// ListeReferenceOfArticle() methode de webminin base de données
 		 List<Reference> listRef=ListeReferenceOfArticle() ;
 		 List<Reference> newListOfRef=new ArrayList<Reference>();
 		 for (Reference ref:listRef)
-		 {
+		 {       // je récupére l id du journal correspodant a l id d article (source et target)
 			 	int source=returnIdOfJournalByIdArt(ref.getSource());
 			 	//System.out.println("source  "+source);
 			 	int target=returnIdOfJournalByIdArt(ref.getTarget());
@@ -300,8 +309,9 @@ public static List<Article> listeArticlesTestJournaux() {
 		return newListOfRef;
 	}
 	
-	// methode implemente par web mining
-	public static List<Reference> ListeReferenceOfArticle() {
+	// methode implemente par web mining qui retourne liste des references des articles 
+	public static List<Reference> ListeReferenceOfArticle() 
+	{
 		List<Article> listArticl =listeArticlesTestJournaux();
 		List<Reference> references = new ArrayList<Reference>();
 		
@@ -312,9 +322,7 @@ public static List<Article> listeArticlesTestJournaux() {
 					Reference r=ref;
 					references.add(r);
 					}
-			
 		}
-
 		return references;
 	}
 	

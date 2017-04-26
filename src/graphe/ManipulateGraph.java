@@ -29,12 +29,13 @@ public class ManipulateGraph {
 			ref.afficher();
 		*/
 		DirectedGraph dg1 = MyGraph.createGraphJournal();
-		
+		// les attributs du journal
 		System.out.println("les attributs du node sont :");
 		for (Column col : MyGraph.graphModel.getNodeTable()) {
             System.out.println(col);
 		}
-		List<Reference>ListRef= MyGraph.exportRefOfJournal();
+		// afficher les references des journaux
+		List<Reference>ListRef= MyGraph.exportRefOfJournals();
 		for(Reference ref:ListRef)
 			ref.afficher();   
 	
