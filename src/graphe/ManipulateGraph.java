@@ -27,7 +27,8 @@ public class ManipulateGraph {
 		for (Node node : dg.getNodes()) {
 			System.out.println(node.getAttribute("id_Article"));
 		}
-		DirectedGraph authorGraph = MyGraph.createAuthorsGraph();
+
+//		DirectedGraph authorGraph = MyGraph.createAuthorsGraph();
 //		for (Node node : authorGraph.getNodes()) {
 //			System.out.println(node.getAttribute("id")+": "+node.getAttribute("name_Author"));
 //		}
@@ -39,13 +40,10 @@ public class ManipulateGraph {
 		for (Node node : articleAuthor.getNodes()) {
 			System.out.println(node.getAttribute("id")+": "+node.getAttribute("name_Author"));
 		}
-		
-		
+
 		//MyGraph.partitionGraph(authorGraph);
-<<<<<<< HEAD
-=======
+
 		//MyGraph.partitionGraph(authorGraph, MyGraph.pubYear);
->>>>>>> MG-23
 		
 		String var = MyGraph.exportGraph(MyGraph.Extension.GML);
 		System.out.println(var);

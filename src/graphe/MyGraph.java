@@ -143,7 +143,6 @@ public final class MyGraph {
 			authorGraph.addNode(n0);
 		}
 		
-		
 		return authorGraph;
 	}
 	
