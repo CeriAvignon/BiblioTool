@@ -18,23 +18,39 @@ import com.itextpdf.text.Rectangle;
 
 public class AnalyseReferences {
 
+	/**
+	* La classe AnalyseReferences permet de trouver la partie du texte contenant les références bibliographiques
+	* et va executer les fonctions pour récupérer les références unes à unes.
+	*
+	* @author  Carlier Nils
+	*/
 	
 	int lDebut,lFin;
-	private final String bibHeader[] = {"Bibliographie", "Bibliography", "RÃ©fÃ©rences", "References"};
+	private final String bibHeader[] = {"Bibliographie", "Bibliography", "Références", "References"};
 	private ArrayList<String> Lines;
 	private ArrayList<Float> LineSizes;
 	private float avgSize;
+	public ArrayList<Section> sections;
+	public int indexReferences = -1;
 	
 	public AnalyseReferences(String pdf)
 	{		
 		Lines = new ArrayList<String>();
 		LineSizes = new ArrayList<Float>();
+		sections = new ArrayList<Section>();
 		toText(pdf);
 		lDebut = lFin = 0;
 	}
 	
 	private void toText(String pdf)
 	{
+		/**
+		* Cette fonction va analyser le texte pour le transformer en texte et le diviser
+		* en sections, dont la section de références.
+		* 
+		* @param Prend en paramètre un lien vers le pdf
+		* @return
+		*/
 		try {
 			PdfReader pdfr = new PdfReader(pdf);
 			PdfReaderContentParser parser = new PdfReaderContentParser(pdfr);
@@ -44,30 +60,32 @@ public class AnalyseReferences {
 			
 			avgSize = 0;
 			
-			//ArrayList<String> tmp = new ArrayList<String>();// textes (pas des phrases)
-			//ArrayList<Float> tmp2 = new ArrayList<Float>(); // Tailles
+			String tmp = "";
+			ArrayList<Float> tmp2 = new ArrayList<Float>();
 			for(int i=1;i<= pdfr.getNumberOfPages();i++)
 			{				
 				strategy = parser.processContent(i, new customStrategy());
-				//tmp.add(strategy.getResultantText();
-				//tmp2.append(strategy.height()); // PAS NECESSAIREMENT, VERIFIER que height se reset Ã  la fin !!
-				//PageToLines(strategy.getResultantText(),strategy.height); // NE S'APPELLE PAS ICI : strategy non complÃ¨te
-				System.out.println(strategy.height.size());
+				tmp += strategy.getResultantText();
+				
+				tmp2.addAll(strategy.height);
 			}
-			avgSize /= LineSizes.size(); // PB ICI : Prend par page != par ligne
-			avgSize *=1.2;
+			PageToLines(tmp, tmp2);
 			
+			avgSize /= LineSizes.size();
 			
-			ArrayList<Pair<Integer,Integer>> test = findSections();
+			ArrayList<Pair<Integer,Integer>> test = findSections(); // Division du pdf en sections
 			
-//			for(int i=0;i<test.size();i++)
-//			{
-//				System.out.println(Lines.get(test.get(i).getLeft()) + " // " + LineSizes.get(test.get(i).getLeft()));
-//				/*for(int j=test.get(i).getLeft();j<test.get(i).getRight();j++)
-//				{
-//					System.out.println(Lines.get(j));
-//				}*/
-//			}
+			for(int i=0;i<test.size();i++)
+			{
+				//System.out.println(Lines.get(test.get(i).getLeft()) + " // " + LineSizes.get(test.get(i).getLeft()));
+				sections.add(new Section(test.get(i).getLeft(),test.get(i).getRight(),Lines.get(test.get(i).getLeft())));
+			}
+			
+			for(int i=0;i<sections.size();i++)
+			{
+				if(sections.get(i).comparaisonTitre(bibHeader)) indexReferences = i;
+				//System.out.println(sections.get(i).titre + " : " + sections.get(i).debut + " / " + sections.get(i).fin);
+			}
 			
 			out.close();
 			
@@ -80,8 +98,12 @@ public class AnalyseReferences {
 	
 	private void PageToLines(String Page,ArrayList<Float> size)
 	{
+		/**
+		 * Cette fonction découpe le texte en lignes et prépare la moyenne de tailles des lignes du texte.
+		 * @param Le texte complet et le tableau de tailles des lignes du texte
+		 */
 		String[] lines = Page.split("\\n");
-		for(int i=0;i<lines.length;i++)
+		for(int i=0;i<lines.length-1;i++)
 		{
 			Lines.add(lines[i]);
 			LineSizes.add(size.get(i));
@@ -91,6 +113,11 @@ public class AnalyseReferences {
 	
 	private ArrayList<Pair<Integer,Integer>> findSections()
 	{
+		/**
+		 * Cette fonction découpe le texte en lignes et prépare la moyenne de tailles des lignes du texte.
+		 * @param Le texte complet et le tableau de tailles des lignes du texte
+		 * @return Retourne une liste de 2 entiers correspondants à la position de la première et dernière ligne de la section dans le tableau de lignes
+		 */
 		ArrayList<Pair<Integer,Integer>> ret = new ArrayList<Pair<Integer,Integer>>();
 		
 		int beginLine = 0;
@@ -107,65 +134,37 @@ public class AnalyseReferences {
 				}
 			}
 		}
+		ret.add(new Pair<Integer,Integer>(beginLine,Lines.size()));
 		return ret;
 	}
 	
-	private boolean findBibSection()
+	public ArrayList<String> getReferences()
 	{
-		//Trouver la partie Bib dans le fichier texte
+		/**
+		* Cette fonction va trouver les références et les retourner vers TextMining.processPdf
+		* 
+		* @return Les références bibliographiques trouvées
+		*/
+		ArrayList<String> references = new ArrayList<String>();
 		
-		boolean findHeader = true;
-		for(int i=0;i<Lines.size();i++)
+		if(indexReferences != -1)
 		{
-			String line = Lines.get(i);
-			if(containsList(line, bibHeader) && findHeader) // Recherche du dÃ©but
-			{
-				lDebut = i;
-				findHeader = false;
-			}
-			//Trouver la fin
+			System.out.println("Partie références trouvée !");
+			//references = Sandaly(section.get(indexReferences));
 		}
-		return !findHeader;		
-	}
-	
-	private int getTextFontSize(int debut, int fin)
-	{
-		
-		
-		
-		return -1;
-	}
-	
-	private boolean containsList(String line, String[] keys)
-	{
-		for(int i=0;i<keys.length;i++)
-		{
-			if(line.toLowerCase().contains(keys[i].toLowerCase())) return true;
-		}
-		return false;
-	}
-	
-	public String[] getReferences()
-	{
-		if(!findBibSection()) return null;
-		String[] references = listReferences();
-		
-		
-		
-		return references;
-	}
-	
-	private String[] listReferences()
-	{
-		String[] references = {};
-		
-		//Lister chaque rÃ©fÃ©rence Ã  partir du fichier texte de la ligne lDebut Ã  lFin
 		
 		return references;
 	}
 }
 
 class customStrategy implements TextExtractionStrategy{
+	
+	/**
+	* Cette classe agit comme une interface entre la bibliothèque itextPdf et la classe AnalyseReferences
+	* Elle permet de récupèrer la taille de chaque ligne du pdf dans un tableau
+	* 
+	*/
+	
 	private Vector lastStart;
     private Vector lastEnd;
     
@@ -195,6 +194,11 @@ class customStrategy implements TextExtractionStrategy{
     }
     
     public void renderText(TextRenderInfo renderInfo) {
+    	/**
+		* Cette fonction va calculer la hauteur de la ligne actuellement en analyse et l'ajouter à la liste d'éléments pdf traités.
+		* 
+		* @param Un argument renderInfo qui contient les informations sur le texte pdf en cours d'analyse par la bibliothèque
+		*/
     	
     	int tmp = result.lastIndexOf("\n");
         boolean firstRender = result.length() == 0;
@@ -217,10 +221,6 @@ class customStrategy implements TextExtractionStrategy{
 		{
 			System.out.println("ICI");
 		}
-		/*if(renderInfo.getText().contains("\\n")) { height.add(curFontSize);
-			System.out.println(height.get(height.size()-1));
-		}*/
-		//height.add((topRight.subtract(curBaseline)).get(1));
 
 		//Modification End
         
@@ -229,19 +229,14 @@ class customStrategy implements TextExtractionStrategy{
             Vector x1 = lastStart;
             Vector x2 = lastEnd;
             
-            // see http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
             float dist = (x2.subtract(x1)).cross((x1.subtract(x0))).lengthSquared() / x2.subtract(x1).lengthSquared();
 
-            float sameLineThreshold = 1f; // we should probably base this on the current font metrics, but 1 pt seems to be sufficient for the time being
+            float sameLineThreshold = 1f;
             if (dist > sameLineThreshold)
                 hardReturn = true;
-            
-            // Note:  Technically, we should check both the start and end positions, in case the angle of the text changed without any displacement
-            // but this sort of thing probably doesn't happen much in reality, so we'll leave it alone for now
         }
         
         if (hardReturn){
-            //System.out.println("<< Hard Return >>");
         	appendTextChunk("\n");
         } else if (!firstRender){ 
             if (result.charAt(result.length()-1) != ' ' && renderInfo.getText().length() > 0 && renderInfo.getText().charAt(0) != ' '){ // we only insert a blank space if the trailing character of the previous string wasn't a space, and the leading character of the current string isn't a space
@@ -258,15 +253,9 @@ class customStrategy implements TextExtractionStrategy{
         appendTextChunk(renderInfo.getText());
         if(tmp != result.lastIndexOf("\n"))
         {
-        	//System.out.println(renderInfo.getText()); // Probablement un dÃ©calage de 1 'ligne'
         	height.add(heightBuffer);
         }
         heightBuffer = curFontSize;
-        
-        // /!\ PB : Taille est par rapport Ã  une partie de phrase et non une phrase complÃ¨te
-        // Solution : Override la fonction qui recrÃ©e la phrase Ã  partir des parties et garder sa hauteur
-        
-        //System.out.println(renderInfo.getText() + " : " + height.get(height.size()-1) + " |Â " + height.size());
         
         lastStart = start;
         lastEnd = end;
@@ -277,8 +266,40 @@ class customStrategy implements TextExtractionStrategy{
 }
 }
 
-class Pair<L,R> {
+class Section {
+	/**
+	* La classe section permet de classer facilement les sections du pdf
+	* 
+	*/
+	public int debut;
+	public int fin;
+	public String titre;
+	
+	public Section(int debut,int fin, String titre)
+	{
+		this.debut = debut;
+		this.fin = fin;
+		this.titre = titre;
+	}
+	
+	public boolean comparaisonTitre(String[] clefs)
+	{
+		/**
+		* Cette fonction va comparer une liste de chaînes de caractères au titre de la section
+		* 
+		* @param Prend en argument une liste de chaînes de caractères à comparer
+		* @return Retourne vrai si une des clefs en arguments sont présentes dans le titre de la section
+		*/
+		for(int i=0;i<clefs.length;i++)
+		{
+			if(titre.toLowerCase().contains(clefs[i].toLowerCase())) return true;
+			
+		}
+		return false;
+	}
+}
 
+class Pair<L,R> {
 	  private final L left;
 	  private final R right;
 
