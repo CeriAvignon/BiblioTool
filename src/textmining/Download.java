@@ -26,12 +26,13 @@ public class Download
             }
 
             input = connection.getInputStream();
+            //le nom du pdf 
             String fileName =url.getFile().substring(url.getFile().lastIndexOf('/') + 1);
             writeFile = new FileOutputStream(fileName);
            
            
             System.out.println(fileName);
-           
+           //lire sur le buffer 
             byte[] buffer = new byte[1024];
             int read;
 
@@ -39,6 +40,7 @@ public class Download
                writeFile.write(buffer, 0, read);
             writeFile.flush();
         }
+        //generer une exception en cas de probleme 
         catch (IOException e)
         {
             System.out.println("erreur de telechargement de pdf.");
@@ -62,14 +64,5 @@ public class Download
     
     
 
-    public static void main(String[] args)
-    {
-       /* if (args.length != 1)
-        {
-            System.out.println("faut donner url de document à télécharger");
-            return;
-        }*/
-
-        getFile("http://exo7.emath.fr/ficpdf/ficall.pdf");
-    }
+    
 }
