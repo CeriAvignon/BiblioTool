@@ -32,7 +32,7 @@ public class Download
            
            
             System.out.println(fileName);
-           //lire sur le buffer 
+           //lire dans le buffer 
             byte[] buffer = new byte[1024];
             int read;
 
