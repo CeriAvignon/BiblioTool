@@ -23,8 +23,8 @@ public class ManipulateGraph {
             System.out.println(col);
 		}
 		System.out.println("Nodes: " + dg.getNodeCount() + " Edges: " + dg.getEdgeCount());
-		
-		List<Reference>ListRef= MyGraph.exportRef(MyGraph.returnlistenode());
+		//afficher les references des noeuds selectionnés
+		List<Reference>ListRef= MyGraph.exportRef(MyGraph.returnlistenodeSelect());
 		for(Reference ref:ListRef)
 			ref.afficher();   
 		
