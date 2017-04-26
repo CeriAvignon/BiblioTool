@@ -116,7 +116,7 @@ public final class MyGraph {
 		//createColumns();
 		
 		articles2 = retournerListeArticles2();
-		references = ListeReference();
+		references = listeReference();
 		
 		
 		for (Article article : articles2) {
