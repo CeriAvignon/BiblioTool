@@ -1,4 +1,4 @@
-package projet_2017;
+package textmining;
 
 public class test {
  
