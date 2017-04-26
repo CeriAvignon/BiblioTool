@@ -60,7 +60,7 @@ public class displayGraph {
 	
 	// Display à partir du DirectedGraph envoyé par la recherche
 	
-	public void displayGexf() {
+	public JPanel displayGexf() {
     	
     	///////////////////////////////////////////////////////////////
     	
@@ -79,7 +79,7 @@ public class displayGraph {
             container = importController.importFile(file);
         } catch (Exception ex) {
             ex.printStackTrace();
-            return;
+            return new JPanel();
         }
 
         //Append imported data to GraphAPI
@@ -97,7 +97,6 @@ public class displayGraph {
         previewModel.getProperties().putValue(PreviewProperty.NODE_LABEL_PROPORTIONAL_SIZE, Boolean.TRUE);
         
         previewModel.getProperties().putValue(PreviewProperty.NODE_BORDER_WIDTH, 2);
-        previewModel.getProperties().putValue(PreviewProperty.NODE_BORDER_COLOR, new DependantColor(Color.YELLOW));
         previewModel.getProperties().putValue(NodeLabelItem.VISIBLE, Boolean.FALSE);
         
         //New Processing target, get the PApplet
@@ -130,12 +129,11 @@ public class displayGraph {
         
         //ajoute une légende en dessous du graphe
         panel.add(new colorLegend(), BorderLayout.SOUTH);    
-        
-        JFrame frame = new JFrame();
+        return panel;
+        /*JFrame frame = new JFrame();
         frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(panel, BorderLayout.CENTER);
-        //frame.add(new JButton("1"), BorderLayout.WEST);
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent e) {
@@ -143,10 +141,9 @@ public class displayGraph {
             }
         });
         frame.setSize(1024, 768);
-        frame.setVisible(true);
+        frame.setVisible(true);*/
         
     }
-	
 
 	public void loadMatrix() {
 		//Charge un graphe contenu dans un fichier .gexf et le place dans this.directedGraph
@@ -191,11 +188,6 @@ public class displayGraph {
 	}
 	
 	public void changeColor() {	    
-	    //modifie la couleur des noeuds
-		
-		//article déjà lu ou non
-		//pdf disponible ou non
-		
 		int i =1;
 	    for(Node n : this.directedGraph.getNodes()) {
 	    	if (i>3) {
@@ -204,7 +196,6 @@ public class displayGraph {
 	    	else {
 	    		i++;
 	    		n.setColor(Color.RED);
-	    		//n.setSize();
 	    	}
 
 	    }	  
@@ -214,28 +205,13 @@ public class displayGraph {
 		//sauvegarde le graphe dans un fichier gexf
 		ExportController ec = Lookup.getDefault().lookup(ExportController.class);
 	    try {
-	        ec.exportFile(new File("graph.gexf"));
+	        ec.exportFile(new File("bin/graphGephi/graph.gexf"));
 	    } catch (IOException ex) {
 	        ex.printStackTrace();
 	        return;
 	    }
 	}
 	
-	/*public static void filtre() {
-		 GraphModel graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
-	        AppearanceModel appearanceModel = Lookup.getDefault().lookup(AppearanceController.class).getModel();
-	        FilterController filterController = Lookup.getDefault().lookup(FilterController.class);
-	        NodePartitionFilter partitionFilter = new NodePartitionFilter(graphModel.getNodeTable().getColumn("isSelected"), appearanceModel);
-	        partitionFilter.unselectAll();
-	        partitionFilter.addPart(Boolean.TRUE);
-	        Query query2 = filterController.createQuery(partitionFilter);
-	        GraphView view2 = filterController.filter(query2);
-	        graphModel.setVisibleView(view2);    //Set the filter result as the visible view
-	        DirectedGraph graph = graphModel.getDirectedGraphVisible();
-	        System.out.println("Nodes: " + graph.getNodeCount() + " Edges: " + graph.getEdgeCount());
-	        PreviewController previewController = Lookup.getDefault().lookup(PreviewController.class);
-	        previewController.refreshPreview();
-	}*/
 	
 	public static void main(String[] args) {
 		displayGraph d = new displayGraph();
@@ -243,6 +219,5 @@ public class displayGraph {
 		d.layoutGraph();
 		d.changeColor();
 		d.saveGexf();
-		d.displayGexf();
 	}
 }
