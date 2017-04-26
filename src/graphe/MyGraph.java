@@ -107,7 +107,6 @@ public final class MyGraph {
 			n0.setAttribute(name_auth, author.getName_auth());
 			n0.setAttribute(first_name, author.getFirst_name());
 			n0.setAttribute(affiliation, author.getAffiliation());
-			
 			authorGraph.addNode(n0);
 		}
 		
