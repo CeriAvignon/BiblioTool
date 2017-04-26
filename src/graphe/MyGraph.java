@@ -202,7 +202,7 @@ public final class MyGraph {
 		}
 		return references;
 	}
-	
+	//MG-22
 	 public static void exportGraph(){
 		 //Export full graph gexf
 	 ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
