@@ -62,7 +62,7 @@ public class ManipulateGraph {
 		System.out.println(var);
 	
 		PartitionGraph partitionGraph = new PartitionGraph();
-        partitionGraph.script();
+       // partitionGraph.script();
       
 		
 }
