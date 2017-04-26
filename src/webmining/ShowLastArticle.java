@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 public class ShowLastArticles {
 	
-	// Déclaration
+	//Déclaration
 
     public static ResultSet rs;
     public int nbr=1;
