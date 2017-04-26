@@ -75,21 +75,17 @@
 <data key="x">0.0</data>
 <data key="y">0.0</data>
 </node>
-<edge source="1" target="2">
-<data key="edgeid">0</data>
-<data key="weight">1.0</data>
-</edge>
-<edge source="2" target="3">
-<data key="edgeid">1</data>
-<data key="weight">1.0</data>
-</edge>
-<edge source="3" target="4">
-<data key="edgeid">2</data>
-<data key="weight">1.0</data>
-</edge>
-<edge source="4" target="5">
-<data key="edgeid">3</data>
-<data key="weight">1.0</data>
-</edge>
+<node id="6">
+<data key="id_author">6</data>
+<data key="name_author">nom_author6</data>
+<data key="first_name">prenom_author6</data>
+<data key="afficliation">affiliation6</data>
+<data key="size">0.0</data>
+<data key="r">0</data>
+<data key="g">0</data>
+<data key="b">0</data>
+<data key="x">0.0</data>
+<data key="y">0.0</data>
+</node>
 </graph>
 </graphml>
