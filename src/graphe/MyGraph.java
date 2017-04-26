@@ -406,10 +406,11 @@ public final class MyGraph {
 
 	public static void changeStatusArticl(Node a) {
 		
-		a.setAttribute(status,true);
+		a.setAttribute(status,true);//on change le statut de noeud sélectionné
 		//int id= Integer.parseInt((String) a.getId());
-	  // setStatus(id); methode de web mining 
+	  // setStatus(id); methode de web mining pour changer le statut dans la base de données
 	}
+	// cette methode pour tester la methode changeStatusArticl
 	public static Node creerNode(Article article){
 		Node n0 = graphModel.factory().newNode(String.valueOf(article.getIdArt()));
 		n0.setLabel(article.getTitleArt());
