@@ -14,10 +14,8 @@ import org.gephi.project.api.Workspace;
 import org.openide.util.Lookup;
 
 public class ManipulateGraph {
-
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		
 		MyGraph.setArticles(MyGraph.listeArticles());
 		MyGraph.setReferences(MyGraph.listeReference());
 		
@@ -27,18 +25,18 @@ public class ManipulateGraph {
 		for (Node node : dg.getNodes()) {
 			System.out.println(node.getAttribute("id_Article"));
 		}
-
-//		DirectedGraph authorGraph = MyGraph.createAuthorsGraph();
-//		for (Node node : authorGraph.getNodes()) {
-//			System.out.println(node.getAttribute("id")+": "+node.getAttribute("name_Author"));
-//		}
+		DirectedGraph authorGraph = MyGraph.createAuthorsGraph();
+		for (Node node : authorGraph.getNodes()) {
+			System.out.println(node.getAttribute("id")+": "+node.getAttribute("name_Author"));
+		}
 		
 		Article article = new Article();
 		article.setIdArt(5);
-		article.setAuthor(MyGraph.testListAuthor());
-		DirectedGraph articleAuthor = MyGraph.createAuthorsGraph(article);
+    	article.setAuthor(MyGraph.testListAuthor());
+		DirectedGraph articleAuthor = MyGraph.createAuthorsGraph();
 		for (Node node : articleAuthor.getNodes()) {
-			System.out.println(node.getAttribute("id")+": "+node.getAttribute("name_Author"));
+			//System.out.println(node.getAttribute("id")+": "+node.getAttribute("name_Author"));
+			System.out.println(node.getAttribute("id_Author")+": "+node.getAttribute("name_Author"));
 		}
 
 		//MyGraph.partitionGraph(authorGraph);

@@ -44,6 +44,22 @@ public final class MyGraph {
 	public static Column idArt, titleArt, author, doi, pubYear, numPage, nbPage, numVol, numIssue, journal, urlArt, ref, status;
 	public static Column idAuth, name_auth, first_name, affiliation;
 	
+	public static List<Article> getArticles() {
+		return articles;
+	}
+
+	public static void setArticles(List<Article> articles) {
+		MyGraph.articles = articles;
+	}
+
+	public static List<Reference> getReferences() {
+		return references;
+	}
+
+	public static void setReferences(List<Reference> references) {
+		MyGraph.references = references;
+	}
+
 	public static DirectedGraph createDirectedGraph(){
 		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
 		pc.newProject();
@@ -101,20 +117,24 @@ public final class MyGraph {
 		DirectedGraph authorGraph = graphModel.getDirectedGraph();
 		createAuthorColumns();
 		
-		List<Author> authors = listAllAuthors();
-		references = listeReference();
-		
+		List<Author> authors = testListAuthor();
+		List<Article> articles = listeArticles();
+		//on fait appel à la méthode qui exporte les references d'un auteur
+		List<Reference> references = exportRefAuthors(authors,articles);
 		for (Author author : authors) {
-			Node n0 = graphModel.factory().newNode();
+			Node n0 = graphModel.factory().newNode(String.valueOf(author.getId_auth()));
 			n0.setAttribute(idAuth, author.getId_auth());
 			n0.setAttribute(name_auth, author.getName_auth());
 			n0.setAttribute(first_name, author.getFirst_name());
 			n0.setAttribute(affiliation, author.getAffiliation());
-			
 			authorGraph.addNode(n0);
 		}
 		
 		for (Reference ref : references) {
+			System.out.println(ref.getSource()+ "->" +ref.getTarget());
+			Edge e1 = graphModel.factory().newEdge(authorGraph.getNode(String.valueOf(ref.getSource())),authorGraph.getNode(String.valueOf(ref.getTarget())), 0, 1.0, true);
+			authorGraph.addEdge(e1);
+			
 			
 		}
 		
@@ -131,6 +151,7 @@ public final class MyGraph {
 		createAuthorColumns();
 		
 		List<Author> authors = listAuthorsByArticle(article);
+
 		references = listeReference();
 		
 		for (Author author : authors) {
@@ -168,45 +189,57 @@ public final class MyGraph {
 		first_name = graphModel.getNodeTable().addColumn("first_name", String.class);
 		affiliation = graphModel.getNodeTable().addColumn("afficliation", String.class);
 	}
-	
-	public static List<Article> getArticles() {
-		return articles;
-	}
-
-	public static void setArticles(List<Article> articles) {
-		MyGraph.articles = articles;
-	}
-
-	public static List<Reference> getReferences() {
-		return references;
-	}
-
-	public static void setReferences(List<Reference> references) {
-		MyGraph.references = references;
-	}
 
 	// methode implementee par le groupe web-mining
 	public static List<Article> listeArticles() {
 		List<Article> articles = new ArrayList<Article>();
-		for (int i = 0; i < 6; i++) {
+		for (int i = 1; i < 6; i++) {
 			Article art = new Article();
-			art.setIdArt(i + 1);
-			art.setTitleArt("article" + (i + 1));
-			art.setAuthor(testListAuthor());
+			art.setIdArt(i);
+			art.setTitleArt("article" + (i));
+			Author auth = new Author(i, "nom_author"+(i), "prenom_author"+(i), "affiliation"+(i));
+			List<Author> test = new ArrayList<Author>();
+			test.add(auth);
+			art.setAuthor(test);
+			Reference a=new Reference();
+			a.setId(i);
+			a.setSource(i);
+			a.setTarget(i+1);
+			List<Reference> references = new ArrayList<Reference>();
+			references.add(a);
+			art.setReferences(references);
 			articles.add(art);
 		}
 		return articles;
 	}
-
+	//on crée une liste d'auteurs
 	public static List<Author> testListAuthor(){
 		List<Author> test = new ArrayList<Author>();
-		for (int i = 0; i < 5; i++) {
-			Author a = new Author(i, "nom_author"+(i+1), "prenom_author"+(i+1), "affiliation"+(i+1));
+		for (int i = 1; i < 6; i++) {
+			Author a = new Author(i, "nom_author"+(i), "prenom_author"+(i), "affiliation"+(i));
 			test.add(a);
 		}
 		return test;
 	}
-	
+	//methode implementé par web-mining
+	public static List<Article> retournerListeArticles() {
+		
+		List<Article> articles = new ArrayList<Article>();
+		for (int i = 0; i < 6; i++) {
+			Reference a=new Reference();
+			List<Reference> references = new ArrayList<Reference>();
+			Article art = new Article();
+			a.setId(i+1);
+			a.setSource(i+1);
+			a.setTarget(i+2);
+			references.add(a);
+			art.setIdArt(i + 1);
+			art.setTitleArt("article" + (i + 1));
+			art.setReferences(references);
+			articles.add(art);
+		}
+		return articles;
+	}
 	// methode implementee par le groupe web-mining
 	public static List<Reference> listeReference() {
 		List<Reference> references = new ArrayList<Reference>();
@@ -218,7 +251,7 @@ public final class MyGraph {
 		}
 		return references;
 	}
-	
+	//retourner liste d'auteurs
 	public static List<Author> listAllAuthors(){
 		List<Author> authors = new ArrayList<Author>();
 		List<Article> articles = listeArticles();
@@ -232,17 +265,57 @@ public final class MyGraph {
 		}
 		return authors;
 	}
-	
+	//Ali
 	public static List<Author> listAuthorsByArticle(Article article){
 		List<Author> authors = new ArrayList<Author>();
+				Iterator<Author> iterate_auth = article.getAuthor().iterator();
+				while(iterate_auth.hasNext()){
+					Author auth = iterate_auth.next();
+					authors.add(auth);
+				}
+		return authors;
+		
+	}
+	// retourner la liste d'auteurs par article
+	public static List<Author> listAuthorsByArticle(int idArticle, List<Article> articles){
+		List<Author> authors = new ArrayList<Author>();
+		for(Article article:articles){
+			if(article.getIdArt()==idArticle){
+				Iterator<Author> iterate_auth = article.getAuthor().iterator();
+				while(iterate_auth.hasNext()){
+					Author auth = iterate_auth.next();
+					authors.add(auth);
+				}
+			}
+		}
+		return authors;
+		
+	}
+	// retourne la liste des articles par auteur
+	public static List<Article> listArticlesByAuthor(int idAuthor,List<Article> articles){
+		List<Article> articlesA = new ArrayList<Article>();
+		for(Article article : articles){
 		Iterator<Author> iterate_auth = article.getAuthor().iterator();
 		while(iterate_auth.hasNext()){
 			Author auth = iterate_auth.next();
-			authors.add(auth);
+			if(auth.getId_auth()==idAuthor){
+				articlesA.add(article);
+			}
+		 }
 		}
-		
-		return authors;
+		return articlesA;
 	}
+	//retourne la liste des réf d'un article donné
+	static List<Reference> refList(int idArticle, List<Article> articles){
+		List<Reference> listRef=new ArrayList<Reference>();
+		for(Article a:articles){
+			if(a.getIdArt()==idArticle){
+				listRef=a.getReferences();	
+				}
+		}
+	return listRef;
+	}
+
 	
 	public enum Extension {
 	    GEXF,
@@ -330,5 +403,31 @@ public final class MyGraph {
         }
 	}
 	
-	
+	//retourne la liste des references d'auteurs
+	public static List<Reference> exportRefAuthors(List<Author> authors,List<Article> articles){
+		//List articles avec authors
+		List<Reference> references = new ArrayList<Reference>();
+		for(Author auth: authors){
+			List<Article> articlesAuth = new ArrayList<Article>();
+			articlesAuth=listArticlesByAuthor(auth.getId_auth(),articles);
+			for(Article art:articlesAuth){
+				List<Reference> referenceArticle = new ArrayList<Reference>();
+				referenceArticle=refList(art.getIdArt(),articlesAuth);
+				for(Reference ref: referenceArticle){
+					Reference ref1 = new Reference();
+					ref1.setSource(auth.getId_auth());
+					List<Author> authorsArticle= new ArrayList<Author>();
+					authorsArticle=listAuthorsByArticle(ref.getTarget(),articles);
+					for(Author auth2: authorsArticle){
+						ref1.setTarget(auth2.getId_auth());
+						references.add(ref1);
+					}
+				}
+			}
+			
+		}
+
+		return references;
+	}
+ 	
 }
