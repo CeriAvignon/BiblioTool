@@ -273,13 +273,13 @@ public final class MyGraph {
 		
 	}
 	// retourne la liste des articles par auteur
-	public static List<Article> listArticlesByAuthor(int id,List<Article> articles){
+	public static List<Article> listArticlesByAuthor(int idAuthor,List<Article> articles){
 		List<Article> articlesA = new ArrayList<Article>();
 		for(Article article : articles){
 		Iterator<Author> iterate_auth = article.getAuthor().iterator();
 		while(iterate_auth.hasNext()){
 			Author auth = iterate_auth.next();
-			if(auth.getId_auth()==id){
+			if(auth.getId_auth()==idAuthor){
 				articlesA.add(article);
 			}
 		 }
