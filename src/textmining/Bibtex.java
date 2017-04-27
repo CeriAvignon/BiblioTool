@@ -49,11 +49,10 @@ public class Bibtex {
 	
 	
 	/**
-         * Constructeur de Bibtex. 
+	 *Constructeur de Bibtex. 
 	 *
-         * A la construction d'un objet Bibtex 
-
-         */
+     *A la construction d'un objet Bibtex
+	 */
 	public  Bibtex() { 
 
 
@@ -82,10 +81,8 @@ public class Bibtex {
 
  	}*/
  	/**
-         * Affiche les donnee de l'objet Bibtex. 
-	 *
-
-         */
+ 	 * Affiche les donnee de l'objet Bibtex. 
+ 	 */
  	 public void affiche(){
 	 	 System.out.println(type_de_doc+"  \n\nDONNE : ");
 	 	 affiche_objet(donne);
@@ -109,8 +106,9 @@ public class Bibtex {
  	
  	}
  	/**
-         * Affiche les donnee de l'objet Bibtex. 
-         */
+ 	 * Affiche les donnee de l'objet Bibtex. 
+ 	 * @return
+ 	 */
  	public Article ArticleFromBibtex(){
  	
  		Article A = new Article();
@@ -150,10 +148,10 @@ public class Bibtex {
  	
  	}
  	/**
-         * Renvoie le fichier dans un string. 
-	 *
-
-         */
+ 	 * Renvoie le fichier dans un string. 
+ 	 * @param Fichier
+ 	 * @return
+ 	 */
  	public String FromFilePathToString(String Fichier){
  		String str="";
  		try{	
@@ -176,10 +174,10 @@ public class Bibtex {
  	
  	}
  	/**
-         * lit un fichier bibtex et implemente la classe 
-	 *
-
-         */
+ 	 * lit un fichier bibtex et implemente la classe
+ 	 * @param Fichier
+ 	 * @return
+ 	 */
           public boolean ReadFromFile(String Fichier){
           
           	 	return	ReadFromString(FromFilePathToString(Fichier));
@@ -187,8 +185,7 @@ public class Bibtex {
           }
           /**
          * lit un String bibtex et implemente la classe 
-	 *
-
+         *
          */
  	public boolean ReadFromString(String str){
  	
