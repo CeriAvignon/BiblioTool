@@ -14,7 +14,6 @@ public class Author {
 	}
 
 	public Author(int id_auth, String name_auth, String first_name, String affiliation) {
-		super();
 		this.id_auth = id_auth;
 		this.name_auth = name_auth;
 		this.first_name = first_name;

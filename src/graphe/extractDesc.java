@@ -28,9 +28,11 @@ public class extractDesc {
 	public static void main(String[] args) {
 		double density;
 		DirectedGraph directedGraph = graph.createDirectedGraph();		
-		System.out.println("la densité est de "+ calculateDensity(directedGraph));	
+		//System.out.println("la densité est de "+ calculateDensity(directedGraph));	
 		calculateDiameter(directedGraph);
+		//extractDesc(directedGraph);
 	}
+	
 	public static double calculateDensity(Graph graph){
         GraphDensity d = new GraphDensity();
         double density = d.calculateDensity(graph, false);
@@ -46,11 +48,8 @@ public class extractDesc {
 		//la distance depuis un noeud de départ vers le noeud le plus loin dans le réseau
 	    double[] eccentricity;
         GraphDistance d = new GraphDistance();
-        // créer un map d'indicies
+        // créer un map d'indicies pour chaque node on associe une valeur
         HashMap<Node, Integer> indicies = d.createIndiciesMap(graph);   
-        for (Integer val : indicies.values()) {
-          System.out.println(val);
-        }
         Map<String, double[]> metrics1 = d.calculateDistanceMetrics(graph, indicies, true, false);
         eccentricity = metrics1.get(d.ECCENTRICITY);
         closeness = metrics1.get(d.CLOSENESS);
@@ -63,6 +62,24 @@ public class extractDesc {
 		}
     	System.out.println(d.getReport());
 	}	
+	public GraphData extractDesc(Graph graph){
+		GraphData g = new GraphData();
+	    GraphDistance d = new GraphDistance();
+		GraphDensity gd = new GraphDensity();
+		HashMap<Node, Integer> indicies = d.createIndiciesMap(graph);   
+	     // true pour graphe directionnel et false pour graphe normalisé
+	     Map<String, double[]> metrics1 = d.calculateDistanceMetrics(graph, indicies, true, false);
+		g.setNodes(graph.getNodeCount());
+		g.setEdges(graph.getEdgeCount());
+		g.setRadius(d.getRadius());
+		g.setDiameter(d.getDiameter());
+		g.setDensity(gd.calculateDensity(graph, false));
+	    g.setEccentricity(metrics1.get(d.ECCENTRICITY));
+	    g.setCloseness(metrics1.get(d.CLOSENESS));
+	    g.setHarmonicCloseness(metrics1.get(d.HARMONIC_CLOSENESS));
+	    g.setBetweeness(metrics1.get(d.BETWEENNESS));
+	    return g;
+	}
 	
 	
 
