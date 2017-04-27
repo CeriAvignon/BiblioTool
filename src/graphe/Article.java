@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "Article")
-
+     
 public class Article {
 	private int idArt;
 	private String titleArt;
