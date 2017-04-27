@@ -14,6 +14,7 @@ import java.awt.TextField;
 
 
 public class FormPDF extends JPanel {
+	String fileName;
 	
 	public FormPDF(){
 		setBounds(0,0,950,700);
@@ -26,10 +27,28 @@ public class FormPDF extends JPanel {
 		openFile.setBounds(358, 300, 180, 29);
 		add(openFile);
 		
+
+		
+		TextField textField = new TextField();
+		textField.setBounds(362, 339, 200, 22);
+		textField.setVisible(true);
+		add(textField);
+		
+		openFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fc = new JFileChooser();
+				fc.showOpenDialog(null);
+				File file= fc.getSelectedFile();
+				fileName = file.getName();
+				textField.setText(fileName);
+				System.out.println(fc.getSelectedFile().getAbsolutePath());
+			}
+		});
 		JButton btnSubmitResearch = new JButton("Submit");
 		btnSubmitResearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				getGraph();
+				Article article = TextMining.processPdf(fileName);
+				
 				setVisible(false);
 			}
 		});
@@ -45,22 +64,6 @@ public class FormPDF extends JPanel {
 		});
 		btnCancel.setBounds(358, 389, 117, 29);
 		add(btnCancel);
-		
-		TextField textField = new TextField();
-		textField.setBounds(362, 339, 200, 22);
-		textField.setVisible(true);
-		add(textField);
-		
-		openFile.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fc = new JFileChooser();
-				fc.showOpenDialog(null);
-				File file= fc.getSelectedFile();
-				String fileName = file.getName();
-				textField.setText(fileName);
-				System.out.println(fc.getSelectedFile().getAbsolutePath());
-			}
-		});
 	}
 	
 	public DirectedGraph getGraph(){
