@@ -11,50 +11,50 @@ import org.gephi.graph.api.Node;
 
 public class Ordonner{
 	     
-	    private static Map<Node,List<Node>> neighbors = new HashMap<Node,List<Node>>();
+	    private static Map<Node,List<Node>> voisins = new HashMap<Node,List<Node>>();
 	   
 	    public String toString () {
 	        StringBuffer s = new StringBuffer();
-	        for (Node n: neighbors.keySet()) s.append("\n    " + n + " -> " + neighbors.get(n));
+	        for (Node n: voisins.keySet()) s.append("\n    " + n + " -> " + neighbors.get(n));
 	        return s.toString();                
 	    }
 	    
 	   
 	    public void add (Node n) {
-	        if (!neighbors.containsKey(n))
-	        	neighbors.put(n, new ArrayList<Node>());
+	        if (!voisins.containsKey(n))
+	        	voisins.put(n, new ArrayList<Node>());
 	    }
 	    
 	    
 	    public boolean contains (Node n) {
-	        return neighbors.containsKey(n);
+	        return voisins.containsKey(n);
 	    }
 	    
 	    
 	    public void add (Node n1, Node n2) {
 	        this.add(n1); this.add(n2);
-	        neighbors.get(n1).add(n2);
+	        voisins.get(n1).add(n2);
 	    }
 	    
 	    
 	    public void remove (Node n1, Node n2) {
 	        if (!(this.contains(n1) && this.contains(n2)))
 	            throw new IllegalArgumentException("Le noeud n'existe pas");
-	        neighbors.get(n1).remove(n2);
+	        voisins.get(n1).remove(n2);
 	    }
 	    
 	    // degree : le nombre des arcs qui adjacente à un noeud.
 	    public Map<Node,Integer> outDegree () {
 	        Map<Node,Integer> resultat = new HashMap<Node,Integer>();
-	        for (Node n: neighbors.keySet()) resultat.put(n, neighbors.get(n).size());
+	        for (Node n: voisins.keySet()) resultat.put(n, voisins.get(n).size());
 	        return resultat;
 	    }
 	    
 	    public static Map<Node,Integer> inDegree () {
 	        Map<Node,Integer> resultat = new HashMap<Node,Integer>();
-	        for (Node n: neighbors.keySet()) resultat.put(n, 0);       
-	        for (Node n1: neighbors.keySet()) {
-	            for (Node n2: neighbors.get(n1)) {
+	        for (Node n: voisins.keySet()) resultat.put(n, 0);       
+	        for (Node n1: voisins.keySet()) {
+	            for (Node n2: voisins.get(n1)) {
 	                resultat.put(n2, resultat.get(n2) + 1);
 	            }
 	        }
@@ -74,14 +74,14 @@ public class Ordonner{
 	            Node n = zeroNodes.pop();                  
 	            result.add(n);                         
 	            
-	            for (Node neighbor: neighbors.get(n)) {
-	                degree.put(neighbor, degree.get(neighbor) - 1);
+	            for (Node voisin: voisins.get(n)) {
+	                degree.put(neighbor, degree.get(voisin) - 1);
 	               
-	                if (degree.get(neighbor) == 0) zeroNodes.push(neighbor);
+	                if (degree.get(voisin) == 0) zeroNodes.push(voisin);
 	            }
 	        }
 	        
-	        if (result.size() != neighbors.size()) return null;
+	        if (result.size() != voisins.size()) return null;
 	        return result;
 	    }
 	    
