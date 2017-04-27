@@ -153,7 +153,7 @@ public class ManipulateGraph {
 		DirectedGraph authorGraph = MyGraph.createAuthorsGraph();
 		for (Node node : authorGraph.getNodes()) {
 			System.out.println(node.getAttribute("id")+": "+node.getAttribute("name_Author"));
-	}
+		}
 		
 		Article article = new Article();
 		article.setIdArt(5);
