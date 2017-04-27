@@ -46,15 +46,15 @@ public class ManipulateGraph {
 
 		/**********/		
 		
-		 ArrayList<ArrayList<Node>> cocite=new  ArrayList<ArrayList<Node>>();
+		 ArrayList<ArrayList<Node>> cocitant=new  ArrayList<ArrayList<Node>>();
 		 ArrayList<Node> n=new ArrayList<Node> ();
-		 cocite=MyGraph.returnNodesCocite();
+		 cocitant=MyGraph.returnNodesCocitant();
 		System.out.println("");
-		System.out.println("***Le resultat de regroupement des noeuds par cocitation (co_cité) ****");
+		System.out.println("***Le resultat de regroupement des noeuds par cocitation (co_citant) ****");
 
-		for(int h =0;h<cocite.size();h++)
+		for(int h =0;h<cocitant.size();h++)
 		{
-			n = cocite.get(h);
+			n = cocitant.get(h);
 			System.out.println("***"+h+") ****");
 			for(int j=0;j<n.size();j++)
 
@@ -68,47 +68,17 @@ public class ManipulateGraph {
 		}
 		System.out.println("");
 
-		System.out.println("***Affichage des arcs qui relient les noeuds co_cité ****");
-
-		DirectedGraph dg1 = MyGraph.createDirectedGraph(cocite);
-
-		for (Edge e : dg1.getEdges())
-		{
-	           System.out.println(e.getSource().getId() + " -> " + e.getTarget().getId());
-	    }
-	
-		/********************************************/
-		 ArrayList<ArrayList<Node>> cocitant=new  ArrayList<ArrayList<Node>>();
-		 ArrayList<Node> n1=new ArrayList<Node> ();
-		 cocitant=MyGraph.returnNodesCocitant();
-		System.out.println("");
-		System.out.println("***Le resultat de regroupement des noeuds par cocitation (co_citant) ****");
-
-		for(int h =0;h<cocitant.size();h++)
-		{
-			n1 = cocitant.get(h);
-			System.out.println("***"+h+") ****");
-			for(int j=0;j<n1.size();j++)
-
-			{
-				System.out.println("***"+n1.get(j).getLabel()+"*****");
-
-				
-			}
-			
-			
-		}
-		System.out.println("");
-
 		System.out.println("***Affichage des arcs qui relient les noeuds co_citant ****");
 
-		DirectedGraph dg2 = MyGraph.createDirectedGraph2(cocitant);
+		DirectedGraph dg2 = MyGraph.createUndirectedGraph2(cocitant);
 
 		for (Edge e : dg2.getEdges())
 		{
 	           System.out.println(e.getSource().getId() + " -> " + e.getTarget().getId());
 	    }
-	
-	}
 
+		
+		
+		
+	}
 }
