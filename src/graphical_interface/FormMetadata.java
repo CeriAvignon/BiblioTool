@@ -33,7 +33,7 @@ public class FormMetadata extends JPanel{
 		setBounds(0,0,950,700);
 		setVisible(true);
 		setLayout(null);
-		setBackground(Color.red);
+		setBackground(Color.white);
 		
 		
 		JButton btnSubmitResearch = new JButton("Submit");
