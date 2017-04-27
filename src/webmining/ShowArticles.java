@@ -55,17 +55,15 @@ public class ShowArticles {
 
 					 // Remplir de l'objet article
 					 articles.idArt=rs.getInt("idArt");
-					  articles.titreArt=rs.getString("titleArt");
+					  articles.titleArt=rs.getString("titleArt");
 					 articles.urlPage=rs.getString("urlPage");
 					  articles.urlPdf=rs.getString("urlPdf");
 					  articles.doi=rs.getString("doi");
-					  articles.numVol=rs.getInt("numVol");
 					  articles.numIssue=rs.getInt("numIssue");
-					  articles.numPage=rs.getInt("numPage");
 					  articles.nbPage=rs.getInt("nbPage");
 
 					  articles.yearPub=rs.getDate("yearPub");
-					  articles.status=rs.getString("status");
+					  //articles.status=rs.getString("status");
 					  
 							list.add(articles); 
 

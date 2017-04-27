@@ -25,7 +25,7 @@ public static void main(String[] args) {
             System.out.println("Driver ok");
             //recuperation de la connexion
             Connection cnx= DriverManager.getConnection(url,user,password);
-            System.out.println("connexion bien établie");
+            System.out.println("connexion bien etablie");
             
             return cnx;
         }

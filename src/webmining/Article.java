@@ -35,6 +35,11 @@ public class Article{
 		  this.yearPub = yearPub;
 		  this.status = status;
 	  }
+	  
+	  public Article()
+	  {
+		  
+	  }
 	     public int getId()
 	     {
 	    	 return idArt;

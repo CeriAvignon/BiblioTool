@@ -31,6 +31,35 @@ public class SplitReferences{
 	 * @return referencesByParagraphe: contain references by paragr.ph.
 	 */
 	
+	public ArrayList<Reference> splitReferences(List<String> referenceArray)
+	{
+		
+		if(referenceArray.get(0).substring(0, 1).equals("[")&& Objects.equals(referenceArray.get(0).substring(2, 3), new String("]")))
+//			if(Objects.equals(referenceArray.get(0).substring(0, 1), "[")&& Objects.equals(referenceArray.get(0).substring(2, 3), new String("]")))
+		{
+			splitRefenceInArrayStringWithBracket(referenceArray);
+		
+		}
+		
+		if(Objects.equals(referenceArray.get(0).substring(0, 1), new String("1")))
+		{
+			splitRefenceInArrayStringWithBracket(referenceArray);
+			
+		}
+		
+		
+		ArrayList<Reference> ret = new ArrayList<Reference>();
+		
+		TraitementReference tr = new TraitementReference();
+		
+		for(String ref : referencesByParagraphe)
+		{
+			ret.add(tr.go(ref));
+		}
+		
+		return ret;
+	}
+	
 	public List<String> splitRefenceInArrayStringWithBracket(List<String> referenceArray)
 	{
 		String firstChar,thirdChar;

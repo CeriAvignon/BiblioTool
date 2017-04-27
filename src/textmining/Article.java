@@ -1,5 +1,6 @@
 package textmining;
 
+import java.util.ArrayList;
 public class Article
 {	
 	int maxRef = 1 ;
@@ -12,11 +13,11 @@ public class Article
 	int mAnnee;//Année de l'article
 	String mDate;//date de l'article 
 	String mSource;//Nom du journal par exemple
-	String [] mReferences;//Refercence liées a l'article
+	ArrayList<Reference> mReferences;//Refercence liées a l'article
 	public Article()
 	{	
 		this.mAuteur = new String[10];
-		this.mReferences = new String [10];
+		this.mReferences = new ArrayList<Reference>();
 	}
 	public  void SetTitre(String titre)
 	{
@@ -49,11 +50,9 @@ public class Article
 	{
 		this.mSource = Source ;	
 	}
-	public  void SetReference(String [] references)
+	public  void AddReferences(ArrayList<Reference> references)
 	{
-		maxRef = references.length;
-		for( int i = 0 ; i < maxRef; i++ )
-			this.mReferences[i] = references[i];
+		mReferences = references;
 	}
 	public void ViewArticle()
 	{
@@ -69,8 +68,8 @@ public class Article
 		System.out.println("---------------------------------------------------------------" );
 		System.out.println("Année de  publication de l'article : " + this.mAnnee );
 		System.out.println("---------------------------------------------------------------" );
-		for(int i = 0; i < maxRef ; i++ )
-			System.out.println("Reference de l'article : " + this.mReferences[i] );
+		for(int i = 0; i < mReferences.size() ; i++ )
+			System.out.println("Reference de l'article : " + this.mReferences.get(i).toString() );
 	    System.out.println("---------------------------------------------------------------" );
 	}
 	
