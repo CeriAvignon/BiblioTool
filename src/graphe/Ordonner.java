@@ -43,7 +43,7 @@ public class Ordonner{
 	        neighbors.get(n1).remove(n2);
 	    }
 	    
-	    // degree : le nombre des arcs qui adjacente à un noeud.
+	    // degree : le nombre des arcs qui adjacente Ã  un noeud.
 	    public Map<Node,Integer> outDegree () {
 	        Map<Node,Integer> resultat = new HashMap<Node,Integer>();
 	        for (Node n: neighbors.keySet()) resultat.put(n, neighbors.get(n).size());
@@ -85,12 +85,6 @@ public class Ordonner{
 	        return result;
 	    }
 	    
-	    /*
-	     // directed graph
-	    public boolean isDg () {
-	        return Sort() != null;
-	    }
-	    */
 	    
 	  
 }
