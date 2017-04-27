@@ -65,7 +65,6 @@ public class FormPDF extends JPanel {
 		btnCancel.setBounds(358, 389, 117, 29);
 		add(btnCancel);
 	}
-	
 	public DirectedGraph getGraph(){
     	MyGraph.setArticles(MyGraph.retournerListeArticles());
 		MyGraph.setReferences(MyGraph.ListeReference());
