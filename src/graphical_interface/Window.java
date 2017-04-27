@@ -1,4 +1,4 @@
-package GUI;
+package graphical_interface;
 
 /**
  * 
