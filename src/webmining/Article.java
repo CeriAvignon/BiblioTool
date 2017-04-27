@@ -60,6 +60,42 @@ public class Article{
 	     {
 	    	  this.urlPage = urlPage;
 	     }
+	     
+	     public String  getUrlPdf()
+	     {
+	    	 return urlPdf;
+	     }
+	     public void setUrlPdf(String urlPdf)
+	     {
+	    	  this.urlPdf = urlPdf;
+	     }
+	     
+	     public String  getdoi()
+	     {
+	    	 return doi;
+	     }
+	     public void setdoi(String doi)
+	     {
+	    	  this.doi = doi;
+	     }
+	     
+	     public int  getnumIssue()
+	     {
+	    	 return numIssue;
+	     }
+	     public void setnumIssue(int numIssue)
+	     {
+	    	  this.numIssue = numIssue;
+	     }
+	     
+	     public int  getnbPage()
+	     {
+	    	 return nbPage;
+	     }
+	     public void setnbPage(int nbPage)
+	     {
+	    	  this.nbPage = nbPage;
+	     }
 	     public Date getYearPub(Date yearPub)
 	     {
 	    	 return yearPub;
@@ -103,25 +139,25 @@ public class Article{
 	    	    this.listReference = listReference;
 	     }
 	     
-	     public void addAuthor(Author author){
-	    	 this.listAuthor.add(author);
+	     public void addAuthor(Author Author){
+	    	 this.listAuthor.add(Author);
 	     }
 	     
-	     public void removeAuthor(Author author){
-	    	 this.listAuthor.remove(author);
+	     public void removeAuthor(Author Author){
+	    	 this.listAuthor.remove(Author);
 	     }
-	     public void addArticle(Article article){
-	    	 this.listArticle.add(article);
+	     public void addArticle(Article Article){
+	    	 this.listArticle.add(Article);
 	     }	   
          
-	     public void removeArticle(Article article){
-	    	 this.listArticle.remove(article);
+	     public void removeArticle(Article Article){
+	    	 this.listArticle.remove(Article);
 	     }	
-	     public void addReference(Reference reference){
-	    	 this.listReference.add(reference);
+	     public void addReference(Reference Reference){
+	    	 this.listReference.add(Reference);
 	     }
-	     public void removeReference(Reference reference){
-	    	 this.listReference.remove(reference);
+	     public void removeReference(Reference Reference){
+	    	 this.listReference.remove(Reference);
 	     }
 }
 	     

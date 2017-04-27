@@ -3,7 +3,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-public class ShowLastArticles {
+public class ShowLastArticle {
 	
 	//Déclaration
 
@@ -52,18 +52,16 @@ public class ShowLastArticles {
 
 	         // Remplir de l'objet article
 				 articles.idArt=rs.getInt("idArt");
-				  articles.titreArt=rs.getString("titleArt");
+				  articles.titleArt=rs.getString("titleArt");
 				 articles.urlPage=rs.getString("urlPage");
 				  articles.urlPdf=rs.getString("urlPdf");
 				  articles.doi=rs.getString("doi");
-				  articles.numVol=rs.getInt("numVol");
 				  articles.numIssue=rs.getInt("numIssue");
-				  articles.numPage=rs.getInt("numPage");
 				  articles.nbPage=rs.getInt("nbPage");
 
 				  articles.yearPub=rs.getDate("yearPub");
-				  articles.status=rs.getString("status");
-				  articles.dateInsertion=rs.getDate("dateInsertion");
+				  //articles.status=rs.getString("status");
+				  //articles.dateInsertion=rs.getDate("dateInsertion");
 
 				  
 
@@ -105,8 +103,8 @@ public class ShowLastArticles {
 
   	     System.out.println(" l'id de l'article   "+articles.idArt);
   	     System.out.println("Le nombre de page    "+articles.nbPage);
-  	     System.out.println("Le titre d'article   "+articles.titreArt);
-  	     System.out.println("Date d'insertion     "+articles.dateInsertion);
+  	     System.out.println("Le titre d'article   "+articles.titleArt);
+  	     //System.out.println("Date d'insertion     "+articles.dateInsertion);
 
 
   	     return articles;
