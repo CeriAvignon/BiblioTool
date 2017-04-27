@@ -47,7 +47,7 @@ public class FormPDF extends JPanel {
 		JButton btnSubmitResearch = new JButton("Submit");
 		btnSubmitResearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Article article = TextMining.processPdf(fileName);
+				//Article article = TextMining.processPdf(fileName);
 				
 				setVisible(false);
 			}

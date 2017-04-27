@@ -115,7 +115,6 @@ public class FormMetadata extends JPanel{
 				if(checkCiteSeerX.isSelected()){
 					//call function research citeseerx
 				}
-				getGraph();
 				textFieldKeyword.setText("");
 				textFieldTitle.setText("");
 				textFieldAuthor.setText("");
