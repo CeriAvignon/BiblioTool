@@ -53,7 +53,6 @@ public final class MyGraph {
 		
 		return directedGraph;
 	}
-	
 
 	public static void generateFileGexfFromGraph(DirectedGraph directedGraph)
 	{
@@ -94,7 +93,6 @@ public final class MyGraph {
 		}
 
 	}
-
 	
 	/**
 	 * @author yang shuai
