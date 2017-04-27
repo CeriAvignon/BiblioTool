@@ -1068,4 +1068,58 @@ public static List<Article> listeArticlesTestJournaux() {
 	
 	
 	
+	public static DirectedGraph createJournalGph(){
+		
+	
+		
+		//creation de attributs des noeuds 
+		id_news = graphModel.getNodeTable().addColumn("id_journal",Integer.class);
+		title_news = graphModel.getNodeTable().addColumn("titre_journal",String.class);
+		Articles = graphModel.getNodeTable().addColumn("id_Article",Integer.class);
+		//instancier un nouveau graph 
+		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+		pc.newProject();
+		Workspace workspace = pc.getCurrentWorkspace();
+		
+		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace);
+		
+		DirectedGraph journalGraph = graphModel.getDirectedGraph();
+
+		for(Journal j : returnJournaux()){
+			Node noeud = graphModel.factory().newNode();
+			noeud.setAttribute(id_news, j.getId_news());
+			noeud.setAttribute(title_news, j.getTitle_news());
+			
+		for(Article a : listeArticles()){
+			noeud.setAttribute(Articles, a.getIdArt());
+
+		}
+		
+		}
+		return journalGraph;
+	}
+
+
+		public  static List<Journal>  returnJournaux(){
+
+			List<Journal> listJournaux = new ArrayList<Journal>();
+			Journal J;
+			for(int i=0;i<=5;i++){
+
+			    J=new Journal();
+				J.setId_news(i);
+				J.setTitle_news("titre"+i);
+				J.setArticles(listeArticles());
+			    listJournaux.add(J);
+			}
+
+
+
+			return listJournaux;
+
+		}
+	
+
+	
+	
 }
