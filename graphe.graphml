@@ -10,30 +10,28 @@
 <key attr.name="x" attr.type="float" for="node" id="x"/>
 <key attr.name="y" attr.type="float" for="node" id="y"/>
 <key attr.name="size" attr.type="float" for="node" id="size"/>
-<key attr.name="id_Article" attr.type="int" for="node" id="id_article"/>
-<key attr.name="title_Article" attr.type="string" for="node" id="title_article"/>
-<key attr.name="authors" attr.type="string" for="node" id="authors"/>
-<key attr.name="doi" attr.type="string" for="node" id="doi"/>
-<key attr.name="pub_Year" attr.type="int" for="node" id="pub_year"/>
-<key attr.name="num_Page" attr.type="int" for="node" id="num_page"/>
-<key attr.name="nb_Page" attr.type="int" for="node" id="nb_page"/>
-<key attr.name="num_Volume" attr.type="int" for="node" id="num_volume"/>
-<key attr.name="num_Issue" attr.type="int" for="node" id="num_issue"/>
-<key attr.name="journal" attr.type="string" for="node" id="journal"/>
-<key attr.name="url_Article" attr.type="string" for="node" id="url_article"/>
-<key attr.name="reference" attr.type="int" for="node" id="reference"/>
-<key attr.name="status" attr.type="boolean" for="node" id="status"/>
+<key attr.name="id_Author" attr.type="int" for="node" id="id_author"/>
+<key attr.name="name_Author" attr.type="string" for="node" id="name_author"/>
+<key attr.name="first_name" attr.type="string" for="node" id="first_name"/>
+<key attr.name="afficliation" attr.type="string" for="node" id="afficliation"/>
 <graph edgedefault="directed">
+<node id="0">
+<data key="id_author">0</data>
+<data key="name_author">nom_author1</data>
+<data key="first_name">prenom_author1</data>
+<data key="afficliation">affiliation1</data>
+<data key="size">0.0</data>
+<data key="r">0</data>
+<data key="g">0</data>
+<data key="b">0</data>
+<data key="x">0.0</data>
+<data key="y">0.0</data>
+</node>
 <node id="1">
-<data key="label">article1</data>
-<data key="id_article">1</data>
-<data key="title_article">article1</data>
-<data key="authors">prenom_author1 nom_author1</data>
-<data key="pub_year">0</data>
-<data key="num_page">0</data>
-<data key="nb_page">0</data>
-<data key="num_volume">0</data>
-<data key="num_issue">0</data>
+<data key="id_author">1</data>
+<data key="name_author">nom_author2</data>
+<data key="first_name">prenom_author2</data>
+<data key="afficliation">affiliation2</data>
 <data key="size">0.0</data>
 <data key="r">0</data>
 <data key="g">0</data>
@@ -42,15 +40,10 @@
 <data key="y">0.0</data>
 </node>
 <node id="2">
-<data key="label">article2</data>
-<data key="id_article">2</data>
-<data key="title_article">article2</data>
-<data key="authors">prenom_author2 nom_author2</data>
-<data key="pub_year">0</data>
-<data key="num_page">0</data>
-<data key="nb_page">0</data>
-<data key="num_volume">0</data>
-<data key="num_issue">0</data>
+<data key="id_author">2</data>
+<data key="name_author">nom_author3</data>
+<data key="first_name">prenom_author3</data>
+<data key="afficliation">affiliation3</data>
 <data key="size">0.0</data>
 <data key="r">0</data>
 <data key="g">0</data>
@@ -59,15 +52,10 @@
 <data key="y">0.0</data>
 </node>
 <node id="3">
-<data key="label">article3</data>
-<data key="id_article">3</data>
-<data key="title_article">article3</data>
-<data key="authors">prenom_author3 nom_author3</data>
-<data key="pub_year">0</data>
-<data key="num_page">0</data>
-<data key="nb_page">0</data>
-<data key="num_volume">0</data>
-<data key="num_issue">0</data>
+<data key="id_author">3</data>
+<data key="name_author">nom_author4</data>
+<data key="first_name">prenom_author4</data>
+<data key="afficliation">affiliation4</data>
 <data key="size">0.0</data>
 <data key="r">0</data>
 <data key="g">0</data>
@@ -76,15 +64,10 @@
 <data key="y">0.0</data>
 </node>
 <node id="4">
-<data key="label">article4</data>
-<data key="id_article">4</data>
-<data key="title_article">article4</data>
-<data key="authors">prenom_author4 nom_author4</data>
-<data key="pub_year">0</data>
-<data key="num_page">0</data>
-<data key="nb_page">0</data>
-<data key="num_volume">0</data>
-<data key="num_issue">0</data>
+<data key="id_author">4</data>
+<data key="name_author">nom_author5</data>
+<data key="first_name">prenom_author5</data>
+<data key="afficliation">affiliation5</data>
 <data key="size">0.0</data>
 <data key="r">0</data>
 <data key="g">0</data>
@@ -92,67 +75,5 @@
 <data key="x">0.0</data>
 <data key="y">0.0</data>
 </node>
-<node id="5">
-<data key="label">article5</data>
-<data key="id_article">5</data>
-<data key="title_article">article5</data>
-<data key="authors">prenom_author5 nom_author5</data>
-<data key="pub_year">0</data>
-<data key="num_page">0</data>
-<data key="nb_page">0</data>
-<data key="num_volume">0</data>
-<data key="num_issue">0</data>
-<data key="size">0.0</data>
-<data key="r">0</data>
-<data key="g">0</data>
-<data key="b">0</data>
-<data key="x">0.0</data>
-<data key="y">0.0</data>
-</node>
-<node id="6">
-<data key="label">article6</data>
-<data key="id_article">6</data>
-<data key="title_article">article6</data>
-<data key="authors">prenom_author6 nom_author6</data>
-<data key="pub_year">0</data>
-<data key="num_page">0</data>
-<data key="nb_page">0</data>
-<data key="num_volume">0</data>
-<data key="num_issue">0</data>
-<data key="size">0.0</data>
-<data key="r">0</data>
-<data key="g">0</data>
-<data key="b">0</data>
-<data key="x">0.0</data>
-<data key="y">0.0</data>
-</node>
-<edge source="1" target="2">
-<data key="edgeid">0</data>
-<data key="weight">1.0</data>
-</edge>
-<edge source="2" target="3">
-<data key="edgeid">1</data>
-<data key="weight">1.0</data>
-</edge>
-<edge source="3" target="4">
-<data key="edgeid">2</data>
-<data key="weight">1.0</data>
-</edge>
-<edge source="4" target="5">
-<data key="edgeid">3</data>
-<data key="weight">1.0</data>
-</edge>
-<edge source="1" target="4">
-<data key="edgeid">4</data>
-<data key="weight">1.0</data>
-</edge>
-<edge source="2" target="5">
-<data key="edgeid">5</data>
-<data key="weight">1.0</data>
-</edge>
-<edge source="3" target="4">
-<data key="edgeid">6</data>
-<data key="weight">1.0</data>
-</edge>
 </graph>
 </graphml>

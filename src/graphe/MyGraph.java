@@ -5,7 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
 import org.gephi.appearance.api.AppearanceController;
 import org.gephi.appearance.api.AppearanceModel;
 import org.gephi.appearance.api.Function;
@@ -14,21 +16,12 @@ import org.gephi.appearance.api.PartitionFunction;
 import org.gephi.appearance.plugin.PartitionElementColorTransformer;
 import org.gephi.appearance.plugin.palette.Palette;
 import org.gephi.appearance.plugin.palette.PaletteManager;
-import java.util.Collection;
-import java.util.List;
-import java.util.TreeSet;
-
 import org.gephi.graph.api.Column;
 import org.gephi.graph.api.DirectedGraph;
-import org.gephi.graph.api.UndirectedGraph;
-
 import org.gephi.graph.api.Edge;
-import org.gephi.graph.api.Graph;
 import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphModel;
 import org.gephi.graph.api.Node;
-import org.gephi.graph.api.EdgeIterable;
-
 import org.gephi.io.exporter.api.ExportController;
 import org.gephi.io.exporter.spi.CharacterExporter;
 import org.gephi.io.exporter.spi.Exporter;
@@ -40,77 +33,28 @@ import org.gephi.project.api.ProjectController;
 import org.gephi.project.api.Workspace;
 import org.gephi.statistics.plugin.Modularity;
 import org.openide.util.Lookup;
-import org.gephi.datalab.api.AttributeColumnsController;
-import org.gephi.graph.*;
 
 public final class MyGraph {
-
-	private static final String NULL = null;
-public final class MyGraph{
 	
 	public static List<Article> articles;
-
-	public static List<Journal> journaux;
 	public static List<Reference> references;
 	public static GraphModel graphModel;
-
-	private MyGraph() {
-	}
-
-	public static Column idArt, titleArt, author, doi, pubYear, numPage, nbPage, numVol, numIssue, journal, urlArt, ref,
-			status;
-
-	public static DirectedGraph createDirectedGraph() {
-		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
-		pc.newProject();
-		Workspace workspace = pc.getCurrentWorkspace();
-
-		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
-		DirectedGraph directedGraph = graphModel.getDirectedGraph();
-		createColumns();
-
-		articles = retournerListeArticles();
-		references = ListeReference();
-
-
 	private MyGraph() { }
-
+	
 	public static Column idArt, titleArt, author, doi, pubYear, numPage, nbPage, numVol, numIssue, journal, urlArt, ref, status;
 	public static Column idAuth, name_auth, first_name, affiliation;
 	
-	public static List<Article> getArticles() {
-		return articles;
-	}
-
-	public static void setArticles(List<Article> articles) {
-		MyGraph.articles = articles;
-	}
-
-	public static List<Reference> getReferences() {
-		return references;
-	}
-
-	public static void setReferences(List<Reference> references) {
-		MyGraph.references = references;
-	}
-	public static Column idJour, titleJour;
-
 	public static DirectedGraph createDirectedGraph(){
 		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
 		pc.newProject();
-
-		Workspace workspace = pc.getCurrentWorkspace();		
+		Workspace workspace = pc.getCurrentWorkspace();
+		
 		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace);
 		DirectedGraph directedGraph = graphModel.getDirectedGraph();
 		createArticleColumns();
 		
 		articles = listeArticles();
 		references = listeReference();
-		for(Article a : articles)
-			System.out.println("id article: " + a.getIdArt());
-		
-		for(Reference ref : references)
-			System.out.println("edge: " + ref.getSource() + " -> " + ref.getTarget());
 		
 		for (Article article : articles) {
 			Node n0 = graphModel.factory().newNode(String.valueOf(article.getIdArt()));
@@ -125,84 +69,29 @@ public final class MyGraph{
 			n0.setAttribute(numIssue, article.getNumIssue());
 			n0.setAttribute(journal, article.getJournal());
 			n0.setAttribute(urlArt, article.getUrlArt());
-			// n0.setAttribute(ref, article.getReferences());
+			//n0.setAttribute(ref, article.getReferences());
 			n0.setAttribute(status, article.getStatus());
-			directedGraph.addNode(n0);
-		}
-
-		/*
-		 * System.out.println("les attributs du node sont :"); for (Column col :
-		 * graphModel.getNodeTable()) {
-		 * 
-		 * 
-		 * System.out.println(col); }
-		 */
-
 			for (Author auth : article.getAuthor()) {
 				n0.setAttribute(author, auth.getFirst_name()+" "+auth.getName_auth());
 			}
 			
 			directedGraph.addNode(n0);
 		}
+		
+		System.out.println("les attributs du node sont: ");
+			for (Column col : graphModel.getNodeTable()) {
+			System.out.println(col);
+		}
 			
-		
-	/*	System.out.println("les attributs du node sont :");
-		for (Column col : graphModel.getNodeTable()) {
-            System.out.println(col.getTitle());
-		}
-		*/
-	
-		
-		for (Reference reference : references) {
-			//System.out.println(reference.getTarget());
-			Edge e1 = graphModel.factory().newEdge(directedGraph.getNode(String.valueOf(reference.getSource())),
-					directedGraph.getNode(String.valueOf(reference.getTarget())), 0, 1.0, true);
-			directedGraph.addEdge(e1);
-		}
-
-		return directedGraph;
-	}
-
-	public static void createColumns() {
-
-	// creer un graphe des journaux
-	public static DirectedGraph createGraphJournal(){
-		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
-		pc.newProject();
-		Workspace workspace = pc.getCurrentWorkspace();
-		
-		
-		
-		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
-		DirectedGraph directedGraph = graphModel.getDirectedGraph();
-		createColumnsJour();
-		
-		journaux = retournerListeJournaux();
-		
-		
-		for (Journal jour : journaux) {
-			Node n0 = graphModel.factory().newNode(String.valueOf(jour.getId()));
-			n0.setLabel(jour.getTitre());
-			n0.setAttribute(idJour, jour.getId());
-			directedGraph.addNode(n0);
-		}
-		references = exportRefOfJournals();
-		//créer des liens entre les journaux a partir de la fonction exportRefOfJournal() 
 		for (Reference reference : references) {
 			Edge e1 = graphModel.factory().newEdge(directedGraph.getNode(String.valueOf(reference.getSource())),
 					directedGraph.getNode(String.valueOf(reference.getTarget())), 0, 1.0, true);
 			directedGraph.addEdge(e1);
 		}
-		for(Edge e : directedGraph.getEdges()) {
-		   // System.out.println(e.getSource().getId()+" -> "+e.getTarget().getId());
-		}
-		for(Node e : directedGraph.getNodes()) {
-		   // System.out.println(e.getAttribute(idArt));
-		}
-	
+		
 		return directedGraph;
 	}
-
+	
 	public static DirectedGraph createAuthorsGraph(){
 		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
 		pc.newProject();
@@ -211,45 +100,8 @@ public final class MyGraph{
 		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace);
 		DirectedGraph authorGraph = graphModel.getDirectedGraph();
 		createAuthorColumns();
-		List<Author> authors = testListAuthor();
-		List<Article> articles = listeArticles();
-		//on fait appel à la méthode qui exporte les references d'un auteur
-		List<Reference> references = exportRefAuthors(authors,articles);
-		for (Author author : authors) {
-			Node n0 = graphModel.factory().newNode(String.valueOf(author.getId_auth()));
-			n0.setAttribute(idAuth, author.getId_auth());
-			n0.setAttribute(name_auth, author.getName_auth());
-			n0.setAttribute(first_name, author.getFirst_name());
-			n0.setAttribute(affiliation, author.getAffiliation());
-			authorGraph.addNode(n0);
-		}
-		for (Reference ref : references) {
-			System.out.println(ref.getSource()+ "->" +ref.getTarget());
-			Edge e1 = graphModel.factory().newEdge(authorGraph.getNode(String.valueOf(ref.getSource())),authorGraph.getNode(String.valueOf(ref.getTarget())), 0, 1.0, true);
-			//authorGraph.addEdge(e1);
-		}
 		
-		return authorGraph;
-	}
-	public void changeStatusArticle(Node a) {
-		
-		a.setAttribute(status,true);
-		int id= Integer.parseInt((String) a.getId());
-	  // setStatus(id); methode de web mining 
-	}
-	
-	public static DirectedGraph createAuthorsGraph(Article article){
-		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
-		pc.newProject();
-		Workspace workspace = pc.getCurrentWorkspace();
-		
-		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace);
-		DirectedGraph authorGraph = graphModel.getDirectedGraph();
-		createAuthorColumns();
-
-		
-		List<Author> authors = listAuthorsByArticle(article);
-
+		List<Author> authors = listAllAuthors();
 		references = listeReference();
 		
 		for (Author author : authors) {
@@ -261,6 +113,36 @@ public final class MyGraph{
 			
 			authorGraph.addNode(n0);
 		}
+		
+		for (Reference ref : references) {
+			
+		}
+		
+		return authorGraph;
+	}
+	
+	public static DirectedGraph createAuthorsGraph(Article article){
+		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+		pc.newProject();
+		Workspace workspace = pc.getCurrentWorkspace();
+		
+		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace);
+		DirectedGraph authorGraph = graphModel.getDirectedGraph();
+		createAuthorColumns();
+		
+		List<Author> authors = listAuthorsByArticle(article);
+		references = listeReference();
+		
+		for (Author author : authors) {
+			Node n0 = graphModel.factory().newNode();
+			n0.setAttribute(idAuth, author.getId_auth());
+			n0.setAttribute(name_auth, author.getName_auth());
+			n0.setAttribute(first_name, author.getFirst_name());
+			n0.setAttribute(affiliation, author.getAffiliation());
+			
+			authorGraph.addNode(n0);
+		}
+		
 		
 		return authorGraph;
 	}
@@ -280,14 +162,6 @@ public final class MyGraph{
 		ref = graphModel.getNodeTable().addColumn("reference", Integer.class);
 		status = graphModel.getNodeTable().addColumn("status", Boolean.class);
 	}
-
-	public static List<Article> getArticles() {
-		return articles;
-	}
-
-	public static void setArticles(List<Article> articles) {
-		MyGraph.articles = articles;
-
 	
 	public static void createAuthorColumns(){
 		idAuth = graphModel.getNodeTable().addColumn("id_Author", Integer.class);
@@ -295,281 +169,57 @@ public final class MyGraph{
 		first_name = graphModel.getNodeTable().addColumn("first_name", String.class);
 		affiliation = graphModel.getNodeTable().addColumn("afficliation", String.class);
 	}
-		public static void createColumnsJour(){
-		
-		idJour = graphModel.getNodeTable().addColumn("idJour", Integer.class);
-		titleJour = graphModel.getNodeTable().addColumn("titleJour", String.class);
+	
+	public static List<Article> getArticles() {
+		return articles;
 	}
-	
 
-	
+	public static void setArticles(List<Article> articles) {
+		MyGraph.articles = articles;
+	}
+
+	public static List<Reference> getReferences() {
+		return references;
+	}
+
+	public static void setReferences(List<Reference> references) {
+		MyGraph.references = references;
+	}
 
 	// methode implementee par le groupe web-mining
-	public static List<Article> retournerListeArticles() {
+	public static List<Article> listeArticles() {
 		List<Article> articles = new ArrayList<Article>();
-		for (int i = 1; i < 7; i++) {
+		for (int i = 0; i < 6; i++) {
 			Article art = new Article();
 			art.setIdArt(i + 1);
 			art.setTitleArt("article" + (i + 1));
-			art.setNbPage(50 + i);
-			art.setNumVol(700);
-			art.setDoi("AIIII001");
-			art.setStatus(true);
-			art.setIdArt(i);
-			art.setTitleArt("article" + (i));
-			Author auth = new Author(i, "nom_author"+(i), "prenom_author"+(i), "affiliation"+(i));
-			List<Author> test = new ArrayList<Author>();
-			test.add(auth);
-			art.setAuthor(test);
-			Reference a=new Reference();
-			a.setId(i);
-			a.setSource(i);
-			a.setTarget(i+1);
-			List<Reference> references = new ArrayList<Reference>();
-			references.add(a);
-			art.setReferences(references);
+			art.setAuthor(testListAuthor());
 			articles.add(art);
 		}
 		return articles;
 	}
 
-	//on crée une liste d'auteurs
 	public static List<Author> testListAuthor(){
 		List<Author> test = new ArrayList<Author>();
-		for (int i = 1; i < 7; i++) {
-			Author a = new Author(i, "nom_author"+(i), "prenom_author"+(i), "affiliation"+(i));
+		for (int i = 0; i < 5; i++) {
+			Author a = new Author(i, "nom_author"+(i+1), "prenom_author"+(i+1), "affiliation"+(i+1));
 			test.add(a);
 		}
 		return test;
 	}
+	
 	// methode implementee par le groupe web-mining
-	public static List<Article> retournerListeArticles() {
-		
-		List<Article> articles = new ArrayList<Article>();
-		for (int i = 0; i < 6; i++) {
-			Reference a=new Reference();
-			List<Reference> references = new ArrayList<Reference>();
-			Article art = new Article();
-			a.setId(i+1);
-			a.setSource(i+1);
-			a.setTarget(i+2);
-			references.add(a);
-			art.setIdArt(i + 1);
-			art.setTitleArt("article" + (i + 1));
-			art.setReferences(references);
-			articles.add(art);
-		}
-		return articles;
-	}
-	// créer liste des journaux (pour le test)
-	public static List<Journal> retournerListeJournaux() {
-		
-		List<Journal> journaux = new ArrayList<Journal>();
-		for (int i = 10; i < 15; i++) {
-			
-			Journal jour = new Journal();
-		
-			jour.setId(i);
-			jour.setTitre("journal" + (i));
-
-		}
-		
-		return journaux;
-	}
-	public static List<Article> retournerListeArticles2() {
-		List<Article> articles2 = new ArrayList<Article>();
-		for (int i = 7; i <=8; i++) {
-			Article art = new Article();
-			art.setIdArt(i + 1);
-			art.setTitleArt("article" + (i + 1));
-			articles2.add(art);
-		}
-		return articles2;
-	}
-
-			
-	// methode implementee par le groupe web-mining
-	public static List<Reference> ListeReference() {
+	public static List<Reference> listeReference() {
 		List<Reference> references = new ArrayList<Reference>();
-
-		for (int i = 1; i < 5; i++) {
+		for (int i = 1; i <= 5; i++) {
 			Reference ref = new Reference();
 			ref.setSource(i);
 			ref.setTarget(i + 1);
 			references.add(ref);
 		}
-		Reference ref1 = new Reference();
-		ref1.setSource(5);
-		ref1.setTarget(3);
-		references.add(ref1);
-		Reference ref2 = new Reference();
-		ref2.setSource(5);
-		ref2.setTarget(2);
-		references.add(ref2);
-
-		Reference ref3 = new Reference();
-		ref3.setSource(3);
-		ref3.setTarget(1);
-		references.add(ref3);
-
 		return references;
 	}
-
-	public static List<String> nodeInfo(List<Node> selectedNodes) {
-		int nbColumn = 0;
-		List<String> ListInfoSelectedNodes = new ArrayList<String>();
-
-		for (Column col : graphModel.getNodeTable()) {
-			nbColumn++;
-		}
-
-		for (int i = 0; i < selectedNodes.size(); i++) // parcourir la liste
-														// selectedNodes envoyée
-														// par le groupe IG
-		{
-			String stringInfoNode = "";
-			for (int j = 0; j < nbColumn; j++)// parcourir les informations du
-												// noeud
-			{
-				Column col = graphModel.getNodeTable().getColumn(j);
-
-				if (((selectedNodes.get(i)).getAttribute(col) != NULL) && (col.isIndexed() == true)) {
-					String NodeAttribute = (selectedNodes.get(i)).getAttribute(col).toString();
-					stringInfoNode = "" + stringInfoNode + " " + col.getTitle() + ": " + NodeAttribute + ", ";
-				}
-			}
-			ListInfoSelectedNodes.add(i, stringInfoNode);
-		}
-		return (ListInfoSelectedNodes);
-	}
-
-	/************* co_cité ******************/
-	/**
-	 * La methode returnNodesCocite() regroupe les noeuds qui sont cité par un
-	 * même noeud et retourne le resultat dans une liste qui contient dans
-	 * chaque element une autre liste de noeud qui contient ce regrepement par
-	 * co_cité
-	 ***/
-
 	
-	public static ArrayList<ArrayList<Node>> returnNodesCocite() {
-		int nbLigne = 0;
-		DirectedGraph directedGraph1 = createDirectedGraph();
-		nbLigne = directedGraph1.getEdgeCount();
-		// System.out.println("numberRow: " + nbLigne);
-		EdgeIterable eI = directedGraph1.getEdges();// iterateur sur le tableau
-													// des arcs
-		Edge[] tabEdges = eI.toArray();// tableau des edges
-
-		ArrayList<ArrayList<Node>> listeNodeCoCite = new ArrayList<ArrayList<Node>>();
-
-		 System.out.println("les liens entre les articles:");
-		 for (int i=0; i <tabEdges.length; i++) {
-		  System.out.println(" "+tabEdges[i].getSource().getLabel()+"->"+tabEdges[i].getTarget().getLabel()); }
-		 
-
-		for (int i = 0; i < nbLigne - 1; i++) {
-
-			ArrayList<Node> listeOfNodesCiteeParNodes = new ArrayList<Node>();
-			listeOfNodesCiteeParNodes.add(tabEdges[i].getTarget());
-
-			for (int j = i + 1; j < nbLigne; j++) {
-
-				if ((tabEdges[i].getSource().getLabel()).equals(tabEdges[j].getSource().getLabel())) {
-
-					listeOfNodesCiteeParNodes.add(tabEdges[j].getTarget());
-
-				}
-		
-		Reference ref1 = new Reference();
-		ref1.setSource(1);
-		ref1.setTarget(4);
-		Reference ref2 = new Reference();
-		ref2.setSource(2);
-		ref2.setTarget(5);
-		Reference ref3 = new Reference();
-		ref3.setSource(3);
-		ref3.setTarget(4);
-		references.add(ref1);references.add(ref2);references.add(ref3);
-		return references;
-	}
-
-	
-	// methode pour mettre a jour le graphe apres le developpement d'un noeud
-	public static DirectedGraph updateGraph(){
-		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
-		Workspace workspace = pc.getCurrentWorkspace();
-		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
-		DirectedGraph directedGraph = graphModel.getDirectedGraph();
-		//method webmining
-		List<Article> listArticl= returnNewList();
-         // methode webmining
-		List<Reference> listRef=ListNewReferences();
-		
-		for (Article article : listArticl) {
-			Node n1 = graphModel.factory().newNode(String.valueOf(article.getIdArt()));
-			n1.setLabel(article.getTitleArt());
-			n1.setAttribute(idArt, article.getIdArt());
-			n1.setAttribute(pubYear, article.getPubYear());
-			n1.setAttribute(author, article.getAuthor());
-			n1.setAttribute(titleArt, article.getTitleArt());
-			n1.setAttribute(doi, article.getDoi());
-			n1.setAttribute(numPage, article.getNumPage());
-			n1.setAttribute(nbPage, article.getNbPage());
-			n1.setAttribute(numVol, article.getNumVol());
-			n1.setAttribute(numIssue, article.getNumIssue());
-			n1.setAttribute(journal, article.getJournal());
-			n1.setAttribute(urlArt, article.getUrlArt());
-			n1.setAttribute(ref, article.getReferences());
-			n1.setAttribute(status, article.getStatus());
-			
-			directedGraph.addNode(n1);
-		}	
-     	for (Reference reference : listRef) {
-			//System.out.println(reference.getTarget());
-			Edge e1 = graphModel.factory().newEdge(directedGraph.getNode(String.valueOf(reference.getSource())),
-					directedGraph.getNode(String.valueOf(reference.getTarget())), 0, 1.0, true);
-		directedGraph.addEdge(e1);
-	}
-		
-		return directedGraph;
-	}
-	// methode implemente par webMining (la nouvelle recherche) permet de retourner
-	//la liste des articles associés a la nouvelle recherche
-	public static List<Article> returnNewList() {
-		List<Article> articles = new ArrayList<Article>();
-		for (int i = 7; i <=8; i++) {
-			Article art = new Article();
-			art.setIdArt(i );
-			art.setTitleArt("article"+i);
-			art.setNbPage(500);
-			articles.add(art);
-		}	
-
-		return articles;
-	}
-
-	// methode implemente par web-Mining : liste des references de la nouvelle recherche
-	public static List<Reference> ListNewReferences() {
-		List<Reference> references = new ArrayList<Reference>();
-		Reference ref1 = new Reference();
-		ref1.setSource(7);
-		ref1.setTarget(8);
-		Reference ref2 = new Reference();
-		ref2.setSource(7);
-		ref2.setTarget(5);
-		Reference ref3 = new Reference();
-		ref3.setSource(8);
-		ref3.setTarget(1);
-		references.add(ref1);
-		references.add(ref2);
-		references.add(ref3);
-	
-		return references;
-		
-	}
-
-
 	public static List<Author> listAllAuthors(){
 		List<Author> authors = new ArrayList<Author>();
 		List<Article> articles = listeArticles();
@@ -580,227 +230,26 @@ public final class MyGraph{
 				Author auth = iterate_auth.next();
 				authors.add(auth);
 			}
-			listeNodeCoCite.add(listeOfNodesCiteeParNodes);
-
 		}
-
-		return listeNodeCoCite;
-
+		return authors;
 	}
-
 	
-	public static DirectedGraph createDirectedGraph(ArrayList<ArrayList<Node>> listeNodeCoCite) {
-		DirectedGraph directedGraph1 = createDirectedGraph();
-		EdgeIterable eI = directedGraph1.getEdges();// iterateur sur le tableau
-													// des arcs
-		Edge[] tabEdges = eI.toArray();// tableau des edges
-		for (int i = 0; i < tabEdges.length; i++) {
-			directedGraph1.removeEdge(tabEdges[i]);// suppression de tous les
-													// anciens arcs entre les
-													// sommets
-		}
-		int nbLigne = directedGraph1.getEdgeCount();
-		// System.out.println("nbEdges:"+nbLigne);
-		ArrayList<Node> n = new ArrayList<Node>();
-
-		for (int h = 0; h < listeNodeCoCite.size(); h++) {
-			n = listeNodeCoCite.get(h);
-			if (n.size() > 1) {
-				for (int j = 0; j < n.size() - 1; j++)
-
-				{
-					for (int k = j + 1; k < n.size(); k++)
-
-					{
-
-						Edge e1 = graphModel.factory().newEdge(n.get(j), n.get(k)); // creation de nouveaux arcs basés sur la relation de co_cité
-																					
-						directedGraph1.addEdge(e1);
-					}
-				}
-
-			}
-		}
-
-	
-		return directedGraph1;
-	}
-
-	/****** fin co_cité ********/
-
-	/****** Début co_citant ****/
-	public static ArrayList<ArrayList<Node>> returnNodesCocitant() {
-		int nbLigne = 0;
-		DirectedGraph directedGraph1 = createDirectedGraph();
-		nbLigne = directedGraph1.getEdgeCount();// le nombre de ligne du tableau
-												// des arcs (ce tableau est
-												// definie par gephi)
-		// System.out.println("numberRow: " + nbLigne);
-
-		EdgeIterable eI = directedGraph1.getEdges();// iterateur sur le tableau
-													// des arcs pour parcourir
-													// le tableau des arcs
-		Edge[] tabEdges = eI.toArray();// definir tableau des arcs
-
-		ArrayList<ArrayList<Node>> listeNodeCoCitant = new ArrayList<ArrayList<Node>>();
-
-		
-
-		/*
-		 * on parcourt chaque edges du tableau (avec la 1ere boucle for), on
-		 * ajoute sa source dans chaque element de la liste
-		 * "listeOfNodesCiteeParNodes" puis on verifie (avec la 2eme boucle for)
-		 * sur tous les autres suivantes edges (tabEdges[j] eq(les arcs qui sont
-		 * differents de l'arc de tabEgdes[i])) ont-ils la meme source que celui
-		 * de l'arc tabEgdes[i] si oui on ajoute cet destination dans la liste
-		 * "listeOfNodesCiteeParNodes"
-		 */
-		for (int i = 0; i < nbLigne - 1; i++) {
-
-			ArrayList<Node> listeOfNodesCitantParNode = new ArrayList<Node>();
-			listeOfNodesCitantParNode.add(tabEdges[i].getSource());
-
-			for (int j = i + 1; j < nbLigne; j++) {
-
-				if (tabEdges[i].getTarget().getLabel().equals(tabEdges[j].getTarget().getLabel())) {
-
-					listeOfNodesCitantParNode.add(tabEdges[j].getSource());
-				}
-			}
-			listeNodeCoCitant.add(listeOfNodesCitantParNode);
-		}
-		return listeNodeCoCitant;
-	}
-
-	public static DirectedGraph createDirectedGraph2(ArrayList<ArrayList<Node>> listeNodeCoCitant) {
-
-		DirectedGraph directedGraph1 = createDirectedGraph();// on instance un graphe pour lui attribuer les nouveaux arcs qui relie les
-		//noueds par les criteres de cocitant
-																
-		EdgeIterable eI = directedGraph1.getEdges();// iterateur sur le tableau des arcs (le table créer automatiquement par  gephi)
-													
-		Edge[] tabEdges = eI.toArray();// tableau des arcs
-		for (int i = 0; i < tabEdges.length; i++) {
-			directedGraph1.removeEdge(tabEdges[i]);// suppression de tous les anciens arcs entre les sommets
-		}
-		int nbLigne = directedGraph1.getEdgeCount();
-		ArrayList<Node> n = new ArrayList<Node>();
-
-		for (int h = 0; h < listeNodeCoCitant.size(); h++) {
-			n = listeNodeCoCitant.get(h);
-			if (n.size() > 1) {
-				for (int j = 0; j < n.size() - 1; j++)
-
-				{
-					for (int k = j + 1; k < n.size(); k++)
-
-					{
-
-						Edge e1 = graphModel.factory().newEdge(n.get(j), n.get(k)); // creation de nouveaux arcs basés sur la relation de co_citant
-																				
-						directedGraph1.addEdge(e1);
-					}
-				}
-
-			} else if (n.size() <= 1) {
-
-				for (int j = 0; j < n.size() - 1; j++)
-
-				{
-					directedGraph1.addNode(n.get(h));
-
-				}
-			}
-		}
-		return directedGraph1;
-	}
-
-
-	/****** fin co_citant ********/
-
-}
-	//Ali
 	public static List<Author> listAuthorsByArticle(Article article){
 		List<Author> authors = new ArrayList<Author>();
-				Iterator<Author> iterate_auth = article.getAuthor().iterator();
-				while(iterate_auth.hasNext()){
-					Author auth = iterate_auth.next();
-					authors.add(auth);
-				}
-		return authors;
-		
-	}
-	// retourner la liste d'auteurs par article
-	public static List<Author> listAuthorsByArticle(int idArticle, List<Article> articles){
-		List<Author> authors = new ArrayList<Author>();
-		for(Article article:articles){
-			if(article.getIdArt()==idArticle){
-				Iterator<Author> iterate_auth = article.getAuthor().iterator();
-				while(iterate_auth.hasNext()){
-					Author auth = iterate_auth.next();
-					authors.add(auth);
-				}
-			}
-		}
-		return authors;
-		
-	}
-	// retourne la liste des articles par auteur
-	public static List<Article> listArticlesByAuthor(int idAuthor,List<Article> articles){
-		List<Article> articlesA = new ArrayList<Article>();
-		for(Article article : articles){
 		Iterator<Author> iterate_auth = article.getAuthor().iterator();
 		while(iterate_auth.hasNext()){
 			Author auth = iterate_auth.next();
-			if(auth.getId_auth()==idAuthor){
-				articlesA.add(article);
-			}
-		 }
+			authors.add(auth);
 		}
-		return articlesA;
-	}
-	//retourne la liste des réf d'un article donné
-	static List<Reference> refList(int idArticle, List<Article> articles){
-		List<Reference> listRef=new ArrayList<Reference>();
-		for(Article a:articles){
-			if(a.getIdArt()==idArticle){
-				listRef=a.getReferences();	
-				}
-		}
-		return listRef;
+		
+		return authors;
 	}
 	
-	// methode de test (Interface graphique):  retourne la liste des noeuds selectionnes
-	public static List<Node> returnlistenodeSelect(){
-		DirectedGraph dg = createDirectedGraph();
-		List<Node> ln = new ArrayList<>();
-		int j = 1;
-		for (Node node : dg.getNodes()) {
-			if (j<4) {
-				ln.add(node);
-				j++;
-			}
-			
-		}
-		return ln ;
-	}
-	//methode implemente par le group webMining permet de retourner les reference d'un article 
-	//
-	static List<Reference> returnRefByIdArt(int idAarticl){
-		List<Reference> listRef=new ArrayList<Reference>();
-		List<Article> listArticl =retournerListeArticles();
-		for(Article a:listArticl){
-			if(a.getIdArt()==idAarticl){
-				listRef=a.getReferences();	}
-		}
-	return listRef;
-	}
-
-	//MG-22
 	public enum Extension {
 	    GEXF,
 	    GML		  
 }
+	
 	public static String exportGraph(Extension ext){
 		 //Export full graph gexf
 	  if(ext==Extension.GEXF){
@@ -882,242 +331,57 @@ public final class MyGraph{
         }
 	}
 	
-
-	public static void changeStatusArticl(Node a) {
-		
-		a.setAttribute(status,true);//on change le statut de noeud sélectionné
-		//int id= Integer.parseInt((String) a.getId());
-	  // setStatus(id); methode de web mining pour changer le statut dans la base de données
-	}
-	// cette methode pour tester la methode changeStatusArticl
-	public static Node creerNode(Article article){
-		Node n0 = graphModel.factory().newNode(String.valueOf(article.getIdArt()));
-		n0.setLabel(article.getTitleArt());
-		n0.setAttribute(idArt, article.getIdArt());
-		n0.setAttribute(pubYear, article.getPubYear());
-		n0.setAttribute(author, article.getAuthor());
-		n0.setAttribute(titleArt, article.getTitleArt());
-		n0.setAttribute(doi, article.getDoi());
-		n0.setAttribute(numPage, article.getNumPage());
-		n0.setAttribute(nbPage, article.getNbPage());
-		n0.setAttribute(numVol, article.getNumVol());
-		n0.setAttribute(numIssue, article.getNumIssue());
-		n0.setAttribute(journal, article.getJournal());
-		n0.setAttribute(urlArt, article.getUrlArt());
-		n0.setAttribute(ref, article.getReferences());
-		n0.setAttribute(status, article.getStatus());
-		return n0;
-	}
-	//retourne la liste des references d'auteurs
-	public static List<Reference> exportRefAuthors(List<Author> authors,List<Article> articles){
-		//List articles avec authors
-		List<Reference> references = new ArrayList<Reference>();
-		for(Author auth: authors){
-			List<Article> articlesAuth = new ArrayList<Article>();
-			articlesAuth=listArticlesByAuthor(auth.getId_auth(),articles);
-			for(Article art:articlesAuth){
-				List<Reference> referenceArticle = new ArrayList<Reference>();
-				referenceArticle=refList(art.getIdArt(),articlesAuth);
-				for(Reference ref: referenceArticle){
-					Reference ref1 = new Reference();
-					ref1.setSource(auth.getId_auth());
-					List<Author> authorsArticle= new ArrayList<Author>();
-					authorsArticle=listAuthorsByArticle(ref.getTarget(),articles);
-					for(Author auth2: authorsArticle){
-						ref1.setTarget(auth2.getId_auth());
-						references.add(ref1);
-					}
-				}
-			}
-			
-		}
-
-		return references;
-	}
- 	
 	
 
 
 	
-	/*public static List<Article> returnDistinctList() {
-	List<Article> articles =returnNewList();
-	List<Article> DistincArt =new ArrayList<Article>();
-  for (Article article : articles) {
-	  if(!DistincArt.contains(article)){
-		  System.out.println(article.getIdArt());
-		  System.out.println(article.getTitleArt());
-		  DistincArt.add(article);
-
-	  }else rtyrrt9
-	
-}
-	return DistincArt ;
-}
-*/
-
-	// methode pour determiner les réferences des noeuds selectionneé
-	static List<Reference> exportRef(List<Node> listOfNode){
-	 List<Reference> listRef=new ArrayList<Reference>();
-	 for (Node node:listOfNode){
-		 int id= Integer.parseInt((String) node.getId());
-		  List<Reference> listBD=returnRefByIdArt(id); 
-		for (Reference ref:listBD){
-			listRef.add(ref);
-		}
-	 }
-	return listRef;
-	}
-	
-	// methode implementé par webMining permet de retourner l id du journal associé a l id d'article
-	static public int returnIdOfJournalByIdArt(int id_art)
-	{
-		List<Article> listArticl =listeArticlesTestJournaux();
-		for(Article a:listArticl)
-		{
-			if(a.getIdArt()==id_art)
-			{
-				int id=a.getJournal().getId();
-				return id;
-			}
-		}
-		return 0;
-	}
-	/* methodes listeArticlesTestJournaux() :creer des articles (id,titre,journal,ref ...) pour 
-	tester la methode exportRefOfJournal 
-	normalement on utilise la liste des articles retournés par la BDD*/
-public static List<Article> listeArticlesTestJournaux() {
-		
-		List<Article> articles = new ArrayList<Article>();
-
-		for (int i = 0; i < 4; i++) {
-			List<Reference> references = new ArrayList<Reference>();
-			Reference a=new Reference();
-			
-			Article art = new Article();
-			Journal j=new Journal();
-			j.setId(i+1*10);
-			j.setTitre("journal"+(i + 1));
-			a.setId(i+1);
-			a.setSource(i+1);
-			a.setTarget(i+2);
-			references.add(a);
-			art.setIdArt(i + 1);
-			art.setTitleArt("article" + (i + 1));
-			art.setReferences(references);
-			art.setJournal(j);
-			articles.add(art);
-		}
-		List<Reference> references = new ArrayList<Reference>();
-		Article art=new Article();
-		Journal j=new Journal();
-		j.setId(14);
-		j.setTitre("journal 5");
-		Reference b=new Reference();
-		b.setId(5);
-		b.setSource(5);
-		b.setTarget(2);
-		references.add(b);
-		art.setIdArt(5);
-		art.setTitleArt("article 5");
-		art.setReferences(references);
-		art.setJournal(j);
-		articles.add(art);
-		return articles;
-	}
-	// tache 30 exporter les references des journaux pour creér de liens entre
-   // les noeuds journaus
-	static List<Reference> exportRefOfJournals()
-	{
-		 int i=1;
-		// ListeReferenceOfArticle() methode de webminin base de données
-		 List<Reference> listRef=ListeReferenceOfArticle() ;
-		 List<Reference> newListOfRef=new ArrayList<Reference>();
-		 for (Reference ref:listRef)
-		 {       // je récupére l id du journal correspodant a l id d article (source et target)
-			 	int source=returnIdOfJournalByIdArt(ref.getSource());
-			 	//System.out.println("source  "+source);
-			 	int target=returnIdOfJournalByIdArt(ref.getTarget());
-			 	Reference a= new Reference();
-			 	a.setId(i);
-			 	a.setSource(source);
-			 	a.setTarget(target);
-			 	newListOfRef.add(a);
-			 	i++;
-			}
-		 
-		return newListOfRef;
-	}
-	
-	// methode implemente par web mining qui retourne liste des references des articles 
-	public static List<Reference> ListeReferenceOfArticle() 
-	{
-		List<Article> listArticl =listeArticlesTestJournaux();
-		List<Reference> references = new ArrayList<Reference>();
-		
-		for(Article a:listArticl)
-		{
-				for(Reference ref:a.getReferences())
-					{
-					Reference r=ref;
-					references.add(r);
-					}
-		}
-		return references;
-	}
-	
-	
-	
-	
-	public static DirectedGraph createJournalGph(){
-		
-	
-		
-		//creation de attributs des noeuds 
-		id_news = graphModel.getNodeTable().addColumn("id_journal",Integer.class);
-		title_news = graphModel.getNodeTable().addColumn("titre_journal",String.class);
-		Articles = graphModel.getNodeTable().addColumn("id_Article",Integer.class);
-		//instancier un nouveau graph 
-		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
-		pc.newProject();
-		Workspace workspace = pc.getCurrentWorkspace();
-		
-		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace);
-		
-		DirectedGraph journalGraph = graphModel.getDirectedGraph();
-
-		for(Journal j : returnJournaux()){
-			Node noeud = graphModel.factory().newNode();
-			noeud.setAttribute(id_news, j.getId_news());
-			noeud.setAttribute(title_news, j.getTitle_news());
-			
-		for(Article a : listeArticles()){
-			noeud.setAttribute(Articles, a.getIdArt());
-
-		}
-		
-		}
-		return journalGraph;
-	}
-
-
-		public  static List<Journal>  returnJournaux(){
-
-			List<Journal> listJournaux = new ArrayList<Journal>();
-			Journal J;
-			for(int i=0;i<=5;i++){
-
-			    J=new Journal();
-				J.setId_news(i);
-				J.setTitle_news("titre"+i);
-				J.setArticles(listeArticles());
-			    listJournaux.add(J);
-			}
-
-
-
-			return listJournaux;
-
-		}
+//	public static DirectedGraph createJournalGph(){
+//		//creation de attributs des noeuds 
+//		id_news = graphModel.getNodeTable().addColumn("id_journal",Integer.class);
+//		title_news = graphModel.getNodeTable().addColumn("titre_journal",String.class);
+//		Articles = graphModel.getNodeTable().addColumn("id_Article",Integer.class);
+//		//instancier un nouveau graph 
+//		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+//		pc.newProject();
+//		Workspace workspace = pc.getCurrentWorkspace();
+//		
+//		graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace);
+//		
+//		DirectedGraph journalGraph = graphModel.getDirectedGraph();
+//
+//		for(Journal j : returnJournaux()){
+//			Node noeud = graphModel.factory().newNode();
+//			noeud.setAttribute(id_news, j.getId_news());
+//			noeud.setAttribute(title_news, j.getTitle_news());
+//			
+//		for(Article a : listeArticles()){
+//			noeud.setAttribute(Articles, a.getIdArt());
+//
+//		}
+//		
+//		}
+//		return journalGraph;
+//	}
+//
+//
+//		public  static List<Journal>  returnJournaux(){
+//
+//			List<Journal> listJournaux = new ArrayList<Journal>();
+//			Journal J;
+//			for(int i=0;i<=5;i++){
+//
+//			    J=new Journal();
+//				J.setId_news(i);
+//				J.setTitle_news("titre"+i);
+//				J.setArticles(listeArticles());
+//			    listJournaux.add(J);
+//			}
+//
+//
+//
+//			return listJournaux;
+//
+//		}
 	
 
 	
