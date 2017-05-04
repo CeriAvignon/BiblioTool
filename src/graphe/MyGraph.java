@@ -45,7 +45,7 @@ public final class MyGraph{
 	public static List<Reference> references;
 	public static GraphModel graphModel;
 	private MyGraph() { }
-
+         
 	public static Column idArt, titleArt, author, doi, pubYear, numPage, nbPage, numVol, numIssue, journal, urlArt, ref, status;
 	public static Column idAuth, name_auth, first_name, affiliation;
 	
@@ -65,7 +65,7 @@ public final class MyGraph{
 		MyGraph.references = references;
 	}
 	public static Column idJour, titleJour;
-
+	//Crée un graph d'articles
 	public static DirectedGraph createDirectedGraph(){
 		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
 		pc.newProject();
