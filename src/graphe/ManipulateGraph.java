@@ -32,9 +32,10 @@ import java.util.List;
 public class ManipulateGraph {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		//On fait appel au fonction de set pour remplir la liste d'articles et de références
 		MyGraph.setArticles(MyGraph.listeArticles());
 		MyGraph.setReferences(MyGraph.listeReference());
-		
+		//Fonction qui sert à créer le graph
 		DirectedGraph dg = MyGraph.createDirectedGraph();
 		Article art = new Article();
 		art.setIdArt(5);
@@ -42,6 +43,7 @@ public class ManipulateGraph {
 		art.setStatus(false);
 		Node noeud;
 		noeud= MyGraph.creerNode(art);
+		//Sert à modifier l'article du noeud passé en paramétre
 		MyGraph.changeStatusArticl(noeud);
 		System.out.println("le nouveau statut de l'article est "+noeud.getAttribute("status"));
 		
@@ -60,7 +62,8 @@ public class ManipulateGraph {
 		
 		Article article = new Article();
 		article.setIdArt(5);
-    	article.setAuthor(MyGraph.testListAuthor());
+    	        article.setAuthor(MyGraph.testListAuthor());
+		//Crée un graph d'auteurs
 		DirectedGraph articleAuthor = MyGraph.createAuthorsGraph();
 		for (Node node : articleAuthor.getNodes()) {
 			//System.out.println(node.getAttribute("id")+": "+node.getAttribute("name_Author"));
@@ -79,7 +82,7 @@ public class ManipulateGraph {
 		
 		
 		
-		
+		//Export du graph sous extension GML
 		String var = MyGraph.exportGraph(MyGraph.Extension.GML);
 		System.out.println(var);
 	
@@ -88,7 +91,7 @@ public class ManipulateGraph {
       
 		MyGraph.setArticles(MyGraph.retournerListeArticles());
 		MyGraph.setReferences(MyGraph.listeReference());
-
+		//Mise à jour du graph
 		DirectedGraph dg1 = MyGraph.createDirectedGraph();
 		 System.out.println("avant la mise a jour du graph");
 	     System.out.println("Nodes: " + dg1.getNodeCount() + " Edges: " + dg1.getEdgeCount());
