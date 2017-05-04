@@ -13,5 +13,6 @@ public class Main {
 	 
 	 
 	 a.ViewArticle();
+	 Window2 windowBibliotool = new Window2();
  }
 }

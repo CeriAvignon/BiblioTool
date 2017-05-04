@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://www.gexf.net/1.3" version="1.3" xmlns:viz="http://www.gexf.net/1.3/viz" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.3 http://www.gexf.net/1.3/gexf.xsd">
+  <meta lastmodifieddate="2017-02-21">
+    <creator>Gephi 0.9</creator>
+    <description></description>
+  </meta>
+  <graph defaultedgetype="directed" mode="static">
+    <nodes>
+      <node id="1" label="article1">
+        <viz:size value="0.0"></viz:size>
+      </node>
+      <node id="2" label="article2">
+        <viz:size value="0.0"></viz:size>
+      </node>
+      <node id="3" label="article3">
+        <viz:size value="0.0"></viz:size>
+      </node>
+      <node id="4" label="article4">
+        <viz:size value="0.0"></viz:size>
+      </node>
+      <node id="5" label="article5">
+        <viz:size value="0.0"></viz:size>
+      </node>
+      <node id="6" label="article6">
+        <viz:size value="0.0"></viz:size>
+      </node>
+    </nodes>
+    <edges>
+      <edge id="0" source="1" target="2"></edge>
+      <edge id="1" source="2" target="3"></edge>
+      <edge id="2" source="3" target="4"></edge>
+      <edge id="3" source="4" target="5"></edge>
+      <edge id="4" source="5" target="6"></edge>
+	  <edge id="5" source="1" target="4"></edge>
+	  <edge id="6" source="1" target="6"></edge>
+    </edges>
+  </graph>
+</gexf>
