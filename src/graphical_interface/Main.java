@@ -1,6 +1,7 @@
 package graphical_interface;
 import textmining.*;
 
+
 public class Main {
  public static void main(String[] args) {
 	//Window windowBibliotool = new Window();
@@ -13,6 +14,7 @@ public class Main {
 	 
 	 
 	 a.ViewArticle();
-	 Window2 windowBibliotool = new Window2();
+	 
+	 //Window2 windowBibliotool = new Window2();
  }
 }
