@@ -2,10 +2,13 @@ package textmining;
 
 
 
+
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.System;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 import com.itextpdf.text.pdf.PdfReader;
 
@@ -26,7 +29,8 @@ public class TextMining {
 	public static Article processPdf(String pdf)
 	{
 		Article a = new Article();
-		Meta_Donnes meta=new Meta_Donnes(pdf);
+		//Article a = new Article();
+		MetaDonnees meta=new MetaDonnees(pdf);
 		
 		//Récupérer les meta d'une classe à part (Décider de l'API (itextpdf,clownPDF ou ..?))
 		
@@ -38,7 +42,12 @@ public class TextMining {
 		if(meta.getDate().length() == 0) a.SetAnnee(-1);
 		else a.SetAnnee(Integer.parseInt(meta.getDate().substring(meta.getDate().length() - 4)));
 		a.SetSource("");
-		a.SetReference(reference);
+		ArrayList<ArrayList<String>> References = new ArrayList<ArrayList<String>>();
+		
+		AnalyseReferences analyseur = new AnalyseReferences(pdf);
+		ArrayList<Reference> r = analyseur.getReferences();
+		
+		a.AddReferences(r);
 		
 		return a;
 	}
