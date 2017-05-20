@@ -16,7 +16,7 @@ public class UpdateArticle {
 
     String query = "";
 
-    public Article articles;
+    public Article article;
 
   		Statement st=null ;
 

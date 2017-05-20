@@ -15,7 +15,7 @@ public class ShowArticles {
 
 	     String query = "";
 
-         public Article articles;
+         public Article article;
 	
          int nbr=1;
 	   		Statement st=null ;
@@ -36,7 +36,7 @@ public class ShowArticles {
 		   	  // exécution requéte
 	   	  try {
 	   		st = con.createStatement();
-		   	   String sql ="select * from article ";
+		   	   String sql ="select * from Article ";
 
 			rs= st.executeQuery(sql);
 		} catch (SQLException e1) {
@@ -51,23 +51,23 @@ public class ShowArticles {
 				 // Parcourir de la resultat de select
 				try {
 					while(rs.next()){ 
-				         articles = new Article();
+				         article= new Article(0, null, null, null, null, 0, 0, null, false);
 
 					 // Remplir de l'objet article
-					 articles.idArt=rs.getInt("idArt");
-					  articles.titleArt=rs.getString("titleArt");
-					 articles.urlPage=rs.getString("urlPage");
-					  articles.urlPdf=rs.getString("urlPdf");
-					  articles.doi=rs.getString("doi");
-					  articles.numIssue=rs.getInt("numIssue");
-					  articles.nbPage=rs.getInt("nbPage");
+					  article.idArt=rs.getInt("idArt");
+					  article.titleArt=rs.getString("titleArt");
+					  article.urlPage=rs.getString("urlPage");
+					  article.urlPdf=rs.getString("urlPdf");
+					  article.doi=rs.getString("doi");
+					  article.numIssue=rs.getInt("numIssue");
+					  article.nbPage=rs.getInt("nbPage");
 
-					  articles.yearPub=rs.getDate("yearPub");
+					  article.yearPub=rs.getDate("yearPub");
 					  //articles.status=rs.getString("status");
 					  
-							list.add(articles); 
+							list.add(article); 
 
-							 System.out.println(articles.idArt);
+							 System.out.println(article.idArt);
 
 					 nbr++;
 					 
