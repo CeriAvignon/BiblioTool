@@ -18,7 +18,7 @@ public class Article{
 	  public Date yearPub;    // ann�e de publication de l'article;
 	  public boolean status;  // status de l'article si l'article a �t� lue ou pas; 
 	  public List<Author> listAuthor = new ArrayList<Author>(); //liste des auteurs associ� � cette article;
-	  public List<Article> listArticle = new ArrayList<Article>();//liste des journals
+	  public List<Journal> listJournal = new ArrayList<Journal>();//liste des journals
 	  public List<Reference> listReference= new ArrayList<Reference>(); //liste des article cit� et l'article qui est cit�
 	  
 	  //le constructeur de la classe article avec des arguments; 
@@ -120,35 +120,35 @@ public class Article{
 	    	    return listAuthor;
 	    	  }
 
-	    	  public void setListAuthor(List<Author> listAuthor) {
+	    	  public void setListAuthor(List<Author> listauthor) {
 
-	    	    this.listAuthor = listAuthor;
+	    	    this.listAuthor = listauthor;
 	    	  }
-	     public List<Article> getListArticle(List<Article> listArticle) {
+	     public List<Journal> getListJournal(List<Journal> listjournal) {
 	    	 
-	    	 return listArticle;
+	    	 return listjournal;
 	     }
-	     public void setListArticle(List<Article> listArticle) {
+	     public void setListJournal(List<Journal> listjournal) {
 
-	    	    this.listArticle = listArticle;
+	    	    this.listJournal = listjournal;
 	    	  } 
-         public List<Reference> getListReference(List<Reference> listReference) {
+         public List<Reference> getListReference(List<Reference> listreference) {
 	    	 
-	    	 return listReference;
+	    	 return listreference;
 	     }
-	     public void setListReference(List<Reference> listReference) {
+	     public void setListReference(List<Reference> listreference) {
 
-	    	    this.listReference = listReference;
+	    	    this.listReference = listreference;
 	     }
-	     public void addAuthor(Author Author){
-	    	 this.listAuthor.add(Author);
+	     public void addAuthor(Author author){
+	    	 this.listAuthor.add(author);
 	     } 
-	     public void addArticle(Article Article){
-	    	 this.listArticle.add(Article);
+	     public void addJournal(Journal journal){
+	    	 this.listJournal.add(journal);
 	     }	   
           	
-	     public void addReference(Reference Reference){
-	    	 this.listReference.add(Reference);
+	     public void addReference(Reference reference){
+	    	 this.listReference.add(reference);
 	     }  
 	     public void AfficheArticle() //methode d'affichage
 	 	{
