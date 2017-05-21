@@ -51,7 +51,7 @@ public class ShowArticles {
 				 // Parcourir de la resultat de select
 				try {
 					while(rs.next()){ 
-				         article= new Article(0, null, null, null, null, 0, 0, null, false);
+				       Article  article= new Article();
 
 					 // Remplir de l'objet article
 					  article.idArt=rs.getInt("idArt");

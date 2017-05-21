@@ -1,26 +1,27 @@
-
 package webmining;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
-
+/**
+*
+* @author Tanguy Goussoumalet
+*/
 //la classe article
 public class Article{
 	  public int idArt;      //identifiant de l'article;
 	  public String titleArt=""; // le titre de l'article;
 	  public String urlPage=""; // url de la page de l'article;
 	  public String urlPdf="";  // url de pdf de l'article;
-	  public String doi="";    // numéro d'identifiant numérique d'objet;
-	  public int numIssue;     // numéro d'émission de l'artile;
+	  public String doi="";    // numï¿½ro d'identifiant numï¿½rique d'objet;
+	  public int numIssue;     // numï¿½ro d'ï¿½mission de l'artile;
 	  public int nbPage;      // nombre de page de l'article;
-	  public Date yearPub;    // année de publication de l'article;
-	  public boolean status;  // status de l'article si l'article a été lue ou pas; 
-	  public List<Author> listAuthor = new ArrayList<Author>(); //liste des auteurs associé à cette article;
+	  public Date yearPub;    // annï¿½e de publication de l'article;
+	  public boolean status;  // status de l'article si l'article a ï¿½tï¿½ lue ou pas; 
+	  public List<Author> listAuthor = new ArrayList<Author>(); //liste des auteurs associï¿½ ï¿½ cette article;
 	  public List<Article> listArticle = new ArrayList<Article>();//liste des journals
-	  public List<Reference> listReference= new ArrayList<Reference>(); //liste des article cité et l'article qui est cité
+	  public List<Reference> listReference= new ArrayList<Reference>(); //liste des article citï¿½ et l'article qui est citï¿½
 	  
-	  //le constructeur de la classe article
+	  //le constructeur de la classe article avec des arguments; 
 	  public Article(int idArt, String titleArt, String urlPage,String urlPdf,String doi,int numIssue,
 			  int nbPage,Date yearPub,boolean status)
 	  {
@@ -34,6 +35,11 @@ public class Article{
 		  this.yearPub = yearPub;
 		  this.status = status;
 	  }
+	  //le constructeur sans argument de la classe article
+	   public Article(){
+		   
+	   }
+	   
 	     public int getId()
 	     {
 	    	 return idArt;
@@ -149,7 +155,7 @@ public class Article{
 	 	    System.out.println("---------------------------------------------------------------" );
 	 		System.out.println("Titre de l'article : " + this.titleArt);
 	 		System.out.println("---------------------------------------------------------------" );
-	 		System.out.println("Année de  publication de l'article : " + this.yearPub );
+	 		System.out.println("Annï¿½e de  publication de l'article : " + this.yearPub );
 	 		System.out.println("---------------------------------------------------------------" );
 	 		for(int i = 0; i <listAuthor.size() ; i++ )
 	 			System.out.println("Auteur de l'article : " + this.listAuthor.get(i).toString());

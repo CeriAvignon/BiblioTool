@@ -32,7 +32,7 @@ public class ShowLastArticle {
 	   	  // exécution requéte
   	  try {
   		st = con.createStatement();
-	   	   String sql ="select * from article order by idArt DESC limit 1 ";
+	   	   String sql ="select * from Article order by idArt DESC limit 1 ";
 
 		rs= st.executeQuery(sql);
 
@@ -48,7 +48,7 @@ public class ShowLastArticle {
   	  
   	    try {
 		while(rs.next()){ 
-	         article = new Article(0, null, null, null, null, 0, 0, null, false);
+	       Article  article = new Article();
 
 	         // Remplir de l'objet article
 				 article.idArt=rs.getInt("idArt");
