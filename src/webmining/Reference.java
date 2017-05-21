@@ -1,5 +1,9 @@
 package webmining;
 
+/**
+*
+* @author Tanguy Goussoumalet
+*/
 // la classe reference
 public class Reference {
 

@@ -1,23 +1,68 @@
 package graphical_interface;
 
+import graphical_interface.MouseListenerTemplate;
+import graphical_interface.PreviewSketch;
+import graphe.*;
+import javax.swing.*;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import org.gephi.graph.api.GraphController;
+import org.gephi.graph.api.GraphModel;
+import org.gephi.graph.api.GraphView;
+import org.gephi.graph.api.Node;
+import org.gephi.io.exporter.api.ExportController;
+import org.gephi.io.exporter.preview.ExporterBuilderPDF;
+import org.gephi.io.exporter.preview.PDFExporter;
+import org.gephi.io.exporter.spi.CharacterExporter;
+import org.gephi.io.exporter.spi.Exporter;
+import org.gephi.io.exporter.spi.GraphExporter;
+import org.gephi.io.exporter.spi.GraphFileExporterBuilder;
+import org.gephi.filters.api.FilterController;
+import org.gephi.filters.api.Query;
+import org.gephi.filters.api.Range;
+import org.gephi.filters.plugin.graph.DegreeRangeBuilder.DegreeRangeFilter;
+import org.gephi.filters.spi.NodeFilter;
+import org.gephi.graph.api.DirectedGraph;
+import org.gephi.graph.api.Edge;
 import org.gephi.preview.api.G2DTarget;
 import org.gephi.preview.api.PreviewController;
 import org.gephi.preview.api.PreviewMouseEvent;
+import org.gephi.preview.api.PreviewProperties;
+import org.gephi.preview.api.RenderTarget;
 import org.gephi.preview.api.Vector;
 import org.gephi.project.api.ProjectController;
 import org.gephi.project.api.Workspace;
 import org.openide.util.Lookup;
+
+import com.itextpdf.text.PageSize;
+
+import test.FileTypeFilter;
 
 public class PreviewSketch extends JPanel implements MouseListener, MouseWheelListener, MouseMotionListener {
 
@@ -33,6 +78,9 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
     private Timer wheelTimer;
     private boolean inited;
     private final boolean isRetina;
+    private Map<Node,ArrayList<Edge>> hideNodeEdge = new HashMap<Node,ArrayList<Edge>>();
+    private Node nodeHideSave = null;
+    private Query saveQuery = null;
 
     public PreviewSketch(G2DTarget target) {
         this.target = target;
@@ -76,13 +124,326 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
         mouse.getModel().getProperties();
         Workspace workspace = pc.getCurrentWorkspace();
         test.mouseClicked(tmpPME, mouse.getModel().getProperties(), workspace);
-        //////
-        
+        for (Node node : Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace).getGraph().getNodes()) {
+        	if(test.clickingInNode(node,tmpPME)){
+        		mouse.getModel().getProperties().putValue("display-label.node.id", node.getId());                
+                if (node.getAttribute("isSelected") == Boolean.TRUE){
+                	node.setColor(Color.RED);
+                	node.setAttribute("isSelected", Boolean.FALSE);
+                	//Edge[] e = Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace).getGraph().getEdges(node).toArray();
+                	//Node[] neighbors = Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace).getGraph().getNeighbors(node).toArray();
+                    //System.out.println(node.getLabel() + " has " + neighbors.length + " neighbors");
+                }
+                else if (node.getAttribute("isSelected") == Boolean.FALSE){
+                	node.setColor(Color.ORANGE);
+                	node.setAttribute("isSelected", Boolean.TRUE);
+                }
+                
+                PreviewController previewController = Lookup.getDefault().lookup(PreviewController.class);
+                previewController.refreshPreview();
+	        	if(SwingUtilities.isRightMouseButton(e)) // check right click 
+	        	{
+        			// if we click on a noeud then it show the popup menu
+		    		JPopupMenu popup = new JPopupMenu();
+		    		JMenuItem mntmHide = new JMenuItem("Masquer ce noeud");
+		    		JMenuItem mntmDisplay = new JMenuItem("Re-afficher le dernier noeud");
+		    		popup.add(mntmHide);
+		    		if(this.nodeHideSave != null)
+		    			popup.add(mntmDisplay);
+		            popup.show(e.getComponent(), e.getX(), e.getY());
+		    		mntmHide.addActionListener( new ActionListener()
+		    		{
+		    		    public void actionPerformed(ActionEvent e)
+		    		    {
+		    		    	hideNode(node);
+		    	        	tmpPME.setConsumed(true);
+		    	        	return;
+		    		    }
+		    		});
+		    		mntmDisplay.addActionListener( new ActionListener()
+		    		{
+		    		    public void actionPerformed(ActionEvent e)
+		    		    {
+		    		    	displayNode(node);
+		    	        	tmpPME.setConsumed(true);
+		    	        	nodeHideSave = null;
+		    	        	return;
+		    		    }
+		    		});
+		        	System.out.println("on the node " + node.getLabel()+"\n-------------");
+		        	break;
+	        	}
+        	}
+        	else 
+        	{
+	        	System.out.println("not on node\n-------------");
+        		if(SwingUtilities.isRightMouseButton(e)) // check right click 
+        		{
+    	    		JPopupMenu popup = new JPopupMenu();
+    	    		JMenu mntmSave = new JMenu("Sauvegarder sous...");
+		    		JMenuItem mntmSavePdf = new JMenuItem("PDF");
+		    		JMenu mnSaveGexf = new JMenu("GEXF");
+		    		JMenuItem mntmFullGraphe = new JMenuItem("Le graphe entier");
+		    		JMenuItem mntmFilteredGraphe = new JMenuItem("Le graphe filtré");
+		    		JMenuItem mntmGraphMl = new JMenuItem("GrapheML");
+		    		mnSaveGexf.add(mntmFullGraphe);
+		    		mnSaveGexf.add(mntmFilteredGraphe);
+		    		mntmSave.add(mntmSavePdf);
+		    		mntmSave.add(mnSaveGexf);
+		    		mntmSave.add(mntmGraphMl);
+    	    		popup.add(mntmSave);
+    	            popup.show(e.getComponent(), e.getX(), e.getY());
+    	            mntmGraphMl.addActionListener( new ActionListener()
+    	    		{
+    	    		    public void actionPerformed(ActionEvent e)
+    	    		    {
+    	    		    	saveGraphMl();
+    	    	        	tmpPME.setConsumed(true);
+    	    	        	return;
+    	    		    }
+    	    		});
+    	            mntmSavePdf.addActionListener( new ActionListener()
+    	    		{
+    	    		    public void actionPerformed(ActionEvent e)
+    	    		    {
+    	    		    	savePdf();
+    	    	        	tmpPME.setConsumed(true);
+    	    	        	return;
+    	    		    }
+    	    		});
+    	            mntmFilteredGraphe.addActionListener( new ActionListener()
+    	    		{
+    	    		    public void actionPerformed(ActionEvent e)
+    	    		    {
+    	    		    	saveFilteredGexf();
+    	    	        	tmpPME.setConsumed(true);
+    	    	        	return;
+    	    		    }
+    	    		});
+    	            mntmFullGraphe.addActionListener( new ActionListener()
+    	    		{
+    	    		    public void actionPerformed(ActionEvent e)
+    	    		    {
+    	    		    	saveFullGexf();
+    	    	        	tmpPME.setConsumed(true);
+    	    	        	return;
+    	    		    }
+    	    		});
+            	}
+        	}
+        }
+        /////
+
         if (previewController.sendMouseEvent(buildPreviewMouseEvent(e, PreviewMouseEvent.Type.CLICKED))) {
             refreshLoop.refreshSketch();
         }
     }
 
+    public void displayNode(Node node)
+    {
+    	try
+    	{
+    		// loading data
+  	  	  ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+	      Workspace workspace = pc.getCurrentWorkspace();
+          GraphModel graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace);
+    	  PreviewController previewController = Lookup.getDefault().lookup(PreviewController.class);
+    	  
+	      for (Node n : graphModel.getGraph().getNodes().toArray()) {   
+	    	  if(n.getLabel().equals(node.getLabel())) // if its node is matched
+	    	  {  
+	    		  ArrayList<Edge> edgeList = new ArrayList<Edge>();
+	    		  for (Edge edge : graphModel.getGraph().getEdges()) 
+	    		  {   
+	    			  if(edge.getSource().getId() == n.getId() || edge.getTarget().getId() ==n.getId() )
+		   	    	  {
+		    			  edgeList.add(edge);
+		   	    	  }
+	    		  }
+	    		  this.hideNodeEdge.put(node, edgeList);
+	    		  afficherList();
+	    		  System.out.println("not removing.");
+	    		  Filtering filter=new Filtering();
+	    		  saveQuery = filter.script(node, true, this.saveQuery);
+	    		  
+	    		  /*FilterController filterController = Lookup.getDefault().lookup(FilterController.class);
+	    	        DegreeRangeFilter degreeFilter = new DegreeRangeFilter();
+	    	        degreeFilter.init(graphModel.getGraph());
+	    	        degreeFilter.setRange(new Range(2, Integer.MAX_VALUE));    //Remove nodes with degree < 10
+	    	        Query query = filterController.createQuery(degreeFilter);
+	    	        GraphView view = filterController.filter(query);
+	    	        graphModel.setVisibleView(view);    //Set the filter result as the visible view
+	    	        */
+	    		  //directedGraph.removeNode(n); // removing a nodes
+	    		  previewController.refreshPreview(); 
+	    		  refreshLoop.refreshSketch();
+	    	  }
+	      }
+    	}catch(Exception ex){
+    		System.out.println("Cannot find this node.");
+    	}
+    }
+    /**
+     * @author Yang Shuai
+     * This function allow to hide a node and those edges.
+     * can be used for the function redisplayHideNode(Node node);
+     */
+    
+    public void hideNode(Node node)
+    {
+    	try
+    	{
+    		// loading data
+  	  	  ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+	      Workspace workspace = pc.getCurrentWorkspace();
+          GraphModel graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace);
+    	  DirectedGraph directedGraph = graphModel.getDirectedGraph();
+    	  PreviewController previewController = Lookup.getDefault().lookup(PreviewController.class);
+    	  
+	      for (Node n : graphModel.getGraph().getNodes().toArray()) {   
+	    	  if(n.getLabel().equals(node.getLabel())) // if its node is matched
+	    	  {  
+	    		  ArrayList<Edge> edgeList = new ArrayList<Edge>();
+	    		  for (Edge edge : graphModel.getGraph().getEdges()) 
+	    		  {   
+	    			  if(edge.getSource().getId() == n.getId() || edge.getTarget().getId() ==n.getId() )
+		   	    	  {
+		    			  edgeList.add(edge);
+		   	    	  }
+	    		  }
+	    		  this.hideNodeEdge.put(node, edgeList);
+	    		  afficherList();
+	    		  System.out.println("removing.");
+	    		  Filtering filter=new Filtering();
+	    		  saveQuery = filter.script(node,false, this.saveQuery);
+	    		  nodeHideSave = node;
+	    		  previewController.refreshPreview(); 
+	    		  refreshLoop.refreshSketch();
+	    	  }
+	      }
+    	}catch(Exception ex){
+    		System.out.println("Cannot find this node.");
+    	}
+	
+    }
+    // Debug of collection
+    public void afficherList()
+    {
+        System.out.println("Parcours de l'objet HashMap : ");
+        Set<Entry<Node, ArrayList<Edge>>> setHm = this.hideNodeEdge.entrySet();
+        Iterator<Entry<Node, ArrayList<Edge>>> it = setHm.iterator();
+        while(it.hasNext()){
+        	Entry<Node, ArrayList<Edge>> e = it.next();
+        	for(int i = 0;i<e.getValue().size();i++)
+        	{
+        		System.out.println(e.getKey().getLabel() + " : " + e.getValue().get(i).getSource().getLabel()+" -> "+e.getValue().get(i).getTarget().getLabel());
+        	}
+           
+        }
+    }
+    /*
+     * Export the graph into a file GrapheMl
+     * */
+    public void saveGraphMl()
+    {
+        ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+        Workspace workspace = pc.getCurrentWorkspace();
+    	JFileChooser fs = new JFileChooser();
+    	fs.setDialogTitle("Sauvegarde en GrapheML");
+    	fs.setFileFilter(new FileTypeFilter(".graphml","graphml"));
+     	int result = fs.showSaveDialog(null);
+    	if(result == JFileChooser.APPROVE_OPTION){
+    		File file=fs.getSelectedFile();
+    		String filePath = file.getPath()+".graphml";
+    		ExportController ec = Lookup.getDefault().lookup(ExportController.class);
+    		//export
+    		Exporter exporterGraphML = ec.getExporter("graphml");     //Get GraphML exporter
+            exporterGraphML.setWorkspace(workspace);
+            StringWriter stringWriter = new StringWriter();
+            ec.exportWriter(stringWriter, (CharacterExporter) exporterGraphML);
+            try {
+    		    ec.exportFile(new File(filePath), exporterGraphML);
+    		} catch (IOException ex) {
+    		    ex.printStackTrace();
+    		    return;
+    		}
+    		System.out.println(file.getPath());
+    	}
+    }
+    /*
+     * Export the graph into a file pdf
+     * */
+    public void savePdf()
+    {
+    	JFileChooser fs = new JFileChooser();
+    	fs.setDialogTitle("Sauvegarde en PDF");
+    	fs.setFileFilter(new FileTypeFilter(".pdf","PDF"));
+     	int result = fs.showSaveDialog(null);
+    	if(result == JFileChooser.APPROVE_OPTION){
+    		File file=fs.getSelectedFile();
+    		String filePath = file.getPath()+".pdf";
+    		ExportController ec = Lookup.getDefault().lookup(ExportController.class);
+    		//export
+    		try {
+    		   ec.exportFile(new File(filePath));
+    		} catch (IOException ex) {
+    		   ex.printStackTrace();
+    		   return;
+    		}
+    		System.out.println(file.getPath());
+    	}
+    }
+    /*
+     * Export the filtered graph into a file Gexf
+     * */
+    public void saveFilteredGexf()
+    {
+    	JFileChooser fs = new JFileChooser();
+    	fs.setDialogTitle("Sauvegarde en Gexf");
+    	fs.setFileFilter(new FileTypeFilter(".gexf","GEXF"));
+     	int result = fs.showSaveDialog(null);
+    	if(result == JFileChooser.APPROVE_OPTION){
+    		File file=fs.getSelectedFile();
+    		String filePath = file.getPath()+".gexf";
+    		ExportController ec = Lookup.getDefault().lookup(ExportController.class);
+    		////Only exports the visible (filtered) graph
+    		GraphExporter exporter = (GraphExporter) ec.getExporter("gexf");     //Get GEXF exporter
+    		exporter.setExportVisible(true);  //Only exports the visible (filtered) graph
+            ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+    		Workspace workspace = pc.getCurrentWorkspace();
+    		exporter.setWorkspace(workspace);
+    		try {
+    		    ec.exportFile(new File(filePath), exporter);
+    		} catch (IOException ex) {
+    		    ex.printStackTrace();
+    		    return;
+    		}
+    		System.out.println(file.getPath());
+    	}
+    }
+    /*
+     * Export the full graph into a file Gexf
+     * */
+    public void saveFullGexf()
+    {
+    	JFileChooser fs = new JFileChooser();
+    	fs.setDialogTitle("Sauvegarde en Gexf");
+    	fs.setFileFilter(new FileTypeFilter(".gexf","GEXF"));
+     	int result = fs.showSaveDialog(null);
+    	if(result == JFileChooser.APPROVE_OPTION){
+    		File file=fs.getSelectedFile();
+    		String filePath = file.getPath()+".gexf";
+    		// export full graph
+    		ExportController ec = Lookup.getDefault().lookup(ExportController.class);
+    		try {
+    		    ec.exportFile(new File(filePath));
+    		} catch (IOException ex) {
+    		    ex.printStackTrace();
+    		    return;
+    		}
+    		System.out.println(file.getPath());
+    	}
+    }
     @Override
     public void mousePressed(MouseEvent e) {
         previewController.sendMouseEvent(buildPreviewMouseEvent(e, PreviewMouseEvent.Type.PRESSED));
@@ -94,9 +455,43 @@ public class PreviewSketch extends JPanel implements MouseListener, MouseWheelLi
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (!previewController.sendMouseEvent(buildPreviewMouseEvent(e, PreviewMouseEvent.Type.RELEASED))) {
+        PreviewMouseEvent tmpPME=buildPreviewMouseEvent(e, PreviewMouseEvent.Type.RELEASED);
+        if (!previewController.sendMouseEvent(tmpPME)) {
             setMoving(false);
         }
+        
+        String isDomain = "3";
+		boolean onDomain = false;
+		MouseListenerTemplate isClicked=new MouseListenerTemplate();
+		ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+		Workspace workspace = pc.getCurrentWorkspace();
+		
+		for (Node node : Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace).getGraph().getNodes()) {
+			if(isClicked.clickingInNode(node,tmpPME) && node.getId().toString().compareTo(isDomain) == 0){
+				onDomain = true;
+			}
+		}
+
+    	if(SwingUtilities.isMiddleMouseButton(e) && onDomain) { //si clique roulette sur le domaine du graphe
+            G2DTarget target = (G2DTarget) previewController.getRenderTarget(RenderTarget.G2D_TARGET);
+            final PreviewSketch previewSketch = new PreviewSketch(target);
+            previewController.refreshPreview();
+            
+    		JFrame frame = new JFrame();
+    		frame.setBounds(e.getX(),e.getY(), 250, 250);
+    		frame.setLayout(new BorderLayout());
+
+            frame.add(previewSketch, BorderLayout.CENTER);
+            frame.setSize(700, 500);
+            
+            frame.addComponentListener(new ComponentAdapter() {
+                @Override
+                public void componentShown(ComponentEvent e) {
+                    previewSketch.resetZoom();
+                }
+            });
+            frame.setVisible(true);
+    	}
 
         refreshLoop.refreshSketch();
     }

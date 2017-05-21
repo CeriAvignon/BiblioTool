@@ -75,7 +75,7 @@ public class Ordonner{
 	            resultat.add(n);                         
 	            
 	            for (Node voisin: voisins.get(n)) {
-	                degree.put(voisin, degree.get(neighbor) - 1);
+	                //degree.put(voisin, degree.get(neighbor) - 1);
 	               
 	                if (degree.get(voisin) == 0) zeroNodes.push(voisin);
 	            }

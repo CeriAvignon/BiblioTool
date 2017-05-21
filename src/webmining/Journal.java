@@ -1,5 +1,9 @@
 package webmining;
 
+/**
+*
+* @author Tanguy Goussoumalet
+*/
 // la classe journal
 public class Journal {
  

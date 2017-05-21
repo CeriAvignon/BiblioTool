@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
+
 public class Panel extends JPanel {
 	
 	public Panel() {

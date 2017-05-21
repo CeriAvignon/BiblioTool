@@ -67,7 +67,7 @@ public class Filtering {
         //Import file
         Container container;
         try {
-            File file = new File(getClass().getResource("testGephi.gexf").toURI());
+            File file = new File(getClass().getResource("graph.gexf").toURI());
             container = importController.importFile(file);
             container.getLoader().setEdgeDefault(EdgeDirectionDefault.DIRECTED);   //Force DIRECTED
         } catch (Exception ex) {
@@ -84,7 +84,7 @@ public class Filtering {
         System.out.println("Nodes: " + graph.getNodeCount());
         System.out.println("Edges: " + graph.getEdgeCount());
 
-        //Ego filter hide a node
+      //Ego filter hide a node
         EgoFilter egoFilter = new EgoFilter();
         egoFilter.setPattern(n.getLabel());
         egoFilter.setDepth(graph.getEdgeCount());
@@ -112,10 +112,10 @@ public class Filtering {
         
         //Preview
         previewModel.getProperties().putValue(PreviewProperty.SHOW_NODE_LABELS, Boolean.TRUE);
-        previewModel.getProperties().putValue(PreviewProperty.NODE_LABEL_COLOR, new DependantOriginalColor(Color.BLACK));
+        previewModel.getProperties().putValue(PreviewProperty.NODE_LABEL_COLOR, new DependantOriginalColor(Color.WHITE));
         previewModel.getProperties().putValue(PreviewProperty.EDGE_CURVED, Boolean.FALSE);
         previewModel.getProperties().putValue(PreviewProperty.EDGE_OPACITY, 50);
-        previewModel.getProperties().putValue(PreviewProperty.BACKGROUND_COLOR, Color.WHITE);
+        previewModel.getProperties().putValue(PreviewProperty.BACKGROUND_COLOR, Color.BLACK);
         
         //Count nodes and edges on filtered graph
         graph = graphModel.getDirectedGraphVisible();

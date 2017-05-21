@@ -28,17 +28,6 @@ public class MetaDonnees {
 	
 	
 	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
-		 
-
-
-
-		}
-
-//	}
-	
 	
 	
 	void Fichier(String nomfichier){

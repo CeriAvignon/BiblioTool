@@ -23,15 +23,14 @@ public class ResultSearchPanel extends JPanel {
 		this.add(d.displayGexf(), BorderLayout.CENTER);
 		this.revalidate();
 		
-		
 		//previewJFrame.displayGexf( .);
 		//this.add(previewJFrame);
 		
-		//appel du code de david
 		Panel info_graph = new Panel();
 		this.add(info_graph, BorderLayout.SOUTH);
 		this.revalidate();
 		this.setVisible(true);
+
 	}
 	
 	/**

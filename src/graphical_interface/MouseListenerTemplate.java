@@ -67,7 +67,7 @@ public class MouseListenerTemplate implements PreviewMouseListener {
     public void mouseReleased(PreviewMouseEvent event, PreviewProperties properties, Workspace workspace) {
     }
 
-    private boolean clickingInNode(Node node, PreviewMouseEvent event) {
+    boolean clickingInNode(Node node, PreviewMouseEvent event) {
         float xdiff = node.x() - event.x;
         float ydiff = -node.y() - event.y;//Note that y axis is inverse for node coordinates
         float radius = node.size();

@@ -1,4 +1,8 @@
 package webmining;
+/**
+*
+* @author Tanguy Goussoumalet
+*/
 
 //la classe auteur
 public class Author {

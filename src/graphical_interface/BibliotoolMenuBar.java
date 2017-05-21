@@ -45,6 +45,8 @@ public class BibliotoolMenuBar extends JMenuBar {
 	JMenuItem menuCopy = new JMenuItem("Copy");
 	JMenuItem menuPaste = new JMenuItem("Paste");
 	
+	JMenuItem menuAuthor = new JMenuItem("Auteur");
+	JMenuItem menuJournal = new JMenuItem("Journaux");
 	/**
 	 * The contents of Help in the menu bar
 	 */
@@ -63,6 +65,22 @@ public class BibliotoolMenuBar extends JMenuBar {
 		 this.window = window;
 		
 		addItemsToMenu(this);
+		
+		menuAuthor.addActionListener(new ActionListener() {
+	 		   public void actionPerformed(ActionEvent e) {
+	  			  addItemsToMenu(BibliotoolMenuBar.this);
+	 			  window.MakeContaintAuthor();
+	 			  
+	 		   }
+	 	});
+		
+		menuJournal.addActionListener(new ActionListener() {
+	 		   public void actionPerformed(ActionEvent e) {
+	  			  addItemsToMenu(BibliotoolMenuBar.this);
+	 			  window.MakeContaintJournal();
+	 			  
+	 		   }
+	 	});
 		
 		menuLogOut.addActionListener(new ActionListener() {
  		   public void actionPerformed(ActionEvent e) {
@@ -109,52 +127,6 @@ public class BibliotoolMenuBar extends JMenuBar {
 		});
 	}
 	
-	/********
-	//to be supr. with the window
-	********
-	public BibliotoolMenuBar(Window window){
-			// this.window = window;
-			addItemsToMenu(this);
-			
-		 menuLogOut.addActionListener(new ActionListener() {
-	 		   public void actionPerformed(ActionEvent e) {
-	 			  window.isLogIn = false;
-	 			  addItemsToMenu(BibliotoolMenuBar.this);
-	 			  window.MakeContaintDefault();
-	 			  
-	 		   }
-	 	   });
-			
-			
-			menuLogIn.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					addItemsToMenu(BibliotoolMenuBar.this);
-					window.MakeContaintLogIn();
-					validate();
-		 			repaint();
-				}
-			});
-			
-			menuSign.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					window.MakeContaintSign();
-				}
-			});
-			
-			menuSearch.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					window.MakeContaintSearch();
-					
-				}
-			});
-			
-			menuAboutBibliotool.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					window.MakeContaintHelp();
-				}
-			});
-		} 
-		***/
 		
 	/**
 	 * @author audrey roumieux
@@ -227,6 +199,9 @@ public class BibliotoolMenuBar extends JMenuBar {
 		menuEdit.add(menuSearch);
 		menuEdit.add(menuSearchPDF);
 		menuEdit.addSeparator();
+		menuEdit.add(menuAuthor);
+		menuEdit.add(menuJournal);
+		
 		
 		menuCopy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK));
 		// menuEdit.add(menuCopy);

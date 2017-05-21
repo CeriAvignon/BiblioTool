@@ -1,5 +1,6 @@
 package graphical_interface;
 
+import graphe.*;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -63,11 +64,5 @@ public class FormPDF extends JPanel {
 		});
 		btnCancel.setBounds(358, 389, 117, 29);
 		add(btnCancel);
-	}
-	public DirectedGraph getGraph(){
-    	MyGraph.setArticles(MyGraph.retournerListeArticles());
-		MyGraph.setReferences(MyGraph.ListeReference());
-		DirectedGraph dg = MyGraph.createDirectedGraph();
-		return dg;
 	}
 }

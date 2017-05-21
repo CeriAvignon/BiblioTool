@@ -52,7 +52,7 @@ import org.gephi.project.api.ProjectController;
 import org.gephi.project.api.Workspace;
 import org.openide.util.Lookup;
 
-import graphical_interface.PreviewSketch;
+import test.PreviewSketch;
 
 public class display {
 
@@ -85,6 +85,15 @@ public class display {
         //Append imported data to GraphAPI
         importController.process(container, new DefaultProcessor(), workspace);
     	
+        
+      //create a Domain on the node (in the string isDomain)
+        String isDomain = "3";		
+		for (Node node : Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace).getGraph().getNodes()) {
+			if(node.getId().toString().compareTo(isDomain) == 0){
+				node.setSize(20);
+				node.setG(1);
+			}
+		}
 
         //Preview configuration
         PreviewController previewController = Lookup.getDefault().lookup(PreviewController.class);
@@ -210,15 +219,5 @@ public class display {
 	        ex.printStackTrace();
 	        return;
 	    }
-	}
-	
-	
-	public static void main(String[] args) {
-		display d = new display();
-		d.loadMatrix();
-		d.layoutGraph();
-		d.changeColor();
-		d.saveGexf();
-		d.displayGexf();
 	}
 }

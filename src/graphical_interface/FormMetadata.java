@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.*;
 import java.io.File;
 import org.gephi.graph.api.DirectedGraph;
+import graphe.*;
 
 import javax.swing.*;
 import java.awt.FlowLayout;
@@ -116,8 +117,6 @@ public class FormMetadata extends JPanel{
 					//call function research citeseerx
 				}
 
-				getGraph();
-
 				textFieldKeyword.setText("");
 				textFieldTitle.setText("");
 				textFieldAuthor.setText("");
@@ -126,7 +125,8 @@ public class FormMetadata extends JPanel{
 				
 				Window2 window = (Window2) FormMetadata.this.getTopLevelAncestor();
 	            window.MakeContaintResultSearch();
-	            window.repaint(); window.validate();
+	            window.repaint(); 
+	            window.validate();
 	            setVisible(true);
 			}
 		});
@@ -140,12 +140,6 @@ public class FormMetadata extends JPanel{
 
 	}
 	
-	public DirectedGraph getGraph(){
-    	MyGraph.setArticles(MyGraph.retournerListeArticles());
-		MyGraph.setReferences(MyGraph.ListeReference());
-		DirectedGraph dg = MyGraph.createDirectedGraph();
-		return dg;
-	}
 	
 	// getters
 	public String getKeyword(){

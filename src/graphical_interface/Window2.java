@@ -77,6 +77,29 @@ public class Window2 extends JFrame {
 	/**
 	 * @author audrey roumieux
 	 * @param menuBar
+	 * It use to change the contain of the windows, when we click on "Auteur" menu
+	 */
+	public void MakeContaintAuthor(){
+		this.setContentPane(new AuthorPanel());
+		this.getContentPane().revalidate();
+		
+	}
+	
+	
+	/**
+	 * @author audrey roumieux
+	 * @param menuBar
+	 * It use to change the contain of the windows, when we click on "Journaux" menu
+	 */
+	public void MakeContaintJournal(){
+		this.setContentPane(new JournalPanel());
+		this.getContentPane().revalidate();
+		
+	}
+	
+	/**
+	 * @author audrey roumieux
+	 * @param menuBar
 	 * It use to change the contain of the windows, when we click on "sing up" menu
 	 */
 	public void MakeContaintSign(){

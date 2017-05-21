@@ -12,7 +12,7 @@ public class ShowLastArticle {
 
     String query = "";
 
-    public Article articles;
+    public Article article;
 
   		Statement st=null ;
 
@@ -32,7 +32,7 @@ public class ShowLastArticle {
 	   	  // exécution requéte
   	  try {
   		st = con.createStatement();
-	   	   String sql ="select * from article order by idArt DESC limit 1 ";
+	   	   String sql ="select * from Article order by idArt DESC limit 1 ";
 
 		rs= st.executeQuery(sql);
 
@@ -48,18 +48,18 @@ public class ShowLastArticle {
   	  
   	    try {
 		while(rs.next()){ 
-	         articles = new Article();
+	       Article  article = new Article();
 
 	         // Remplir de l'objet article
-				 articles.idArt=rs.getInt("idArt");
-				  articles.titleArt=rs.getString("titleArt");
-				 articles.urlPage=rs.getString("urlPage");
-				  articles.urlPdf=rs.getString("urlPdf");
-				  articles.doi=rs.getString("doi");
-				  articles.numIssue=rs.getInt("numIssue");
-				  articles.nbPage=rs.getInt("nbPage");
+				 article.idArt=rs.getInt("idArt");
+				  article.titleArt=rs.getString("titleArt");
+				 article.urlPage=rs.getString("urlPage");
+				  article.urlPdf=rs.getString("urlPdf");
+				  article.doi=rs.getString("doi");
+				  article.numIssue=rs.getInt("numIssue");
+				  article.nbPage=rs.getInt("nbPage");
 
-				  articles.yearPub=rs.getDate("yearPub");
+				  article.yearPub=rs.getDate("yearPub");
 				  //articles.status=rs.getString("status");
 				  //articles.dateInsertion=rs.getDate("dateInsertion");
 
@@ -101,13 +101,13 @@ public class ShowLastArticle {
 	
   	     System.out.println("-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-");
 
-  	     System.out.println(" l'id de l'article   "+articles.idArt);
-  	     System.out.println("Le nombre de page    "+articles.nbPage);
-  	     System.out.println("Le titre d'article   "+articles.titleArt);
+  	     System.out.println(" l'id de l'article   "+article.idArt);
+  	     System.out.println("Le nombre de page    "+article.nbPage);
+  	     System.out.println("Le titre d'article   "+article.titleArt);
   	     //System.out.println("Date d'insertion     "+articles.dateInsertion);
 
 
-  	     return articles;
+  	     return article;
 	
 	
 }
